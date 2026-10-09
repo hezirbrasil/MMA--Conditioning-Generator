@@ -339,7 +339,10 @@ function createWorkout(){
  const used=new Set(first.map(x=>x.name));
  const second=chooseUnique(currentPool,8,used);
  if(first.length!==12||second.length!==8){document.getElementById("status").textContent="Não há exercícios suficientes para montar esta sessão sem repetição e mantendo os lados juntos.";return}
- const allCombos=getFightBank().map(normalizeFightNames);\n const progressionPair=["Jab + Jab + Direto","Jab + Jab + Direto + Chute baixo F"];\n const remaining=allCombos.filter(x=>!progressionPair.includes(x));\n const combos=[...progressionPair,...shuffle(remaining).slice(0,18)];
+ const allCombos=getFightBank().map(normalizeFightNames);
+ const progressionPair=["Jab + Jab + Direto","Jab + Jab + Direto + Chute baixo F"];
+ const remaining=allCombos.filter(x=>!progressionPair.includes(x));
+ const combos=[...progressionPair,...shuffle(remaining).slice(0,18)];
  workoutGroups=[
  {title:"BLOCO 1 — FUNCIONAL",items:first.map(x=>({name:x.name,detail:"Exercício funcional"}))},
  {title:"BLOCO 2 — LUTA",items:combos.slice(0,12).map(x=>({name:x,detail:"Sequência de golpes"}))},
