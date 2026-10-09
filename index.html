@@ -342,7 +342,9 @@ function createWorkout(){
  const allCombos=getFightBank().map(normalizeFightNames);
  const progressionPair=["Jab + Jab + Direto","Jab + Jab + Direto + Chute baixo F"];
  const remaining=allCombos.filter(x=>!progressionPair.includes(x));
- const combos=[...progressionPair,...shuffle(remaining).slice(0,18)];
+ const combos=shuffle(remaining).slice(0,18);
+ const pairInsert=Math.min(2,combos.length);
+ combos.splice(pairInsert,0,...progressionPair);
  workoutGroups=[
  {title:"BLOCO 1 — FUNCIONAL",items:first.map(x=>({name:x.name,detail:"Exercício funcional"}))},
  {title:"BLOCO 2 — LUTA",items:combos.slice(0,12).map(x=>({name:x,detail:"Sequência de golpes"}))},
