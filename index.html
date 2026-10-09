@@ -15,9 +15,9 @@
 .panel{margin-top:26px;background:linear-gradient(145deg,#191321,#110e16);border:1px solid var(--line);border-radius:12px;padding:22px;box-shadow:0 16px 40px #0003}.controlrow{display:flex;align-items:end;gap:12px;flex-wrap:wrap}.field{display:grid;gap:8px;flex:1;min-width:180px}.field label{font-size:12px;font-weight:700;color:#ded5eb}select{width:100%;background:#0d0a12;border:1px solid #3a2c49;border-radius:6px;color:var(--text);padding:13px;font:inherit;font-size:13px}
 button{cursor:pointer;border:0;border-radius:6px;font-weight:800;letter-spacing:.4px;padding:13px 16px}.primary{background:var(--purple);color:#11091c;box-shadow:0 4px #54259a}.secondary{background:#21182d;border:1px solid #49345f;color:#e6d7fb}.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.tip{color:var(--muted);font-size:11px;line-height:1.6;margin:16px 0 0}
 .resulthead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.resulthead h2{font-size:18px;margin:0}.title-row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:8px 0 18px;margin:20px 0}.title-row h2{font:700 38px 'Barlow Condensed';text-transform:uppercase;margin:7px 0}.purple{color:var(--purple)}.stamp{border:2px solid var(--purple);color:var(--purple);font:800 27px 'Barlow Condensed';padding:8px 12px;transform:skew(-5deg)}
-.block{border:1px solid #382840;background:#100d15;border-radius:8px;overflow:hidden;margin:14px 0}.blockhead{background:#241731;padding:13px 15px;display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:800;letter-spacing:.7px}.blockhead span{color:#c5a4f5;font-size:10px}.exercise{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid #2b2034}.num{font:800 22px 'Barlow Condensed';color:var(--purple)}.ename{font-size:13px;font-weight:700;line-height:1.5}.foot{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;color:#a89ab8;font-size:10px;letter-spacing:1px}.status{color:#d8c0ff;font-size:12px;min-height:18px;margin-top:12px}footer{border-top:1px solid #2b2036;padding:22px max(18px,calc((100% - 1000px)/2));display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#796d87;font-size:9px;letter-spacing:1.2px}[hidden]{display:none!important}
+.block{border:1px solid #382840;background:#100d15;border-radius:8px;overflow:hidden;margin:14px 0}.blockhead{background:#241731;padding:13px 15px;display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:800;letter-spacing:.7px}.blockhead span{color:#c5a4f5;font-size:10px}.exercise{display:grid;grid-template-columns:34px minmax(0,1fr) auto;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid #2b2034}.num{font:800 22px 'Barlow Condensed';color:var(--purple)}.ename{font-size:13px;font-weight:700;line-height:1.5}.item-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.item-actions button{font-size:10px;padding:7px 9px;letter-spacing:0}.item-actions .remove{color:#ffb4c0;border-color:#693044}@media(max-width:600px){.exercise{grid-template-columns:24px minmax(0,1fr);gap:7px;padding:11px 8px}.item-actions{grid-column:2;justify-content:flex-start}.item-actions button{padding:6px 8px}}.foot{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;color:#a89ab8;font-size:10px;letter-spacing:1px}.status{color:#d8c0ff;font-size:12px;min-height:18px;margin-top:12px}footer{border-top:1px solid #2b2036;padding:22px max(18px,calc((100% - 1000px)/2));display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#796d87;font-size:9px;letter-spacing:1.2px}[hidden]{display:none!important}
 @media(max-width:600px){.wrap{padding:25px 12px}.panel{padding:16px 12px}.title-row h2{font-size:31px}.stamp{font-size:21px}.exercise{grid-template-columns:25px 1fr;gap:7px;padding:12px 9px}.foot{align-items:flex-start;flex-direction:column}}
-@media print{body{background:#fff;color:#111}.top,.hero,.config,footer,.buttons,.foot,.tip{display:none!important}.wrap{padding:0}.panel{background:#fff;border:0;box-shadow:none;padding:0}.title-row{border-color:#ddd}.title-row h2,.ename{color:#111}.block{background:#fff;border-color:#ccc;break-inside:avoid}.blockhead{background:#eee;color:#111}.blockhead span,.num{color:#552288}.exercise{border-color:#ddd}}
+@media print{body{background:#fff;color:#111}.top,.hero,.config,footer,.buttons,.item-actions,.foot,.tip{display:none!important}.wrap{padding:0}.panel{background:#fff;border:0;box-shadow:none;padding:0}.title-row{border-color:#ddd}.title-row h2,.ename{color:#111}.block{background:#fff;border-color:#ccc;break-inside:avoid}.blockhead{background:#eee;color:#111}.blockhead span,.num{color:#552288}.exercise{border-color:#ddd}}
 </style>
 </head>
 <body>
@@ -151,31 +151,82 @@ function chooseUnique(pool,n,exclude=new Set()){
  }
  return [];
 }
+let workoutGroups=[], currentPool=[], currentLabel="Full Body";
+function escHtml(value){return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
+function pairKey(name){const m=name.match(/^(.*) ([ED])$/);return m?{base:m[1],side:m[2]}:null}
+function groupIsFunctional(index){return index===0||index===2}
+function saveWorkout(){try{localStorage.setItem("mc-last-workout",JSON.stringify({type:currentLabel,groups:workoutGroups,createdAt:new Date().toISOString()}))}catch(e){}}
+function renderWorkout(){
+ const total=workoutGroups.reduce((n,g)=>n+g.items.length,0);
+ const functional=workoutGroups[0].items.length+workoutGroups[2].items.length;
+ const fightCount=workoutGroups[1].items.length+workoutGroups[3].items.length;
+ document.getElementById("meta").textContent=total+" itens • "+functional+" funcional + "+fightCount+" luta";
+ document.getElementById("blocks").innerHTML=workoutGroups.map((g,gi)=>'<section class="block"><div class="blockhead">'+escHtml(g.title)+'<span>'+g.items.length+(groupIsFunctional(gi)?" EXERCÍCIOS":" SEQUÊNCIAS")+'</span></div>'+g.items.map((it,i)=>'<div class="exercise"><div class="num">'+String(i+1).padStart(2,"0")+'</div><div class="ename">'+escHtml(it.name)+'</div><div class="item-actions"><button class="secondary" data-action="replace" data-group="'+gi+'" data-item="'+i+'">↻ Trocar</button><button class="secondary remove" data-action="remove" data-group="'+gi+'" data-item="'+i+'">✕ Excluir</button></div></div>').join("")+'</section>').join("");
+ document.getElementById("result").hidden=false;
+ saveWorkout();
+}
 function createWorkout(){
- const type=document.getElementById("type").value, label=type==="fullbody"?"Full Body":"Leg Blast";
+ const type=document.getElementById("type").value; currentLabel=type==="fullbody"?"Full Body":"Leg Blast";
  const allowed=type==="fullbody"?fullBodyCats:legCats;
- const pool=bank.filter(x=>allowed.has(x.cat));
- const first=chooseUnique(pool,12);
+ currentPool=bank.filter(x=>allowed.has(x.cat));
+ const first=chooseUnique(currentPool,12);
  const used=new Set(first.map(x=>x.name));
- const second=chooseUnique(pool,8,used);
+ const second=chooseUnique(currentPool,8,used);
  if(first.length!==12||second.length!==8){document.getElementById("status").textContent="Não há exercícios suficientes para montar esta sessão sem repetição e mantendo os lados juntos.";return}
  const combos=shuffle(fight).slice(0,20);
- const groups=[
- {title:"BLOCO 1 — FUNCIONAL",sub:"12 EXERCÍCIOS",items:first.map(x=>({name:x.name,detail:"Exercício funcional"}))},
- {title:"BLOCO 2 — LUTA",sub:"12 SEQUÊNCIAS",items:combos.slice(0,12).map(x=>({name:x,detail:"Sequência de golpes"}))},
- {title:"BLOCO 3 — FUNCIONAL",sub:"8 EXERCÍCIOS",items:second.map(x=>({name:x.name,detail:"Exercício funcional"}))},
- {title:"BLOCO 4 — LUTA",sub:"8 SEQUÊNCIAS",items:combos.slice(12,20).map(x=>({name:x,detail:"Sequência de golpes"}))}
+ workoutGroups=[
+ {title:"BLOCO 1 — FUNCIONAL",items:first.map(x=>({name:x.name,detail:"Exercício funcional"}))},
+ {title:"BLOCO 2 — LUTA",items:combos.slice(0,12).map(x=>({name:x,detail:"Sequência de golpes"}))},
+ {title:"BLOCO 3 — FUNCIONAL",items:second.map(x=>({name:x.name,detail:"Exercício funcional"}))},
+ {title:"BLOCO 4 — LUTA",items:combos.slice(12,20).map(x=>({name:x,detail:"Sequência de golpes"}))}
  ];
- document.getElementById("resultName").textContent=label.toUpperCase();
- document.getElementById("meta").textContent="40 itens • 12 funcional + 12 luta + 8 funcional + 8 luta";
- document.getElementById("blocks").innerHTML=groups.map(g=>'<section class="block"><div class="blockhead">'+g.title+'<span>'+g.sub+'</span></div>'+g.items.map((it,i)=>'<div class="exercise"><div class="num">'+String(i+1).padStart(2,"0")+'</div><div class="ename">'+it.name+'</div></div>').join("")+'</section>').join("");
- document.getElementById("result").hidden=false;
- document.getElementById("status").textContent="Treino gerado. Os 20 exercícios funcionais são únicos; as sequências de luta são exibidas por extenso.";
- try{localStorage.setItem("mc-last-workout",JSON.stringify({type:label,groups,createdAt:new Date().toISOString()}))}catch(e){}
+ document.getElementById("resultName").textContent=currentLabel.toUpperCase();
+ renderWorkout();
+ document.getElementById("status").textContent="Treino gerado. Use “Trocar” para substituir um item ou “Excluir” para removê-lo apenas desta sessão.";
 }
 function workoutText(){const title=document.getElementById("resultName").textContent;const sections=[...document.querySelectorAll(".block")].map(b=>b.querySelector(".blockhead").innerText+"\n"+[...b.querySelectorAll(".exercise .ename")].map((e,i)=>(i+1)+". "+e.innerText).join("\n")).join("\n\n");return "MMA CONDITIONING — "+title+"\n\n"+sections}
 document.getElementById("generate").addEventListener("click",createWorkout);
 document.getElementById("again").addEventListener("click",createWorkout);
+document.getElementById("blocks").addEventListener("click",event=>{
+ const button=event.target.closest("button[data-action]");if(!button)return;
+ const gi=Number(button.dataset.group),ii=Number(button.dataset.item),group=workoutGroups[gi],item=group&&group.items[ii];if(!item)return;
+ const functional=groupIsFunctional(gi), action=button.dataset.action;
+ let targetIndexes=[ii];
+ if(functional){
+  const pair=pairKey(item.name);
+  if(pair){
+   const otherName=pair.base+" "+(pair.side==="E"?"D":"E");
+   const otherIndex=group.items.findIndex((x,i)=>i!==ii&&x.name===otherName);
+   if(otherIndex>=0)targetIndexes=[Math.min(ii,otherIndex),Math.max(ii,otherIndex)];
+  }
+ }
+ if(action==="remove"){
+  targetIndexes.sort((a,b)=>b-a).forEach(i=>group.items.splice(i,1));
+  renderWorkout();
+  document.getElementById("status").textContent=functional&&targetIndexes.length===2?"Os dois lados foram removidos apenas deste treino.":"Item removido apenas deste treino.";
+  saveWorkout();return;
+ }
+ if(action==="replace"){
+  if(functional){
+   const targetNames=new Set(targetIndexes.map(i=>group.items[i].name));
+   const usedNames=new Set(workoutGroups.flatMap((g,index)=>g.items.filter((x,i)=>!(index===gi&&targetIndexes.includes(i))).map(x=>x.name)));
+   targetNames.forEach(n=>usedNames.add(n));
+   const units=shuffle(exerciseUnits(currentPool,usedNames)).filter(unit=>unit.length===targetIndexes.length&&!unit.some(x=>usedNames.has(x.name)));
+   const chosen=units[0];
+   if(!chosen){document.getElementById("status").textContent=targetIndexes.length===2?"Não encontrei outro par E/D disponível para substituir esse exercício.":"Não encontrei outro exercício funcional disponível sem repetir um da sessão.";return}
+   targetIndexes.forEach((idx,j)=>group.items[idx]={name:chosen[j].name,detail:"Exercício funcional"});
+   group.items.sort((a,b)=>{const ia=group.items.indexOf(a),ib=group.items.indexOf(b);return ia-ib});
+   document.getElementById("status").textContent=targetIndexes.length===2?"Par substituído, mantendo E seguido de D.":"Exercício substituído.";
+  }else{
+   const used=new Set(workoutGroups.flatMap((g,index)=>g.items.filter((x,i)=>!(index===gi&&i===ii)).map(x=>x.name)));
+   const alternatives=shuffle(fight.filter(x=>!used.has(x)&&x!==item.name));
+   if(!alternatives.length){document.getElementById("status").textContent="Não há outra sequência de luta disponível sem repetir uma da sessão.";return}
+   group.items[ii]={name:alternatives[0],detail:"Sequência de golpes"};
+   document.getElementById("status").textContent="Sequência de luta substituída.";
+  }
+  renderWorkout();saveWorkout();
+ }
+});
 document.getElementById("print").addEventListener("click",()=>window.print());
 document.getElementById("copy").addEventListener("click",async()=>{const s=document.getElementById("status");try{await navigator.clipboard.writeText(workoutText());s.textContent="Treino copiado para a área de transferência."}catch(e){const t=document.createElement("textarea");t.value=workoutText();document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();s.textContent="Treino copiado."}});
 </script>
