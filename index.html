@@ -301,7 +301,7 @@ function getBlockAddOptions(gi){
   return '<option value="">Escolha um exercício funcional…</option>'+units.map(unit=>{const value=unit.map(x=>x.name).join("|||");const label=unit.length===2?unit[0].name.replace(/ E$/,"")+" (E + D)":unit[0].name;return '<option value="'+escHtml(value)+'">'+escHtml(label)+'</option>'}).join("");
  }
  const used=new Set(workoutGroups.flatMap(g=>g.items.map(x=>x.name)));
- const options=fight.filter(x=>!used.has(x));
+ const options=getFightBank().filter(x=>!used.has(x));
  if(!options.length)return '<option value="">Nenhuma sequência disponível</option>';
  return '<option value="">Escolha uma sequência de luta…</option>'+options.map(x=>'<option value="'+escHtml(x)+'">'+escHtml(x)+'</option>').join("");
 }
@@ -321,7 +321,7 @@ window.addSpecificToBlock=function(event,gi){
  }else{
   const name=select.value,used=new Set(workoutGroups.flatMap(g=>g.items.map(x=>x.name)));
   if(used.has(name)){status.textContent="Essa sequência já está no treino. Escolha outra.";return}
-  if(!fight.includes(name)){status.textContent="Sequência de luta inválida.";return}
+  if(!getFightBank().includes(name)){status.textContent="Sequência de luta inválida.";return}
   group.items.push({name,detail:"Sequência de golpes"});
   status.textContent="Sequência de luta adicionada ao bloco.";
  }
@@ -337,7 +337,7 @@ function createWorkout(){
  const used=new Set(first.map(x=>x.name));
  const second=chooseUnique(currentPool,8,used);
  if(first.length!==12||second.length!==8){document.getElementById("status").textContent="Não há exercícios suficientes para montar esta sessão sem repetição e mantendo os lados juntos.";return}
- const combos=shuffle(fight).slice(0,20);
+ const combos=shuffle(getFightBank()).slice(0,20);
  workoutGroups=[
  {title:"BLOCO 1 — FUNCIONAL",items:first.map(x=>({name:x.name,detail:"Exercício funcional"}))},
  {title:"BLOCO 2 — LUTA",items:combos.slice(0,12).map(x=>({name:x,detail:"Sequência de golpes"}))},
@@ -373,9 +373,36 @@ document.addEventListener("keydown",e=>{if(document.getElementById("playOverlay"
 function workoutText(){const title=document.getElementById("resultName").textContent;const sections=[...document.querySelectorAll(".block")].map(b=>b.querySelector(".blockhead").innerText+"\n"+[...b.querySelectorAll(".exercise .ename")].map((e,i)=>(i+1)+". "+e.innerText).join("\n")).join("\n\n");return "MMA CONDITIONING — "+title+"\n\n"+sections}
 document.getElementById("generate").addEventListener("click",createWorkout);
 document.getElementById("again").addEventListener("click",createWorkout);
+function moveWorkoutItem(gi,ii,direction){
+ const group=workoutGroups[gi];if(!group||!group.items[ii])return;
+ const seen=new Set(),units=[];
+ group.items.forEach((item,index)=>{
+  if(seen.has(index))return;
+  const pair=pairKey(item.name);
+  if(pair){
+   const otherName=pair.base+" "+(pair.side==="E"?"D":"E");
+   const otherIndex=group.items.findIndex((x,j)=>j!==index&&x.name===otherName);
+   if(otherIndex>=0){
+    const left=pair.side==="E"?item:group.items[otherIndex];
+    const right=pair.side==="D"?item:group.items[otherIndex];
+    seen.add(index);seen.add(otherIndex);
+    units.push({items:[left,right],contains:index===ii||otherIndex===ii});return;
+   }
+  }
+  seen.add(index);units.push({items:[item],contains:index===ii});
+ });
+ const current=units.findIndex(unit=>unit.contains),target=current+direction;
+ if(current<0||target<0||target>=units.length)return;
+ [units[current],units[target]]=[units[target],units[current]];
+ group.items=units.flatMap(unit=>unit.items);
+ renderWorkout();saveWorkout();
+ document.getElementById("status").textContent="Item movido "+(direction<0?"para cima.":"para baixo.")+" Pares E/D permanecem juntos.";
+}
 window.handleWorkoutAction=function(event,gi,ii,action){
  event.preventDefault();
  const group=workoutGroups[gi],item=group&&group.items[ii];if(!item)return;
+ if(action===2){moveWorkoutItem(gi,ii,-1);return}
+ if(action===3){moveWorkoutItem(gi,ii,1);return}
  const functional=groupIsFunctional(gi);
  let targetIndexes=[ii];
  if(functional){
@@ -402,7 +429,7 @@ window.handleWorkoutAction=function(event,gi,ii,action){
    document.getElementById("status").textContent=targetIndexes.length===2?"Par substituído, mantendo E seguido de D.":"Exercício substituído.";
   }else{
    const used=new Set(workoutGroups.flatMap((g,index)=>g.items.filter((x,i)=>!(index===gi&&i===ii)).map(x=>x.name)));
-   const alternatives=shuffle(fight.filter(x=>!used.has(x)&&x!==item.name));
+   const alternatives=shuffle(getFightBank().filter(x=>!used.has(x)&&x!==item.name));
    if(!alternatives.length){document.getElementById("status").textContent="Não há outra sequência de luta disponível sem repetir uma da sessão.";return}
    group.items[ii]={name:alternatives[0],detail:"Sequência de golpes"};
    document.getElementById("status").textContent="Sequência de luta substituída.";
