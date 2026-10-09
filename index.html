@@ -122,7 +122,35 @@ const fight = [
 const fullBodyCats = new Set(["peito","costas","ombros","bíceps","tríceps","pernas","posterior","composto","core","cardio"]);
 const legCats = new Set(["pernas","posterior","composto","core","cardio"]);
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function chooseUnique(pool,n,exclude=new Set()){return shuffle(pool.filter(x=>!exclude.has(x.name))).slice(0,n)}
+function exerciseUnits(pool,exclude=new Set()){
+ const available=pool.filter(x=>!exclude.has(x.name));
+ const byName=new Map(available.map(x=>[x.name,x]));
+ const seen=new Set(), units=[];
+ for(const ex of available){
+  if(seen.has(ex.name))continue;
+  const match=ex.name.match(/^(.*) ([ED])$/);
+  if(match){
+   const base=match[1], side=match[2], otherName=base+" "+(side==="E"?"D":"E"), other=byName.get(otherName);
+   if(other){
+    const left=side==="E"?ex:other, right=side==="D"?ex:other;
+    units.push([left,right]);seen.add(left.name);seen.add(right.name);continue;
+   }
+  }
+  units.push([ex]);seen.add(ex.name);
+ }
+ return units;
+}
+function chooseUnique(pool,n,exclude=new Set()){
+ for(let attempt=0;attempt<200;attempt++){
+  const units=shuffle(exerciseUnits(pool,exclude)), chosen=[];
+  let count=0;
+  for(const unit of units){
+   if(count+unit.length<=n){chosen.push(...unit);count+=unit.length}
+   if(count===n)return chosen;
+  }
+ }
+ return [];
+}
 function createWorkout(){
  const type=document.getElementById("type").value, label=type==="fullbody"?"Full Body":"Leg Blast";
  const allowed=type==="fullbody"?fullBodyCats:legCats;
@@ -130,7 +158,7 @@ function createWorkout(){
  const first=chooseUnique(pool,12);
  const used=new Set(first.map(x=>x.name));
  const second=chooseUnique(pool,8,used);
- if(first.length!==12||second.length!==8){document.getElementById("status").textContent="Não há exercícios suficientes para montar esta sessão sem repetição.";return}
+ if(first.length!==12||second.length!==8){document.getElementById("status").textContent="Não há exercícios suficientes para montar esta sessão sem repetição e mantendo os lados juntos.";return}
  const combos=shuffle(fight).slice(0,20);
  const groups=[
  {title:"BLOCO 1 — FUNCIONAL",sub:"12 EXERCÍCIOS",items:first.map(x=>({name:x.name,detail:"Exercício funcional"}))},
