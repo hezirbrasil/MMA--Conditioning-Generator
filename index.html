@@ -160,7 +160,7 @@ function renderWorkout(){
  const functional=workoutGroups[0].items.length+workoutGroups[2].items.length;
  const fightCount=workoutGroups[1].items.length+workoutGroups[3].items.length;
  document.getElementById("meta").textContent=total+" itens • "+functional+" funcional + "+fightCount+" luta";
- document.getElementById("blocks").innerHTML=workoutGroups.map((g,gi)=>'<section class="block"><div class="blockhead">'+escHtml(g.title)+'<span>'+g.items.length+(groupIsFunctional(gi)?" EXERCÍCIOS":" SEQUÊNCIAS")+'</span></div>'+g.items.map((it,i)=>'<div class="exercise"><div class="num">'+String(i+1).padStart(2,"0")+'</div><div class="ename">'+escHtml(it.name)+'</div><div class="item-actions"><button class="secondary" data-action="replace" data-group="'+gi+'" data-item="'+i+'">↻ Trocar</button><button class="secondary remove" data-action="remove" data-group="'+gi+'" data-item="'+i+'">✕ Excluir</button></div></div>').join("")+'</section>').join("");
+ document.getElementById("blocks").innerHTML=workoutGroups.map((g,gi)=>'<section class="block"><div class="blockhead">'+escHtml(g.title)+'<span>'+g.items.length+(groupIsFunctional(gi)?" EXERCÍCIOS":" SEQUÊNCIAS")+'</span></div>'+g.items.map((it,i)=>'<div class="exercise"><div class="num">'+String(i+1).padStart(2,"0")+'</div><div class="ename">'+escHtml(it.name)+'</div><div class="item-actions"><button type="button" class="secondary" onclick="window.handleWorkoutAction(event,'+gi+','+i+',0)">↻ Trocar</button><button type="button" class="secondary remove" onclick="window.handleWorkoutAction(event,'+gi+','+i+',1)">✕ Excluir</button></div></div>').join("")+'</section>').join("");
  document.getElementById("result").hidden=false;
  saveWorkout();
 }
@@ -186,10 +186,10 @@ function createWorkout(){
 function workoutText(){const title=document.getElementById("resultName").textContent;const sections=[...document.querySelectorAll(".block")].map(b=>b.querySelector(".blockhead").innerText+"\n"+[...b.querySelectorAll(".exercise .ename")].map((e,i)=>(i+1)+". "+e.innerText).join("\n")).join("\n\n");return "MMA CONDITIONING — "+title+"\n\n"+sections}
 document.getElementById("generate").addEventListener("click",createWorkout);
 document.getElementById("again").addEventListener("click",createWorkout);
-document.getElementById("blocks").addEventListener("click",event=>{
- const button=event.target.closest("button[data-action]");if(!button)return;
- const gi=Number(button.dataset.group),ii=Number(button.dataset.item),group=workoutGroups[gi],item=group&&group.items[ii];if(!item)return;
- const functional=groupIsFunctional(gi), action=button.dataset.action;
+window.handleWorkoutAction=function(event,gi,ii,action){
+ event.preventDefault();
+ const group=workoutGroups[gi],item=group&&group.items[ii];if(!item)return;
+ const functional=groupIsFunctional(gi);
  let targetIndexes=[ii];
  if(functional){
   const pair=pairKey(item.name);
@@ -199,18 +199,16 @@ document.getElementById("blocks").addEventListener("click",event=>{
    if(otherIndex>=0)targetIndexes=[Math.min(ii,otherIndex),Math.max(ii,otherIndex)];
   }
  }
- if(action==="remove"){
+ if(action===1){
   targetIndexes.sort((a,b)=>b-a).forEach(i=>group.items.splice(i,1));
   renderWorkout();
   document.getElementById("status").textContent=functional&&targetIndexes.length===2?"Os dois lados foram removidos apenas deste treino.":"Item removido apenas deste treino.";
   saveWorkout();return;
  }
- if(action==="replace"){
+ if(action===0){
   if(functional){
-   const targetNames=new Set(targetIndexes.map(i=>group.items[i].name));
    const usedNames=new Set(workoutGroups.flatMap((g,index)=>g.items.filter((x,i)=>!(index===gi&&targetIndexes.includes(i))).map(x=>x.name)));
-   targetNames.forEach(n=>usedNames.add(n));
-   const units=shuffle(exerciseUnits(currentPool,usedNames)).filter(unit=>unit.length===targetIndexes.length&&!unit.some(x=>usedNames.has(x.name)));
+   const units=shuffle(exerciseUnits(currentPool,usedNames)).filter(unit=>unit.length===targetIndexes.length);
    const chosen=units[0];
    if(!chosen){document.getElementById("status").textContent=targetIndexes.length===2?"Não encontrei outro par E/D disponível para substituir esse exercício.":"Não encontrei outro exercício funcional disponível sem repetir um da sessão.";return}
    targetIndexes.forEach((idx,j)=>group.items[idx]={name:chosen[j].name,detail:"Exercício funcional"});
@@ -224,7 +222,7 @@ document.getElementById("blocks").addEventListener("click",event=>{
   }
   renderWorkout();saveWorkout();
  }
-});
+};
 document.getElementById("print").addEventListener("click",()=>window.print());
 document.getElementById("copy").addEventListener("click",async()=>{const s=document.getElementById("status");try{await navigator.clipboard.writeText(workoutText());s.textContent="Treino copiado para a área de transferência."}catch(e){const t=document.createElement("textarea");t.value=workoutText();document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();s.textContent="Treino copiado."}});
 </script>
