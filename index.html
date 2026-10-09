@@ -1,56 +1,154 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b0910">
-<title>MMA Conditioning — Training Generator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0910">
+<title>MMA Conditioning — Gerador de Treinos</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
-:root{--bg:#0b0910;--panel:#15111c;--purple:#9b5cff;--line:#332541;--muted:#aaa0b8;--text:#f7f3ff}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#29133d,transparent 35%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.top{height:72px;border-bottom:1px solid #2b2036;display:flex;align-items:center;justify-content:space-between;padding:0 max(20px,calc((100% - 1000px)/2))}.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:1px;font-size:13px}.mark{background:var(--purple);color:#100817;padding:10px;font:800 22px 'Barlow Condensed';box-shadow:4px 4px #49236e}.brand em{color:var(--purple);font-style:normal}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:2px;margin-top:4px}.tag{font-size:10px;color:#d7bdff;border:1px solid #52356b;padding:6px 9px;border-radius:4px}.wrap{max-width:1000px;margin:auto;padding:38px 20px 50px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:800;color:#d7c4f3}.hero h1{font:800 clamp(48px,8vw,76px)/.94 'Barlow Condensed';text-transform:uppercase;margin:17px 0}.hero h1 span{color:var(--purple)}.hero p{color:var(--muted);font-size:14px;line-height:1.7;max-width:550px}.panel{margin-top:28px;background:linear-gradient(145deg,#191321,#110e16);border:1px solid var(--line);border-radius:12px;padding:24px;box-shadow:0 16px 40px #0003}.head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:12px}.head h2{font-size:18px;margin:0}.step{color:#d5baff;background:#2a1a3a;border:1px solid #51306e;border-radius:5px;padding:8px;margin-right:10px;font-size:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid label,.notes label{font-size:12px;font-weight:700;color:#ded5eb;display:grid;gap:8px}select,input,textarea{width:100%;background:#0d0a12;border:1px solid #3a2c49;border-radius:6px;color:var(--text);padding:13px;font:inherit;font-size:13px}button{cursor:pointer;border:0;border-radius:6px;font-weight:800;letter-spacing:.8px;padding:13px 16px}.primary{background:var(--purple);color:#11091c;box-shadow:0 4px #54259a}.secondary{background:#21182d;border:1px solid #49345f;color:#e6d7fb;padding:10px 12px}.checks{display:flex;gap:22px;flex-wrap:wrap;margin:20px 0;color:#cfc4dc;font-size:12px}.checks label{display:flex;align-items:center;gap:8px}.checks input{width:auto;accent-color:var(--purple)}.result-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.actions{display:flex;gap:8px;flex-wrap:wrap}.title-row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:8px 0 20px;margin-bottom:18px}.title-row h2{font:700 36px 'Barlow Condensed';text-transform:uppercase;margin:7px 0}.purple{color:var(--purple)}.stamp{border:2px solid var(--purple);color:var(--purple);font:800 28px 'Barlow Condensed';padding:8px 12px;transform:skew(-5deg)}.block{border:1px solid #382840;background:#100d15;border-radius:8px;overflow:hidden;margin:12px 0}.blockhead{background:#241731;padding:12px 15px;display:flex;justify-content:space-between;font-size:12px;font-weight:800;letter-spacing:1px}.blockhead span{color:#c5a4f5;font-size:10px}.exercise{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:13px 14px;border-top:1px solid #2b2034}.num{font:800 21px 'Barlow Condensed';color:var(--purple)}.ename{font-size:13px;font-weight:700}.detail{display:block;color:var(--muted);font-size:11px;margin-top:4px}.dose{font-size:10px;font-weight:800;white-space:nowrap}.notes{margin-top:20px;display:grid;gap:8px}.foot{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;color:#a89ab8;font-size:10px;letter-spacing:1px}.disclaimer{margin-top:20px;border-left:3px solid var(--purple);padding:12px 14px;background:#15101c;color:var(--muted);font-size:11px;line-height:1.6}footer{border-top:1px solid #2b2036;padding:22px max(20px,calc((100% - 1000px)/2));display:flex;justify-content:space-between;color:#796d87;font-size:9px;letter-spacing:1.2px} [hidden]{display:none!important}
-@media(max-width:600px){.wrap{padding:26px 14px}.panel{padding:17px 13px}.grid{grid-template-columns:1fr}.head{align-items:flex-start}.title-row h2{font-size:30px}.stamp{font-size:21px}.exercise{grid-template-columns:25px 1fr auto;gap:7px;padding:12px 9px}.dose{font-size:9px}.foot,footer{align-items:flex-start;flex-direction:column}}
-@media print{body{background:white;color:#111}.top,.hero,.config,.disclaimer,footer,.actions,.foot button{display:none!important}.wrap{padding:0}.panel{background:white;border:0;box-shadow:none;padding:0}.title-row{border-color:#ddd}.title-row h2,.ename,.dose{color:#111}.block{background:white;border-color:#ccc;break-inside:avoid}.blockhead{background:#eee;color:#111}.exercise{border-color:#ddd}.detail{color:#555}.notes textarea{background:white;color:#111}}
-</style></head>
+:root{--bg:#0b0910;--panel:#15111c;--purple:#9b5cff;--line:#332541;--muted:#aaa0b8;--text:#f7f3ff;--soft:#241731}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#29133d,transparent 36%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+.top{border-bottom:1px solid #2b2036;display:flex;align-items:center;justify-content:space-between;padding:17px max(18px,calc((100% - 1000px)/2))}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:1px;font-size:13px}.mark{background:var(--purple);color:#100817;padding:10px 13px;font:800 23px 'Barlow Condensed';box-shadow:4px 4px #49236e}.brand em{color:var(--purple);font-style:normal}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:2px;margin-top:4px}
+.tag{font-size:10px;color:#d7bdff;border:1px solid #52356b;padding:7px 9px;border-radius:4px}.wrap{max-width:1000px;margin:auto;padding:34px 18px 48px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:800;color:#d7c4f3}.hero h1{font:800 clamp(44px,8vw,76px)/.95 'Barlow Condensed';text-transform:uppercase;margin:15px 0}.hero h1 span{color:var(--purple)}.hero p{color:var(--muted);font-size:14px;line-height:1.7;max-width:580px}
+.panel{margin-top:26px;background:linear-gradient(145deg,#191321,#110e16);border:1px solid var(--line);border-radius:12px;padding:22px;box-shadow:0 16px 40px #0003}.controlrow{display:flex;align-items:end;gap:12px;flex-wrap:wrap}.field{display:grid;gap:8px;flex:1;min-width:180px}.field label{font-size:12px;font-weight:700;color:#ded5eb}select{width:100%;background:#0d0a12;border:1px solid #3a2c49;border-radius:6px;color:var(--text);padding:13px;font:inherit;font-size:13px}
+button{cursor:pointer;border:0;border-radius:6px;font-weight:800;letter-spacing:.4px;padding:13px 16px}.primary{background:var(--purple);color:#11091c;box-shadow:0 4px #54259a}.secondary{background:#21182d;border:1px solid #49345f;color:#e6d7fb}.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.tip{color:var(--muted);font-size:11px;line-height:1.6;margin:16px 0 0}
+.resulthead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.resulthead h2{font-size:18px;margin:0}.title-row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:8px 0 18px;margin:20px 0}.title-row h2{font:700 38px 'Barlow Condensed';text-transform:uppercase;margin:7px 0}.purple{color:var(--purple)}.stamp{border:2px solid var(--purple);color:var(--purple);font:800 27px 'Barlow Condensed';padding:8px 12px;transform:skew(-5deg)}
+.block{border:1px solid #382840;background:#100d15;border-radius:8px;overflow:hidden;margin:14px 0}.blockhead{background:#241731;padding:13px 15px;display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:800;letter-spacing:.7px}.blockhead span{color:#c5a4f5;font-size:10px}.exercise{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid #2b2034}.num{font:800 22px 'Barlow Condensed';color:var(--purple)}.ename{font-size:13px;font-weight:700;line-height:1.5}.foot{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;color:#a89ab8;font-size:10px;letter-spacing:1px}.status{color:#d8c0ff;font-size:12px;min-height:18px;margin-top:12px}footer{border-top:1px solid #2b2036;padding:22px max(18px,calc((100% - 1000px)/2));display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#796d87;font-size:9px;letter-spacing:1.2px}[hidden]{display:none!important}
+@media(max-width:600px){.wrap{padding:25px 12px}.panel{padding:16px 12px}.title-row h2{font-size:31px}.stamp{font-size:21px}.exercise{grid-template-columns:25px 1fr;gap:7px;padding:12px 9px}.foot{align-items:flex-start;flex-direction:column}}
+@media print{body{background:#fff;color:#111}.top,.hero,.config,footer,.buttons,.foot,.tip{display:none!important}.wrap{padding:0}.panel{background:#fff;border:0;box-shadow:none;padding:0}.title-row{border-color:#ddd}.title-row h2,.ename{color:#111}.block{background:#fff;border-color:#ccc;break-inside:avoid}.blockhead{background:#eee;color:#111}.blockhead span,.num{color:#552288}.exercise{border-color:#ddd}}
+</style>
+</head>
 <body>
-<header class="top"><div class="brand"><span class="mark">MC</span><span>MMA <em>CONDITIONING</em><small>TRAINING GENERATOR</small></span></div><span class="tag">BETA 0.1</span></header>
+<header class="top"><div class="brand"><span class="mark">MC</span><span>MMA <em>CONDITIONING</em><small>GERADOR DE TREINOS</small></span></div><span class="tag">FULL BODY • LEG BLAST</span></header>
 <main class="wrap">
-<section class="hero"><div class="eyebrow">● SEU TREINO. SUAS REGRAS.</div><h1>Monte. Treine.<br><span>Supere limites.</span></h1><p>Gere sessões de treino com estrutura, variedade e a identidade do MMA Conditioning.</p></section>
-<section class="panel config"><div class="head"><h2><span class="step">01</span>Configurar treino</h2><span class="eyebrow">PERSONALIZE A SESSÃO</span></div>
-<div class="grid">
-<label>Tipo de treino<select id="type"><option value="fullbody">Full Body</option><option value="core">Core Blast</option><option value="legday">Leg Day</option><option value="mma">MMA Conditioning</option></select></label>
-<label>Nome do treino<input id="name" placeholder="Ex.: Full Body 01"></label>
-<label>Duração total<select id="duration"><option>30</option><option>40</option><option selected>50</option><option>60</option></select></label>
-<label>Quantidade de exercícios<select id="count"><option>6</option><option selected>8</option><option>10</option><option>12</option></select></label>
-<label>Formato<select id="format"><option value="series">Séries tradicionais</option><option value="circuit">Circuito</option><option value="emom">EMOM</option><option value="tabata">Tabata</option><option value="mixed">Formato misto</option></select></label>
-<label>Descanso<select id="rest"><option>30</option><option>45</option><option selected>60</option><option>90</option></select></label>
-</div><div class="checks"><label><input id="warmup" type="checkbox" checked> Incluir aquecimento</label><label><input id="finisher" type="checkbox" checked> Incluir finalização</label></div><button id="generate" class="primary">✦ &nbsp;GERAR TREINO</button></section>
-<section id="result" class="panel" hidden><div class="head result-head"><h2><span class="step">02</span>Treino gerado</h2><div class="actions"><button class="secondary" id="again">↻ Sortear novamente</button><button class="secondary" id="print">Imprimir / PDF</button></div></div>
-<div class="title-row"><div><div class="eyebrow purple">MMA CONDITIONING</div><h2 id="resultName">Full Body</h2><div id="meta" class="detail"></div></div><div class="stamp">MC</div></div><div id="blocks"></div>
-<div class="notes"><label>Observações do treinador<textarea id="notes" rows="3" placeholder="Cargas, ajustes ou orientações para o aluno..."></textarea></label></div><div class="foot"><span>DISCIPLINA • INTENSIDADE • EVOLUÇÃO</span><button id="copy" class="primary">COPIAR FICHA</button></div><p id="status" class="detail" aria-live="polite"></p></section>
-<div class="disclaimer"><strong>Ferramenta de apoio ao treinador.</strong> Revise o volume, a técnica, as cargas e a adequação dos exercícios antes de aplicar o treino. A duração é uma meta configurada, não uma cronometragem exata.</div>
+<section class="hero"><div class="eyebrow">● SEU TREINO. SUAS REGRAS.</div><h1>Monte. Treine.<br><span>Supere limites.</span></h1><p>Gerador direto ao ponto: escolha Full Body ou Leg Blast e receba a sequência fixa em quatro blocos.</p></section>
+<section class="panel config"><div class="controlrow"><div class="field"><label for="type">Tipo de treino</label><select id="type"><option value="fullbody">Full Body</option><option value="legblast">Leg Blast</option></select></div><button id="generate" class="primary">✦ GERAR TREINO</button></div><p class="tip">Formato fixo: 12 exercícios funcionais → 12 sequências de luta → 8 exercícios funcionais → 8 sequências de luta. Os exercícios funcionais não se repetem na mesma sessão. As sequências de luta aparecem por extenso.</p></section>
+<section id="result" class="panel" hidden><div class="resulthead"><h2>SEU TREINO GERADO</h2><div class="buttons" style="margin:0"><button class="secondary" id="again">↻ Gerar outro</button><button class="secondary" id="copy">Copiar treino</button><button class="secondary" id="print">Imprimir / PDF</button></div></div><div class="title-row"><div><div class="eyebrow purple">MMA CONDITIONING</div><h2 id="resultName">FULL BODY</h2><div id="meta" class="tip" style="margin:0"></div></div><div class="stamp">MC</div></div><div id="blocks"></div><div class="foot"><span>DISCIPLINA • INTENSIDADE • EVOLUÇÃO</span><span>40 ITENS • 4 BLOCOS</span></div><div id="status" class="status" aria-live="polite"></div></section>
 </main><footer><span>© MMA CONDITIONING</span><span>FEITO PARA QUEM TREINA DE VERDADE.</span></footer>
 <script>
-const bank={
-fullbody:[
-["Agachamento Goblet","pernas","3 séries • 10–12 repetições"],["Supino máquina","peito","3 séries • 10–12 repetições"],["Puxada na frente","costas","3 séries • 10–12 repetições"],["Remada Aberta","costas","3 séries • 10–12 repetições"],["Desenvolvimento Arnold","ombros","3 séries • 10–12 repetições"],["Flexora deitado","posterior","3 séries • 12–15 repetições"],["Stiff","posterior","3 séries • 10–12 repetições"],["Panturrilha em pé","panturrilha","3 séries • 15–20 repetições"],["Tríceps no cabo","tríceps","3 séries • 12 repetições"],["Rosca bíceps","bíceps","3 séries • 12 repetições"],["Elevação lateral","ombros","3 séries • 12–15 repetições"],["Terra com barra","posterior","3 séries • 8–10 repetições"],["Crucifixo","peito","3 séries • 12 repetições"],["Remada Fechada","costas","3 séries • 10–12 repetições"],["Extensora","quadríceps","3 séries • 12–15 repetições"],["Leg press","quadríceps","3 séries • 10–12 repetições"],["Agachamento Lateral","pernas","3 séries • 10 por lado"],["Remada Unilateral","costas","3 séries • 10–12 por lado"],["Crucifixo invertido","ombros","3 séries • 12–15 repetições"],["Terra + Desenvolvimento","composto","3 séries • 8–10 repetições"]],
-core:[
-["Abdominal remador","core","3 séries • 12–15 repetições"],["Prancha","core","3 séries • 30–45 segundos"],["Abdominal bicicleta","core","3 séries • 20 repetições"],["Abdominal Borboleta","core","3 séries • 15 repetições"],["Prancha lateral","core","3 séries • 30 segundos por lado"],["Escalador","cardio","3 séries • 30 segundos"],["Abdominal infra","core","3 séries • 12–15 repetições"],["Dead bug","core","3 séries • 10 por lado"],["Hollow hold","core","3 séries • 20–30 segundos"],["Abdominal com peso","core","3 séries • 12–15 repetições"]],
-legday:[
-["Agachamento com barra","quadríceps","4 séries • 8–10 repetições"],["Leg press","quadríceps","4 séries • 10–12 repetições"],["Extensora","quadríceps","3 séries • 12–15 repetições"],["Agachamento Goblet","quadríceps","3 séries • 12 repetições"],["Agachamento Lateral","pernas","3 séries • 10 por lado"],["Stiff","posterior","4 séries • 10 repetições"],["Flexora deitado","posterior","3 séries • 12–15 repetições"],["Flexora em pé","posterior","3 séries • 12 por lado"],["Terra com barra","posterior","3 séries • 8–10 repetições"],["Elevação pélvica","glúteos","4 séries • 10–12 repetições"],["Panturrilha em pé","panturrilha","4 séries • 15–20 repetições"],["Afundo alternado","pernas","3 séries • 10 por lado"]],
-mma:[
-["Polichinelo","cardio","40 segundos"],["Polisapato","cardio","40 segundos"],["Escalador","cardio","40 segundos"],["Sprawl","MMA","8–12 repetições controladas"],["Sprawl com salto","MMA","8–10 repetições"],["Salto no step","pliometria","30 segundos"],["Escada de agilidade","agilidade","30–40 segundos"],["Sprint estacionário","cardio","30 segundos"],["Corrida com elevação de joelho","cardio","40 segundos"],["Corrida lateral Touch Down","agilidade","30–40 segundos"],["Abdominal bicicleta","core","20 repetições"],["Agachamento com peso corporal","pernas","15 repetições"],["Flexão de braço","peito","10–15 repetições"],["Prancha","core","30–45 segundos"],["Sombra de boxe","luta","40 segundos de técnica"],["Direto + esquiva","luta","40 segundos alternando lados"]]
-};
-const labels={fullbody:"Full Body",core:"Core Blast",legday:"Leg Day",mma:"MMA Conditioning"};
-let current=null;
-function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function pick(type,count){const all=shuffle(bank[type]),out=[],cats=new Set();for(const e of all){if(out.length>=count)break;if(!cats.has(e[1])){out.push(e);cats.add(e[1])}}for(const e of all){if(out.length>=count)break;if(!out.includes(e))out.push(e)}return out}
-function generate(){const type=document.querySelector("#type").value,format=document.querySelector("#format").value,count=+document.querySelector("#count").value,rest=+document.querySelector("#rest").value,duration=+document.querySelector("#duration").value,items=pick(type,count),blocks=[];
-if(document.querySelector("#warmup").checked)blocks.push({title:"Aquecimento",tag:"PREPARAÇÃO",items:[["Mobilidade dinâmica + elevação gradual da frequência cardíaca","preparação","5–7 minutos"]]});
-if(["circuit","emom","tabata"].includes(format)||type==="mma"){blocks.push({title:type==="mma"?"Rounds de Conditioning":"Bloco principal",tag:format==="emom"?"A CADA MINUTO":format==="tabata"?"20s ON / 10s OFF":format==="circuit"?"CIRCUITO":"CONDITIONING",items:items.map(e=>[e[0],e[1],format==="tabata"?"20s trabalho • 10s descanso":format==="emom"?"Inicie no começo de cada minuto":e[2]])})}
-else{const main=items.filter(e=>!["core","cardio","agilidade","pliometria","MMA","luta"].includes(e[1])),extra=items.filter(e=>!main.includes(e));if(main.length)blocks.push({title:"Bloco principal",tag:"FORÇA E HIPERTROFIA",items:main});if(extra.length)blocks.push({title:"Bloco complementar",tag:"CONDICIONAMENTO",items:extra})}
-if(document.querySelector("#finisher").checked)blocks.push({title:"Finalização",tag:"FECHAMENTO",items:[[type==="mma"?"Sombra de boxe em ritmo progressivo":type==="core"?"Prancha isométrica":"Cardio leve a moderado","finalização",type==="mma"?"2 minutos • técnica antes da velocidade":type==="core"?"2 séries • 30–45 segundos":"3–5 minutos"]]});
-current={type,format,count,rest,duration,items,blocks};document.querySelector("#resultName").textContent=document.querySelector("#name").value.trim()||labels[type];document.querySelector("#meta").textContent=duration+" MIN • "+items.length+" EXERCÍCIOS • DESCANSO "+rest+"s • "+format.toUpperCase();const root=document.querySelector("#blocks");root.innerHTML="";
-blocks.forEach(b=>{const card=document.createElement("section");card.className="block";const h=document.createElement("div");h.className="blockhead";const title=document.createElement("strong");title.textContent=b.title.toUpperCase();const tag=document.createElement("span");tag.textContent=b.tag;h.append(title,tag);card.append(h);b.items.forEach((e,i)=>{const row=document.createElement("div");row.className="exercise";const num=document.createElement("span");num.className="num";num.textContent=String(i+1).padStart(2,"0");const info=document.createElement("span");const n=document.createElement("span");n.className="ename";n.textContent=e[0];const d=document.createElement("span");d.className="detail";d.textContent=e[2];info.append(n,d);const dose=document.createElement("span");dose.className="dose";dose.textContent=e[1]==="preparação"?"PREP":"DESC. "+rest+"s";row.append(num,info,dose);card.append(row)});root.append(card)});
-document.querySelector("#result").hidden=false;document.querySelector("#status").textContent="";document.querySelector("#result").scrollIntoView({behavior:"smooth",block:"start"})}
-function toText(){if(!current)return"";let out=["MMA CONDITIONING — "+(document.querySelector("#name").value.trim()||labels[current.type]),current.duration+" min | "+current.items.length+" exercícios | Descanso "+current.rest+"s",""];current.blocks.forEach(b=>{out.push(b.title.toUpperCase()+" — "+b.tag);b.items.forEach((e,i)=>out.push((i+1)+". "+e[0]+" — "+e[2]));out.push("")});const note=document.querySelector("#notes").value.trim();if(note)out.push("OBSERVAÇÕES: "+note);return out.join("\n")}
-document.querySelector("#generate").addEventListener("click",generate);document.querySelector("#again").addEventListener("click",generate);document.querySelector("#print").addEventListener("click",()=>window.print());document.querySelector("#copy").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(toText())}catch(e){const t=document.createElement("textarea");t.value=toText();document.body.append(t);t.select();document.execCommand("copy");t.remove()}document.querySelector("#status").textContent="Ficha copiada para a área de transferência."});
-document.querySelector("#type").addEventListener("change",e=>{document.querySelector("#name").value=labels[e.target.value]});
-</script></body></html>
+const bank = [
+{name:"Supino",cat:"peito",types:["fullbody"]},
+{name:"Supino pegada fechada",cat:"peito",types:["fullbody"]},
+{name:"Crucifixo",cat:"peito",types:["fullbody"]},
+{name:"Flexão + Toque Alternado dos Pés",cat:"peito",types:["fullbody"]},
+{name:"Pulldown",cat:"costas",types:["fullbody"]},
+{name:"Remada Aberta",cat:"costas",types:["fullbody"]},
+{name:"Remada Fechada",cat:"costas",types:["fullbody"]},
+{name:"Remada Alta",cat:"costas",types:["fullbody"]},
+{name:"Remada unilateral E",cat:"costas",types:["fullbody"]},
+{name:"Remada unilateral D",cat:"costas",types:["fullbody"]},
+{name:"Desenvolvimento",cat:"ombros",types:["fullbody"]},
+{name:"Desenvolvimento Arnold",cat:"ombros",types:["fullbody"]},
+{name:"Elevação Lateral",cat:"ombros",types:["fullbody"]},
+{name:"Elevação Frontal",cat:"ombros",types:["fullbody"]},
+{name:"Crucifixo Invertido",cat:"ombros",types:["fullbody"]},
+{name:"Bíceps com Halter",cat:"bíceps",types:["fullbody"]},
+{name:"Bíceps com Isometria Unilateral",cat:"bíceps",types:["fullbody"]},
+{name:"Bíceps com Halter com Rotação",cat:"bíceps",types:["fullbody"]},
+{name:"Tríceps Francês com Halter",cat:"tríceps",types:["fullbody"]},
+{name:"Tríceps Coice com Halter",cat:"tríceps",types:["fullbody"]},
+{name:"Agachamento Livre",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Agachamento Neutro",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Agachamento Sumô",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Agachamento com Rotação",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Agachamento Abre e Fecha Tocando o Solo",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Agachamento com Pico de Contração e Salto",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Agachamento com Salto",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Agachamento Goblet",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Agachamento Lateral",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Avanço alternado",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Afundo com Troca de Base",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Afundo lateral E",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Afundo lateral D",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Terra",cat:"posterior",types:["fullbody","legblast"]},
+{name:"Stiff",cat:"posterior",types:["fullbody","legblast"]},
+{name:"Stiff unilateral E",cat:"posterior",types:["fullbody","legblast"]},
+{name:"Stiff unilateral D",cat:"posterior",types:["fullbody","legblast"]},
+{name:"Panturrilha",cat:"pernas",types:["fullbody","legblast"]},
+{name:"Terra + Desenvolvimento",cat:"composto",types:["fullbody","legblast"]},
+{name:"Agachamento + Desenvolvimento",cat:"composto",types:["fullbody","legblast"]},
+{name:"Polichinelo + Desenvolvimento",cat:"composto",types:["fullbody","legblast"]},
+{name:"Agachamento + Panturrilha",cat:"composto",types:["fullbody","legblast"]},
+{name:"Abdominal Remador",cat:"core",types:["fullbody","legblast"]},
+{name:"Abdominal Remador Unilateral",cat:"core",types:["fullbody","legblast"]},
+{name:"Abdominal Bicicleta",cat:"core",types:["fullbody","legblast"]},
+{name:"Abdominal Oblíquo Externo",cat:"core",types:["fullbody","legblast"]},
+{name:"Abdominal + Jab e Direto",cat:"core",types:["fullbody","legblast"]},
+{name:"Abdominal Infra",cat:"core",types:["fullbody","legblast"]},
+{name:"Abdominal Infra Alternado",cat:"core",types:["fullbody","legblast"]},
+{name:"Abdominal Supra com Rotação de Tronco",cat:"core",types:["fullbody","legblast"]},
+{name:"Abdominal Russian Twist",cat:"core",types:["fullbody","legblast"]},
+{name:"Superman",cat:"core",types:["fullbody","legblast"]},
+{name:"Abdominal passando as pernas por cima do halter",cat:"core",types:["fullbody","legblast"]},
+{name:"Flexão de quadril com toque alternado do pé em pé",cat:"core",types:["fullbody","legblast"]},
+{name:"Prancha",cat:"core",types:["fullbody","legblast"]},
+{name:"Prancha Alternada",cat:"core",types:["fullbody","legblast"]},
+{name:"Prancha 3 Apoios E",cat:"core",types:["fullbody","legblast"]},
+{name:"Prancha 3 Apoios D",cat:"core",types:["fullbody","legblast"]},
+{name:"Prancha Tocando o Pé",cat:"core",types:["fullbody","legblast"]},
+{name:"Prancha Abre e Fecha",cat:"core",types:["fullbody","legblast"]},
+{name:"Prancha T",cat:"core",types:["fullbody","legblast"]},
+{name:"Escalador",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Sprawl",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Sprawl com Salto",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Salto no Step",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Sprint",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Corrida Lateral com Touch Down",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Polichinelo",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Polichinelo Horizontal",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Polisapato",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Hand Walk",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Elevação de Joelho no Step",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Senta, Levanta e Pula",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Joelhada no Step E",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Joelhada no Step D",cat:"cardio",types:["fullbody","legblast"]},
+{name:"Joelhada no Step Alternada",cat:"cardio",types:["fullbody","legblast"]}
+];
+const fight = [
+"Jab + Direto","Jab + Direto + Cruzado da frente","Jab + Direto + Cruzado de trás","Jab + Uppercut da frente + Cruzado da frente",
+"Jab + Direto + Chute baixo","Jab + Direto + Chute médio","Jab + Cruzado da frente + Chute baixo","Direto + Cruzado da frente + Chute médio",
+"Jab + Direto + Chute frontal","Jab + Direto + Joelhada frontal","Jab + Cruzado da frente + Direto + Chute baixo","Direto + Uppercut da frente + Cruzado da frente",
+"Jab + Direto + Cruzado da frente + Cruzado de trás","Jab + Direto + Chute baixo + Direto","Jab + Cruzado da frente + Direto + Chute médio",
+"Direto + Cruzado de trás + Chute frontal","Jab + Direto + Chute alto","Jab + Cruzado da frente + Chute baixo + Direto",
+"Jab + Direto + Esquiva + Cruzado da frente","Direto + Recuo + Jab + Direto",
+"Jab + Esquiva + Cruzado da frente + Chute baixo","Cruzado da frente + Recuo + Direto",
+"Jab + Direto + Uppercut de trás + Cruzado da frente","Jab + Direto + Joelhada frontal + Cruzado da frente",
+"Direto + Esquiva + Cruzado da frente + Direto","Jab + Direto + Chute médio + Cruzado da frente",
+"Jab + Cruzado da frente + Cruzado de trás + Chute baixo","Jab + Direto + Chute frontal + Direto",
+"Jab + Direto + Esquiva + Cruzado de trás","Jab + Recuo + Direto"
+];
+const fullBodyCats = new Set(["peito","costas","ombros","bíceps","tríceps","pernas","posterior","composto","core","cardio"]);
+const legCats = new Set(["pernas","posterior","composto","core","cardio"]);
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function chooseUnique(pool,n,exclude=new Set()){return shuffle(pool.filter(x=>!exclude.has(x.name))).slice(0,n)}
+function createWorkout(){
+ const type=document.getElementById("type").value, label=type==="fullbody"?"Full Body":"Leg Blast";
+ const allowed=type==="fullbody"?fullBodyCats:legCats;
+ const pool=bank.filter(x=>allowed.has(x.cat));
+ const first=chooseUnique(pool,12);
+ const used=new Set(first.map(x=>x.name));
+ const second=chooseUnique(pool,8,used);
+ if(first.length!==12||second.length!==8){document.getElementById("status").textContent="Não há exercícios suficientes para montar esta sessão sem repetição.";return}
+ const combos=shuffle(fight).slice(0,20);
+ const groups=[
+ {title:"BLOCO 1 — FUNCIONAL",sub:"12 EXERCÍCIOS",items:first.map(x=>({name:x.name,detail:"Exercício funcional"}))},
+ {title:"BLOCO 2 — LUTA",sub:"12 SEQUÊNCIAS",items:combos.slice(0,12).map(x=>({name:x,detail:"Sequência de golpes"}))},
+ {title:"BLOCO 3 — FUNCIONAL",sub:"8 EXERCÍCIOS",items:second.map(x=>({name:x.name,detail:"Exercício funcional"}))},
+ {title:"BLOCO 4 — LUTA",sub:"8 SEQUÊNCIAS",items:combos.slice(12,20).map(x=>({name:x,detail:"Sequência de golpes"}))}
+ ];
+ document.getElementById("resultName").textContent=label.toUpperCase();
+ document.getElementById("meta").textContent="40 itens • 12 funcional + 12 luta + 8 funcional + 8 luta";
+ document.getElementById("blocks").innerHTML=groups.map(g=>'<section class="block"><div class="blockhead">'+g.title+'<span>'+g.sub+'</span></div>'+g.items.map((it,i)=>'<div class="exercise"><div class="num">'+String(i+1).padStart(2,"0")+'</div><div class="ename">'+it.name+'</div></div>').join("")+'</section>').join("");
+ document.getElementById("result").hidden=false;
+ document.getElementById("status").textContent="Treino gerado. Os 20 exercícios funcionais são únicos; as sequências de luta são exibidas por extenso.";
+ try{localStorage.setItem("mc-last-workout",JSON.stringify({type:label,groups,createdAt:new Date().toISOString()}))}catch(e){}
+}
+function workoutText(){const title=document.getElementById("resultName").textContent;const sections=[...document.querySelectorAll(".block")].map(b=>b.querySelector(".blockhead").innerText+"\n"+[...b.querySelectorAll(".exercise .ename")].map((e,i)=>(i+1)+". "+e.innerText).join("\n")).join("\n\n");return "MMA CONDITIONING — "+title+"\n\n"+sections}
+document.getElementById("generate").addEventListener("click",createWorkout);
+document.getElementById("again").addEventListener("click",createWorkout);
+document.getElementById("print").addEventListener("click",()=>window.print());
+document.getElementById("copy").addEventListener("click",async()=>{const s=document.getElementById("status");try{await navigator.clipboard.writeText(workoutText());s.textContent="Treino copiado para a área de transferência."}catch(e){const t=document.createElement("textarea");t.value=workoutText();document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();s.textContent="Treino copiado."}});
+</script>
+</body></html>
