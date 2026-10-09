@@ -25,7 +25,7 @@ button{cursor:pointer;border:0;border-radius:6px;font-weight:800;letter-spacing:
 <main class="wrap">
 <section class="hero"><div class="eyebrow">● SEU TREINO. SUAS REGRAS.</div><h1>Monte. Treine.<br><span>Supere limites.</span></h1><p>Gerador direto ao ponto: escolha Full Body ou Leg Blast e receba a sequência fixa em quatro blocos.</p></section>
 <section class="panel config"><div class="controlrow"><div class="field"><label for="type">Tipo de treino</label><select id="type"><option value="fullbody">Full Body</option><option value="legblast">Leg Blast</option></select></div><button id="generate" class="primary">✦ GERAR TREINO</button></div><p class="tip">Formato fixo: 12 exercícios funcionais → 12 sequências de luta → 8 exercícios funcionais → 8 sequências de luta. Os exercícios funcionais não se repetem na mesma sessão. As sequências de luta aparecem por extenso.</p></section>
-<section id="result" class="panel" hidden><div class="resulthead"><h2>SEU TREINO GERADO</h2><div class="buttons" style="margin:0"><button class="secondary" id="again">↻ Gerar outro</button><button class="secondary" id="copy">Copiar treino</button><button class="secondary" id="print">Imprimir / PDF</button></div></div><div class="title-row"><div><div class="eyebrow purple">MMA CONDITIONING</div><h2 id="resultName">FULL BODY</h2><div id="meta" class="tip" style="margin:0"></div></div><div class="stamp">MC</div></div><div id="blocks"></div><div class="foot"><span>DISCIPLINA • INTENSIDADE • EVOLUÇÃO</span><span>40 ITENS • 4 BLOCOS</span></div><div id="status" class="status" aria-live="polite"></div></section>
+<section id="result" class="panel" hidden><div class="resulthead"><h2>SEU TREINO GERADO</h2><div class="buttons" style="margin:0"><button class="secondary" id="again">↻ Gerar outro</button><button class="secondary" id="copy">Copiar treino</button><button class="secondary" id="print">Imprimir / PDF</button></div></div><div class="title-row"><div><div class="eyebrow purple">MMA CONDITIONING</div><h2 id="resultName">FULL BODY</h2><div id="meta" class="tip" style="margin:0"></div></div><div class="stamp">MC</div></div><div id="blocks"></div><div class="foot"><span>DISCIPLINA • INTENSIDADE • EVOLUÇÃO</span><span>TREINO PERSONALIZÁVEL • 4 BLOCOS</span></div><div id="status" class="status" aria-live="polite"></div></section>
 </main><footer><span>© MMA CONDITIONING</span><span>FEITO PARA QUEM TREINA DE VERDADE.</span></footer>
 <script>
 const bank = [
@@ -215,7 +215,6 @@ document.getElementById("blocks").addEventListener("click",event=>{
    const chosen=units[0];
    if(!chosen){document.getElementById("status").textContent=targetIndexes.length===2?"Não encontrei outro par E/D disponível para substituir esse exercício.":"Não encontrei outro exercício funcional disponível sem repetir um da sessão.";return}
    targetIndexes.forEach((idx,j)=>group.items[idx]={name:chosen[j].name,detail:"Exercício funcional"});
-   group.items.sort((a,b)=>{const ia=group.items.indexOf(a),ib=group.items.indexOf(b);return ia-ib});
    document.getElementById("status").textContent=targetIndexes.length===2?"Par substituído, mantendo E seguido de D.":"Exercício substituído.";
   }else{
    const used=new Set(workoutGroups.flatMap((g,index)=>g.items.filter((x,i)=>!(index===gi&&i===ii)).map(x=>x.name)));
