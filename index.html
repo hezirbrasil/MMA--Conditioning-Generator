@@ -299,7 +299,7 @@ function getBlockAddOptions(gi){
   const used=new Set(workoutGroups.flatMap(g=>g.items.map(x=>x.name)));
   const units=exerciseUnits(currentPool).filter(unit=>!unit.some(x=>used.has(x.name)));
   if(!units.length)return '<option value="">Nenhum exercício disponível sem repetir</option>';
-  return '<option value="">Escolha um exercício funcional…</option>'+units.map(unit=>{const value=unit.map(x=>x.name).join("|||");const label=unit.length===2?unit[0].name.replace(/ E$/,"")+" (E + D)":unit[0].name;return '<option value="'+escHtml(value)+'">'+escHtml(label)+'</option>'}).join("");
+  return '<option value="">Selecione um exercício…</option>'+units.map(unit=>{const value=unit.map(x=>x.name).join("|||");const label=unit.length===2?unit[0].name.replace(/ E$/,"")+" (E + D)":unit[0].name;return '<option value="'+escHtml(value)+'">'+escHtml(label)+'</option>'}).join("");
  }
  const used=new Set(workoutGroups.flatMap(g=>g.items.map(x=>x.name)));
  const options=getFightBank().filter(x=>!used.has(x));
