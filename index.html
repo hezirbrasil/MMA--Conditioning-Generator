@@ -163,7 +163,8 @@ function chooseUnique(pool,n,exclude=new Set()){
  return [];
 }
 let workoutGroups=[], currentPool=[], currentLabel="Full Body";
-function loadCustomFight(){try{const saved=JSON.parse(localStorage.getItem("mc-custom-fight")||"[]");return Array.isArray(saved)?saved.filter(x=>typeof x==="string"&&x.trim()):[]}catch(e){return []}}
+function normalizeFightNames(name){return String(name).replaceAll("Uppercut da frente","Uppercut F").replaceAll("Uppercut de trás","Uppercut T").replaceAll("Cruzado da frente","Cruzado F").replaceAll("Cruzado de trás","Cruzado T").replace(/Chute baixo(?! [FT])/g,"Chute baixo F").replace(/Chute médio(?! [FT])/g,"Chute médio F").replace(/Chute alto(?! [FT])/g,"Chute alto F").replace(/Chute frontal(?! [FT])/g,"Chute frontal F")}
+function loadCustomFight(){try{const saved=JSON.parse(localStorage.getItem("mc-custom-fight")||"[]");return Array.isArray(saved)?saved.filter(x=>typeof x==="string"&&x.trim()).map(normalizeFightNames):[]}catch(e){return []}}
 function getFightBank(){return [...fight,...loadCustomFight()]}
 let sequenceDraft=[];
 function renderSequenceDraft(){
@@ -338,7 +339,7 @@ function createWorkout(){
  const used=new Set(first.map(x=>x.name));
  const second=chooseUnique(currentPool,8,used);
  if(first.length!==12||second.length!==8){document.getElementById("status").textContent="Não há exercícios suficientes para montar esta sessão sem repetição e mantendo os lados juntos.";return}
- const combos=shuffle(getFightBank()).slice(0,20);
+ const combos=shuffle(getFightBank().map(normalizeFightNames)).slice(0,20);
  workoutGroups=[
  {title:"BLOCO 1 — FUNCIONAL",items:first.map(x=>({name:x.name,detail:"Exercício funcional"}))},
  {title:"BLOCO 2 — LUTA",items:combos.slice(0,12).map(x=>({name:x,detail:"Sequência de golpes"}))},
