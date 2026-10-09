@@ -164,11 +164,11 @@ function saveCustomBank(items){localStorage.setItem("mc-custom-exercises",JSON.s
 function addExerciseToBank(event){
  event.preventDefault();
  const nameInput=document.getElementById("newExerciseName"),cat=document.getElementById("newExerciseCategory").value,paired=document.getElementById("newExercisePair").checked,status=document.getElementById("addExerciseStatus");
- let name=nameInput.value.trim().replace(/\\s+/g," ");
+ let name=nameInput.value.trim().replace(/\s+/g," ");
  if(!name){status.textContent="Digite o nome do exercício.";return}
  const sideMatch=name.match(/^(.*) ([ED])$/i);
  if(sideMatch&&!paired){status.textContent="Para manter os lados juntos, marque a opção unilateral E/D.";return}
- if(paired){name=name.replace(/\\s+[ED]$/i,"").trim();if(!name){status.textContent="Digite o nome-base do exercício.";return}}
+ if(paired){name=name.replace(/\s+[ED]$/i,"").trim();if(!name){status.textContent="Digite o nome-base do exercício.";return}}
  const names=paired?[name+" E",name+" D"]:[name];
  const existing=getExerciseBank().map(x=>x.name.toLocaleLowerCase("pt-BR"));
  if(names.some(n=>existing.includes(n.toLocaleLowerCase("pt-BR")))){status.textContent="Esse exercício, ou um dos lados, já está cadastrado.";return}
