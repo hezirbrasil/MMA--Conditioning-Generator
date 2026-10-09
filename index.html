@@ -162,6 +162,55 @@ function chooseUnique(pool,n,exclude=new Set()){
  return [];
 }
 let workoutGroups=[], currentPool=[], currentLabel="Full Body";
+function loadCustomFight(){try{const saved=JSON.parse(localStorage.getItem("mc-custom-fight")||"[]");return Array.isArray(saved)?saved.filter(x=>typeof x==="string"&&x.trim()):[]}catch(e){return []}}
+function getFightBank(){return [...fight,...loadCustomFight()]}
+let sequenceDraft=[];
+function renderSequenceDraft(){
+ const box=document.getElementById("sequencePreview");
+ box.innerHTML=sequenceDraft.length?sequenceDraft.map((name,i)=>'<span class="sequence-chip">'+(i+1)+'. '+escHtml(name)+'</span>').join(""):'<span class="bank-empty">Sua sequência aparecerá aqui.</span>';
+}
+function renderCustomFightBank(){
+ const items=loadCustomFight(),box=document.getElementById("customFightBank");
+ box.innerHTML=items.length?items.map((name,i)=>'<div class="fight-bank-item"><span class="fight-bank-name">'+escHtml(name)+'</span><span class="fight-bank-actions"><button type="button" class="secondary" data-custom-fight="'+i+'" data-fight-target="1">＋ Bloco 2</button><button type="button" class="secondary" data-custom-fight="'+i+'" data-fight-target="3">＋ Bloco 4</button><button type="button" class="secondary remove" data-custom-fight-delete="'+i+'">Excluir</button></span></div>').join(""):'<div class="bank-empty">Você ainda não salvou sequências personalizadas.</div>';
+}
+document.getElementById("addTechnique").addEventListener("click",()=>{
+ sequenceDraft.push(document.getElementById("techniqueSelect").value);renderSequenceDraft();
+ document.getElementById("sequenceStatus").textContent="Golpe adicionado à sequência.";
+});
+document.getElementById("undoTechnique").addEventListener("click",()=>{
+ if(sequenceDraft.length)sequenceDraft.pop();renderSequenceDraft();
+ document.getElementById("sequenceStatus").textContent=sequenceDraft.length?"Último golpe removido.":"A sequência está vazia.";
+});
+document.getElementById("clearSequence").addEventListener("click",()=>{
+ sequenceDraft=[];renderSequenceDraft();document.getElementById("sequenceStatus").textContent="Sequência limpa.";
+});
+document.getElementById("saveSequence").addEventListener("click",()=>{
+ if(sequenceDraft.length<2){document.getElementById("sequenceStatus").textContent="Adicione pelo menos dois golpes ou movimentos.";return}
+ const name=sequenceDraft.join(" + ");
+ if(getFightBank().some(x=>x.toLocaleLowerCase("pt-BR")===name.toLocaleLowerCase("pt-BR"))){document.getElementById("sequenceStatus").textContent="Essa sequência já existe no banco.";return}
+ const custom=loadCustomFight();custom.push(name);
+ try{localStorage.setItem("mc-custom-fight",JSON.stringify(custom))}catch(e){document.getElementById("sequenceStatus").textContent="Não consegui salvar neste navegador.";return}
+ sequenceDraft=[];renderSequenceDraft();renderCustomFightBank();
+ document.getElementById("sequenceStatus").textContent="Sequência salva! Ela estará disponível nos próximos treinos.";
+});
+document.getElementById("customFightBank").addEventListener("click",event=>{
+ const add=event.target.closest("button[data-custom-fight][data-fight-target]");
+ if(add){
+  const name=loadCustomFight()[Number(add.dataset.customFight)],gi=Number(add.dataset.fightTarget);
+  if(!name)return;
+  if(!workoutGroups.length){document.getElementById("sequenceStatus").textContent="Gere um treino primeiro para adicionar a sequência a um bloco.";return}
+  if(workoutGroups.some(g=>g.items.some(x=>x.name===name))){document.getElementById("sequenceStatus").textContent="Essa sequência já está no treino.";return}
+  workoutGroups[gi].items.push({name,detail:"Sequência de golpes"});
+  renderWorkout();document.getElementById("status").textContent="Sequência adicionada ao BLOCO "+(gi+1)+".";
+  document.getElementById("result").scrollIntoView({behavior:"smooth",block:"start"});return;
+ }
+ const del=event.target.closest("button[data-custom-fight-delete]");
+ if(del){
+  const items=loadCustomFight();items.splice(Number(del.dataset.customFightDelete),1);
+  localStorage.setItem("mc-custom-fight",JSON.stringify(items));renderCustomFightBank();
+  document.getElementById("sequenceStatus").textContent="Sequência removida do banco personalizado.";
+ }
+});
 function loadCustomBank(){try{const saved=JSON.parse(localStorage.getItem("mc-custom-exercises")||"[]");return Array.isArray(saved)?saved.filter(x=>x&&typeof x.name==="string"&&typeof x.cat==="string"):[]}catch(e){return []}}
 function getExerciseBank(){return [...bank,...loadCustomBank()]}
 function saveCustomBank(items){localStorage.setItem("mc-custom-exercises",JSON.stringify(items))}
@@ -200,6 +249,8 @@ document.getElementById("bankList").addEventListener("click",event=>{
  window.addBankExerciseToBlock(event,button.dataset.bankName,Number(button.dataset.bankTarget));
 });
 renderExerciseBank();
+renderSequenceDraft();
+renderCustomFightBank();
 function escHtml(value){return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
 function pairKey(name){const m=name.match(/^(.*) ([ED])$/);return m?{base:m[1],side:m[2]}:null}
 function groupIsFunctional(index){return index===0||index===2}
