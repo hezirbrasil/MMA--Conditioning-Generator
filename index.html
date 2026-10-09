@@ -470,21 +470,24 @@ window.openReplacePicker=function(event,gi,ii){
  let options=[];
  if(functional){
   const used=new Set(workoutGroups.flatMap((g,gidx)=>g.items.filter((x,i)=>!(gidx===gi&&indexes.includes(i))).map(x=>x.name)));
-  options=shuffle(exerciseUnits(currentPool,used)).filter(unit=>unit.length===indexes.length).map(unit=>({value:unit.map(x=>x.name).join("|||"),label:unit.length===2?unit[0].name.replace(/ E$/,"")+" (E + D)":unit[0].name}));
+  options=shuffle(exerciseUnits(currentPool,used)).filter(unit=>unit.length===indexes.length).map(unit=>({value:unit.map(x=>x.name).join("|||"),label:unit.length===2?unit[0].name.replace(/ E$/,"")+" (E + D)":unit[0].name,category:unit[0].cat||"Outros"}));
  }else{
   const used=new Set(workoutGroups.flatMap((g,gidx)=>g.items.filter((x,i)=>!(gidx===gi&&i===ii)).map(x=>x.name)));
-  options=shuffle(getFightBank().filter(x=>!used.has(x)&&x!==item.name)).map(x=>({value:x,label:x}));
+  options=shuffle(getFightBank().filter(x=>!used.has(x)&&x!==item.name)).map(x=>({value:x,label:x,category:/chute|joelhada/i.test(x)?"Chutes e joelhadas":/esquiva|recuo|bloqueio/i.test(x)?"Defesa e movimentação":/polichinelo|touch down|sprawl|agachamento|escalador/i.test(x)?"Luta + funcional":"Combinações de mãos"}));
  }
  const row=event.currentTarget.closest(".exercise");
  const panel=document.createElement("div");panel.className="replace-picker";panel.style.cssText="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px;margin:0 0 10px 42px;background:#211a31;border:1px solid #7650a8;border-radius:10px";
  if(!options.length){panel.textContent="Não há opções disponíveis sem repetir itens deste treino.";row.insertAdjacentElement("afterend",panel);return;}
- const select=document.createElement("select");select.style.cssText="flex:1;min-width:220px;padding:10px;border-radius:8px;background:#15111f;color:#fff;border:1px solid #7650a8";
- const first=document.createElement("option");first.value="";first.textContent="Escolha o que colocar no lugar…";select.appendChild(first);
- options.forEach(o=>{const op=document.createElement("option");op.value=o.value;op.textContent=o.label;select.appendChild(op)});
+ const categorySelect=document.createElement("select");categorySelect.style.cssText="flex:1;min-width:150px;padding:10px;border-radius:8px;background:#15111f;color:#fff;border:1px solid #7650a8";
+ const chooseCategory=document.createElement("option");chooseCategory.value="";chooseCategory.textContent="1. Escolha a categoria…";categorySelect.appendChild(chooseCategory);
+ [...new Set(options.map(o=>o.category))].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(cat=>{const op=document.createElement("option");op.value=cat;op.textContent=cat;categorySelect.appendChild(op)});
+ const select=document.createElement("select");select.style.cssText="flex:1;min-width:220px;padding:10px;border-radius:8px;background:#15111f;color:#fff;border:1px solid #7650a8";select.disabled=true;
+ const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent="2. Escolha o item…";select.appendChild(placeholder);
+ categorySelect.onchange=function(){select.innerHTML="";const first=document.createElement("option");first.value="";first.textContent="2. Escolha o item…";select.appendChild(first);options.filter(o=>o.category===categorySelect.value).forEach(o=>{const op=document.createElement("option");op.value=o.value;op.textContent=o.label;select.appendChild(op)});select.disabled=!categorySelect.value;};
  const apply=document.createElement("button");apply.type="button";apply.className="primary";apply.textContent="Substituir";
  apply.onclick=function(){if(!select.value){select.focus();return;}const names=select.value.split("|||");indexes.forEach((idx,j)=>group.items[idx]={name:names[j],detail:functional?"Exercício funcional":"Sequência de golpes"});panel.remove();renderWorkout();document.getElementById("status").textContent="Substituição realizada com a opção escolhida.";};
  const cancel=document.createElement("button");cancel.type="button";cancel.className="secondary";cancel.textContent="Cancelar";cancel.onclick=()=>panel.remove();
- panel.append(select,apply,cancel);row.insertAdjacentElement("afterend",panel);select.focus();
+ panel.append(categorySelect,select,apply,cancel);row.insertAdjacentElement("afterend",panel);categorySelect.focus();
 };
 window.handleWorkoutAction=function(event,gi,ii,action){
  event.preventDefault();
