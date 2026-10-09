@@ -265,7 +265,7 @@ function renderWorkout(){
  const functional=workoutGroups[0].items.length+workoutGroups[2].items.length;
  const fightCount=workoutGroups[1].items.length+workoutGroups[3].items.length;
  document.getElementById("meta").textContent=total+" itens • "+functional+" funcional + "+fightCount+" luta";
- document.getElementById("blocks").innerHTML=workoutGroups.map((g,gi)=>'<section class="block"><div class="blockhead">'+escHtml(g.title)+'<span>'+g.items.length+(groupIsFunctional(gi)?" EXERCÍCIOS":" SEQUÊNCIAS")+'</span></div>'+g.items.map((it,i)=>'<div class="exercise" draggable="true" data-drag-group="'+gi+'" data-drag-index="'+i+'" ondragstart="window.workoutDragStart(event,'+gi+','+i+')" ondragover="window.workoutDragOver(event)" ondrop="window.workoutDrop(event,'+gi+','+i+')" ondragend="window.workoutDragEnd(event)"><div class="num">'+String(i+1).padStart(2,"0")+'</div><div class="ename">'+escHtml(it.name)+'</div><div class="item-actions"><button type="button" class="secondary move" aria-label="Mover para cima" onclick="window.handleWorkoutAction(event,'+gi+','+i+',2)">↑</button><button type="button" class="secondary move" aria-label="Mover para baixo" onclick="window.handleWorkoutAction(event,'+gi+','+i+',3)">↓</button><button type="button" class="secondary" onclick="window.handleWorkoutAction(event,'+gi+','+i+',0)">↻ Trocar</button>'+(groupIsFunctional(gi)?'':'<button type="button" class="secondary" onclick="window.editSingleFightMove(event,'+gi+','+i+')">✎ Editar golpe</button>')+'<button type="button" class="secondary remove" onclick="window.handleWorkoutAction(event,'+gi+','+i+',1)">✕ Excluir</button></div></div>').join("")+'</section>').join("");
+ document.getElementById("blocks").innerHTML=workoutGroups.map((g,gi)=>'<section class="block"><div class="blockhead">'+escHtml(g.title)+'<span>'+g.items.length+(groupIsFunctional(gi)?" EXERCÍCIOS":" SEQUÊNCIAS")+'</span></div>'+g.items.map((it,i)=>'<div class="exercise" draggable="true" data-drag-group="'+gi+'" data-drag-index="'+i+'" ondragstart="window.workoutDragStart(event,'+gi+','+i+')" ondragover="window.workoutDragOver(event)" ondrop="window.workoutDrop(event,'+gi+','+i+')" ondragend="window.workoutDragEnd(event)"><div class="num">'+String(i+1).padStart(2,"0")+'</div><div class="ename">'+escHtml(it.name)+'</div><div class="item-actions"><button type="button" class="secondary move" aria-label="Mover para cima" onclick="window.handleWorkoutAction(event,'+gi+','+i+',2)">↑</button><button type="button" class="secondary move" aria-label="Mover para baixo" onclick="window.handleWorkoutAction(event,'+gi+','+i+',3)">↓</button><button type="button" class="secondary" onclick="window.openReplacePicker(event,'+gi+','+i+')">↻ Trocar</button>'+(groupIsFunctional(gi)?'':'<button type="button" class="secondary" onclick="window.editSingleFightMove(event,'+gi+','+i+')">✎ Editar golpe</button>')+'<button type="button" class="secondary remove" onclick="window.handleWorkoutAction(event,'+gi+','+i+',1)">✕ Excluir</button></div></div>').join("")+'</section>').join("");
  document.getElementById("result").hidden=false;
  if(!document.getElementById("playOverlay").hidden)renderPlay();
  saveWorkout();
@@ -460,6 +460,32 @@ document.getElementById("applyFightEdit").addEventListener("click",()=>{
  document.getElementById("status").textContent="Golpe alterado: "+previous+" → "+replacement+". Os demais golpes foram mantidos.";
  fightEditTarget=null;
 });
+window.openReplacePicker=function(event,gi,ii){
+ event.preventDefault();
+ const group=workoutGroups[gi],item=group&&group.items[ii];if(!item)return;
+ document.querySelectorAll(".replace-picker").forEach(x=>x.remove());
+ const functional=groupIsFunctional(gi);
+ let indexes=[ii];
+ if(functional){const pair=pairKey(item.name);if(pair){const otherName=pair.base+" "+(pair.side==="E"?"D":"E");const oi=group.items.findIndex((x,i)=>i!==ii&&x.name===otherName);if(oi>=0)indexes=[Math.min(ii,oi),Math.max(ii,oi)];}}
+ let options=[];
+ if(functional){
+  const used=new Set(workoutGroups.flatMap((g,gidx)=>g.items.filter((x,i)=>!(gidx===gi&&indexes.includes(i))).map(x=>x.name)));
+  options=shuffle(exerciseUnits(currentPool,used)).filter(unit=>unit.length===indexes.length).map(unit=>({value:unit.map(x=>x.name).join("|||"),label:unit.length===2?unit[0].name.replace(/ E$/,"")+" (E + D)":unit[0].name}));
+ }else{
+  const used=new Set(workoutGroups.flatMap((g,gidx)=>g.items.filter((x,i)=>!(gidx===gi&&i===ii)).map(x=>x.name)));
+  options=shuffle(getFightBank().filter(x=>!used.has(x)&&x!==item.name)).map(x=>({value:x,label:x}));
+ }
+ const row=event.currentTarget.closest(".exercise");
+ const panel=document.createElement("div");panel.className="replace-picker";panel.style.cssText="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px;margin:0 0 10px 42px;background:#211a31;border:1px solid #7650a8;border-radius:10px";
+ if(!options.length){panel.textContent="Não há opções disponíveis sem repetir itens deste treino.";row.insertAdjacentElement("afterend",panel);return;}
+ const select=document.createElement("select");select.style.cssText="flex:1;min-width:220px;padding:10px;border-radius:8px;background:#15111f;color:#fff;border:1px solid #7650a8";
+ const first=document.createElement("option");first.value="";first.textContent="Escolha o que colocar no lugar…";select.appendChild(first);
+ options.forEach(o=>{const op=document.createElement("option");op.value=o.value;op.textContent=o.label;select.appendChild(op)});
+ const apply=document.createElement("button");apply.type="button";apply.className="primary";apply.textContent="Substituir";
+ apply.onclick=function(){if(!select.value){select.focus();return;}const names=select.value.split("|||");indexes.forEach((idx,j)=>group.items[idx]={name:names[j],detail:functional?"Exercício funcional":"Sequência de golpes"});panel.remove();renderWorkout();document.getElementById("status").textContent="Substituição realizada com a opção escolhida.";};
+ const cancel=document.createElement("button");cancel.type="button";cancel.className="secondary";cancel.textContent="Cancelar";cancel.onclick=()=>panel.remove();
+ panel.append(select,apply,cancel);row.insertAdjacentElement("afterend",panel);select.focus();
+};
 window.handleWorkoutAction=function(event,gi,ii,action){
  event.preventDefault();
  const group=workoutGroups[gi],item=group&&group.items[ii];if(!item)return;
