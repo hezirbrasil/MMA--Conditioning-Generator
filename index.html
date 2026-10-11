@@ -263,7 +263,24 @@ document.getElementById("customFightBank").addEventListener("click",event=>{
  }
 });
 function loadCustomBank(){try{const saved=JSON.parse(localStorage.getItem("mc-custom-exercises")||"[]");return Array.isArray(saved)?saved.filter(x=>x&&typeof x.name==="string"&&typeof x.cat==="string"):[]}catch(e){return []}}
-function getExerciseBank(){return [...bank,...loadCustomBank()]}
+function normalizeUnilateralBank(items){
+ const output=[],byName=new Map(items.map(x=>[x.name,x])),seen=new Set();
+ for(const ex of items){
+  if(seen.has(ex.name))continue;
+  const match=ex.name.match(/^(.*) ([ED])$/);
+  if(match){
+   const base=match[1],otherName=base+" "+(match[2]==="E"?"D":"E"),other=byName.get(otherName);
+   if(other){
+    seen.add(base+" E");seen.add(base+" D");
+    output.push({...ex,name:base+" (E/D)",detail:"Executar os dois lados: esquerdo e direito"});
+    continue;
+   }
+  }
+  seen.add(ex.name);output.push(ex);
+ }
+ return output;
+}
+function getExerciseBank(){return normalizeUnilateralBank([...bank,...loadCustomBank()])}
 function saveCustomBank(items){localStorage.setItem("mc-custom-exercises",JSON.stringify(items))}
 function addExerciseToBank(event){
  event.preventDefault();
@@ -273,14 +290,14 @@ function addExerciseToBank(event){
  const sideMatch=name.match(/^(.*) ([ED])$/i);
  if(sideMatch&&!paired){status.textContent="Para manter os lados juntos, marque a opção unilateral E/D.";return}
  if(paired){name=name.replace(/\s+[ED]$/i,"").trim();if(!name){status.textContent="Digite o nome-base do exercício.";return}}
- const names=paired?[name+" E",name+" D"]:[name];
+ const names=paired?[name+" (E/D)"]:[name];
  const existing=getExerciseBank().map(x=>x.name.toLocaleLowerCase("pt-BR"));
  if(names.some(n=>existing.includes(n.toLocaleLowerCase("pt-BR")))){status.textContent="Esse exercício, ou um dos lados, já está cadastrado.";return}
  const custom=loadCustomBank();
  names.forEach(n=>custom.push({name:n,cat,types:["fullbody","legblast"],custom:true}));
  try{saveCustomBank(custom)}catch(e){status.textContent="Não consegui salvar neste navegador. Verifique o espaço disponível.";return}
  nameInput.value="";document.getElementById("newExercisePair").checked=false;
- status.textContent=paired?"Par adicionado ao banco: "+names[0]+" → "+names[1]+".":"Exercício adicionado ao banco: "+name+".";
+ status.textContent=paired?"Exercício unilateral adicionado como um único item (E/D).":"Exercício adicionado ao banco: "+name+". ";
  renderExerciseBank();
 }
 document.getElementById("addExerciseForm").addEventListener("submit",addExerciseToBank);
