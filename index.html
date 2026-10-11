@@ -160,6 +160,24 @@ function isMultiArticularExercise(ex){
  if(cat==="composto")return true;
  return /agachamento|terra|stiff|supino|remada|puxada|desenvolvimento|leg press|passada|afundo|avanço|flexão de braço|barra fixa|paralela|thruster|clean|arranco|levantamento|terra \+|polichinelo \+ desenvolvimento|burpee/.test(name);
 }
+function chooseFullBodyCoverage(pool,n,exclude=new Set()){
+ const units=exerciseUnits(pool,exclude);
+ const categories=[...new Set(pool.map(x=>x.cat))];
+ const selected=[],used=new Set(exclude);
+ let count=0;
+ for(const cat of shuffle(categories)){
+  const candidates=shuffle(units.filter(unit=>unit[0].cat===cat&&!unit.some(x=>used.has(x.name))));
+  candidates.sort((a,b)=>Number(a.length>1)-Number(b.length>1)||Number(isMultiArticularExercise(b[0]))-Number(isMultiArticularExercise(a[0])));
+  const unit=candidates.find(u=>count+u.length<=n);
+  if(!unit)continue;
+  selected.push(...unit);unit.forEach(x=>used.add(x.name));count+=unit.length;
+ }
+ const remaining=shuffle(exerciseUnits(pool,used));
+ remaining.sort((a,b)=>Number(isMultiArticularExercise(b[0]))-Number(isMultiArticularExercise(a[0])));
+ for(const unit of remaining){if(count+unit.length<=n){selected.push(...unit);unit.forEach(x=>used.add(x.name));count+=unit.length;}if(count===n)break;}
+ selected.sort((a,b)=>Number(isMultiArticularExercise(b))-Number(isMultiArticularExercise(a)));
+ return selected.length===n?selected:[];
+}
 function chooseUnique(pool,n,exclude=new Set()){
  for(let attempt=0;attempt<200;attempt++){
   const units=shuffle(exerciseUnits(pool,exclude));
@@ -346,7 +364,7 @@ function createWorkout(){
  const type=document.getElementById("type").value; currentLabel=type==="fullbody"?"Full Body":"Leg Blast";
  const allowed=type==="fullbody"?fullBodyCats:legCats;
  currentPool=getExerciseBank().filter(x=>allowed.has(x.cat));
- const first=chooseUnique(currentPool,12);
+ const first=type==="fullbody"?chooseFullBodyCoverage(currentPool,12):chooseUnique(currentPool,12);
  const used=new Set(first.map(x=>x.name));
  const second=chooseUnique(currentPool,8,used);
  if(first.length!==12||second.length!==8){document.getElementById("status").textContent="Não há exercícios suficientes para montar esta sessão sem repetição e mantendo os lados juntos.";return}
