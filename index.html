@@ -154,9 +154,17 @@ function exerciseUnits(pool,exclude=new Set()){
  }
  return units;
 }
+function isMultiArticularExercise(ex){
+ const name=String(ex.name||"").toLowerCase();
+ const cat=String(ex.cat||"").toLowerCase();
+ if(cat==="composto")return true;
+ return /agachamento|terra|stiff|supino|remada|puxada|desenvolvimento|leg press|passada|afundo|avanço|flexão de braço|barra fixa|paralela|thruster|clean|arranco|levantamento|terra \+|polichinelo \+ desenvolvimento|burpee/.test(name);
+}
 function chooseUnique(pool,n,exclude=new Set()){
  for(let attempt=0;attempt<200;attempt++){
-  const units=shuffle(exerciseUnits(pool,exclude)), chosen=[];
+  const units=shuffle(exerciseUnits(pool,exclude));
+  units.sort((a,b)=>Number(isMultiArticularExercise(b[0]))-Number(isMultiArticularExercise(a[0])));
+  const chosen=[];
   let count=0;
   for(const unit of units){
    if(count+unit.length<=n){chosen.push(...unit);count+=unit.length}
