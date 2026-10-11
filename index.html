@@ -178,6 +178,26 @@ function chooseFullBodyCoverage(pool,n,exclude=new Set()){
  selected.sort((a,b)=>Number(isMultiArticularExercise(b))-Number(isMultiArticularExercise(a)));
  return selected.length===n?selected:[];
 }
+function chooseLegBlastBalanced(pool,n,exclude=new Set()){
+ const units=exerciseUnits(pool,exclude);
+ const family=unit=>{const cat=unit[0].cat;if(cat==="cardio")return "cardio";if(cat==="core")return "core";return "legs"};
+ const quotas=n===12?{legs:7,core:3,cardio:2}:{legs:4,core:2,cardio:2};
+ const selected=[],used=new Set(exclude);let count=0;
+ for(const key of ["legs","core","cardio"]){
+  let familyCount=0;
+  while(familyCount<quotas[key]){
+   const candidates=shuffle(exerciseUnits(pool,used)).filter(unit=>family(unit)===key&&count+unit.length<=n);
+   candidates.sort((a,b)=>Number(isMultiArticularExercise(b[0]))-Number(isMultiArticularExercise(a[0])));
+   const unit=candidates[0];if(!unit)break;
+   selected.push(...unit);unit.forEach(x=>used.add(x.name));count+=unit.length;familyCount+=unit.length;
+  }
+ }
+ const remaining=shuffle(exerciseUnits(pool,used));
+ remaining.sort((a,b)=>Number(isMultiArticularExercise(b[0]))-Number(isMultiArticularExercise(a[0])));
+ for(const unit of remaining){if(count+unit.length<=n){selected.push(...unit);unit.forEach(x=>used.add(x.name));count+=unit.length;}if(count===n)break;}
+ selected.sort((a,b)=>Number(isMultiArticularExercise(b))-Number(isMultiArticularExercise(a)));
+ return selected.length===n?selected:[];
+}
 function chooseUnique(pool,n,exclude=new Set()){
  for(let attempt=0;attempt<200;attempt++){
   const units=shuffle(exerciseUnits(pool,exclude));
@@ -364,9 +384,9 @@ function createWorkout(){
  const type=document.getElementById("type").value; currentLabel=type==="fullbody"?"Full Body":"Leg Blast";
  const allowed=type==="fullbody"?fullBodyCats:legCats;
  currentPool=getExerciseBank().filter(x=>allowed.has(x.cat));
- const first=type==="fullbody"?chooseFullBodyCoverage(currentPool,12):chooseUnique(currentPool,12);
+ const first=type==="fullbody"?chooseFullBodyCoverage(currentPool,12):chooseLegBlastBalanced(currentPool,12);
  const used=new Set(first.map(x=>x.name));
- const second=chooseUnique(currentPool,8,used);
+ const second=type==="fullbody"?chooseUnique(currentPool,8,used):chooseLegBlastBalanced(currentPool,8,used);
  if(first.length!==12||second.length!==8){document.getElementById("status").textContent="Não há exercícios suficientes para montar esta sessão sem repetição e mantendo os lados juntos.";return}
  const allCombos=getFightBank().map(normalizeFightNames);
  const progressionPair=["Jab + Jab + Direto","Jab + Jab + Direto + Chute baixo F"];
