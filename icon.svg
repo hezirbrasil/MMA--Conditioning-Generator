@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+<defs><linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c58cff"/><stop offset="1" stop-color="#7c2cff"/></linearGradient><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#29232f"/><stop offset="1" stop-color="#08070b"/></linearGradient></defs>
+<rect width="128" height="128" rx="25" fill="#0b0910"/><rect x="4" y="4" width="120" height="120" rx="23" fill="none" stroke="url(#p)" stroke-width="3"/>
+<g stroke="#9b5cff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M36 73 31 51Q29 44 35 42Q41 41 44 49L48 58 46 29Q46 21 52 21Q59 21 59 29L61 49 63 24Q64 17 70 18Q77 19 76 26L76 49 81 29Q83 22 89 25Q95 27 93 34L89 55 95 43Q99 37 104 41Q109 44 105 52L96 77Q92 88 82 92L80 108 42 108 43 91Q34 86 36 73Z" fill="url(#g)"/>
+<path d="M43 91Q59 96 80 92L80 108 42 108Z" fill="#171020"/>
+<path d="M43 96 79 98M43 101 79 103" fill="none"/>
+<path d="M51 57 53 73M64 51 65 70M78 51 77 69M92 56 86 71" fill="none" opacity=".7"/>
+</g><text x="61" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="13" fill="#c58cff">MMA</text>
+</svg>
