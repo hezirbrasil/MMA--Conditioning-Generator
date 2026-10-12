@@ -3,7 +3,4 @@
 <rect width="128" height="128" rx="18" fill="#09070e"/>
 <polygon points="38,8 90,8 120,38 120,90 90,120 38,120 8,90 8,38" fill="#15101e" stroke="url(#purple)" stroke-width="6" stroke-linejoin="round"/>
 <polygon points="42,19 86,19 109,42 109,86 86,109 42,109 19,86 19,42" fill="none" stroke="#9b5cff" stroke-width="1.5" opacity=".7"/>
-<path d="M31 58 L45 42 Q50 37 57 41 L67 46 L79 42 Q89 39 95 47 Q100 54 95 63 L87 79 Q83 87 74 89 L72 101 L48 101 L48 86 Q39 82 34 74 Q29 67 31 58Z" fill="url(#purple)" stroke="#050408" stroke-width="3" stroke-linejoin="round"/>
-<path d="M45 48 L56 54 L62 61 M68 48 L72 61 M82 48 L81 64 M42 69 L51 77 L48 87 M48 91 L71 95" fill="none" stroke="#09070e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M47 85 Q60 91 74 87 L72 101 L48 101Z" fill="#09070e" stroke="#9b5cff" stroke-width="2"/>
 </svg>
