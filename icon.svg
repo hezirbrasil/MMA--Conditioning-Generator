@@ -1,14 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-<rect width="128" height="128" fill="#fff"/>
-<circle cx="64" cy="64" r="59" fill="#fff" stroke="#000" stroke-width="3.5"/>
-<g fill="#000" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
-<path d="M25 48 C23 39 30 29 40 25 C48 21 57 22 64 27 L75 35 L63 40 L51 52 L39 70 L28 61 Z" stroke="none"/>
-<path d="M31 57 L42 43 Q48 36 57 39 L72 44 L86 39 Q95 36 101 43 Q108 50 103 59 L93 78 Q89 86 80 89 L78 102 L47 102 L47 85 Q37 82 32 74 Q27 67 31 57Z"/>
-<path d="M42 47 Q49 39 58 43 L69 47 L60 57 L45 60 L37 71 L30 64Z" stroke="none"/>
-<path d="M45 53 L57 57 L63 65 L57 78 L47 83 L42 74 L35 69Z" stroke="none"/>
-<path d="M47 83 Q62 91 80 87 L79 103 L47 103Z" stroke="none"/>
-<path d="M45 88 Q61 94 80 90 L80 105 L44 105Z" stroke="#fff" stroke-width="2"/>
-<path d="M49 93 L76 97 M48 99 L76 103" fill="none" stroke="#fff" stroke-width="2"/>
-<path d="M54 43 L61 50 L57 58 M71 47 L74 60 M84 46 L84 62 M96 49 L92 64" fill="none" stroke="#fff" stroke-width="2.5"/>
-</g>
+<defs><linearGradient id="purple" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c58cff"/><stop offset="1" stop-color="#7025d8"/></linearGradient></defs>
+<rect width="128" height="128" rx="18" fill="#09070e"/>
+<polygon points="38,8 90,8 120,38 120,90 90,120 38,120 8,90 8,38" fill="#15101e" stroke="url(#purple)" stroke-width="6" stroke-linejoin="round"/>
+<polygon points="42,19 86,19 109,42 109,86 86,109 42,109 19,86 19,42" fill="none" stroke="#9b5cff" stroke-width="1.5" opacity=".7"/>
+<path d="M31 58 L45 42 Q50 37 57 41 L67 46 L79 42 Q89 39 95 47 Q100 54 95 63 L87 79 Q83 87 74 89 L72 101 L48 101 L48 86 Q39 82 34 74 Q29 67 31 58Z" fill="url(#purple)" stroke="#050408" stroke-width="3" stroke-linejoin="round"/>
+<path d="M45 48 L56 54 L62 61 M68 48 L72 61 M82 48 L81 64 M42 69 L51 77 L48 87 M48 91 L71 95" fill="none" stroke="#09070e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M47 85 Q60 91 74 87 L72 101 L48 101Z" fill="#09070e" stroke="#9b5cff" stroke-width="2"/>
 </svg>
