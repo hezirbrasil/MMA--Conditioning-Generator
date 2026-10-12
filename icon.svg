@@ -1,10 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-<defs><linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c58cff"/><stop offset="1" stop-color="#7c2cff"/></linearGradient><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#29232f"/><stop offset="1" stop-color="#08070b"/></linearGradient></defs>
-<rect width="128" height="128" rx="25" fill="#0b0910"/><rect x="4" y="4" width="120" height="120" rx="23" fill="none" stroke="url(#p)" stroke-width="3"/>
-<g stroke="#9b5cff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
-<path d="M36 73 31 51Q29 44 35 42Q41 41 44 49L48 58 46 29Q46 21 52 21Q59 21 59 29L61 49 63 24Q64 17 70 18Q77 19 76 26L76 49 81 29Q83 22 89 25Q95 27 93 34L89 55 95 43Q99 37 104 41Q109 44 105 52L96 77Q92 88 82 92L80 108 42 108 43 91Q34 86 36 73Z" fill="url(#g)"/>
-<path d="M43 91Q59 96 80 92L80 108 42 108Z" fill="#171020"/>
-<path d="M43 96 79 98M43 101 79 103" fill="none"/>
-<path d="M51 57 53 73M64 51 65 70M78 51 77 69M92 56 86 71" fill="none" opacity=".7"/>
-</g><text x="61" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="13" fill="#c58cff">MMA</text>
+<rect width="128" height="128" fill="#fff"/>
+<circle cx="64" cy="64" r="59" fill="#fff" stroke="#000" stroke-width="3.5"/>
+<g fill="#000" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M25 48 C23 39 30 29 40 25 C48 21 57 22 64 27 L75 35 L63 40 L51 52 L39 70 L28 61 Z" stroke="none"/>
+<path d="M31 57 L42 43 Q48 36 57 39 L72 44 L86 39 Q95 36 101 43 Q108 50 103 59 L93 78 Q89 86 80 89 L78 102 L47 102 L47 85 Q37 82 32 74 Q27 67 31 57Z"/>
+<path d="M42 47 Q49 39 58 43 L69 47 L60 57 L45 60 L37 71 L30 64Z" stroke="none"/>
+<path d="M45 53 L57 57 L63 65 L57 78 L47 83 L42 74 L35 69Z" stroke="none"/>
+<path d="M47 83 Q62 91 80 87 L79 103 L47 103Z" stroke="none"/>
+<path d="M45 88 Q61 94 80 90 L80 105 L44 105Z" stroke="#fff" stroke-width="2"/>
+<path d="M49 93 L76 97 M48 99 L76 103" fill="none" stroke="#fff" stroke-width="2"/>
+<path d="M54 43 L61 50 L57 58 M71 47 L74 60 M84 46 L84 62 M96 49 L92 64" fill="none" stroke="#fff" stroke-width="2.5"/>
+</g>
 </svg>
