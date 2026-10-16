@@ -174,6 +174,32 @@ test("salva e carrega uma parte reutilizável no montador manual", async ({ page
   await expect(page.locator("#manualParts")).toContainText("Supino");
 });
 
+
+test("adiciona um exercício do banco como avulso, sem criar circuito", async ({ page }) => {
+  const button = page.locator('#bankList button[data-bank-manual-name="Supino"][data-bank-manual-mode="individual"]');
+  await button.click();
+
+  await expect(page.locator("#manualParts .builder-part")).toHaveCount(1);
+  await expect(page.locator("#manualParts .builder-part")).toContainText("Exercícios individuais");
+  await expect(page.locator("#manualParts .builder-item span")).toHaveCount(1);
+  await expect(page.locator("#manualParts")).toContainText("Supino");
+  await expect(page.locator("#manualParts .builder-part")).not.toContainText("Circuito funcional");
+});
+
+test("adiciona um exercício do banco ao circuito existente", async ({ page }) => {
+  await page.locator("#manualPartType").selectOption("circuit");
+  await page.locator("#manualAddPart").click();
+  await page.locator('#manualParts [data-manual-select="0"]').selectOption({ label: "Crucifixo" });
+  await page.locator('#manualParts [data-manual-action="add-item"][data-p="0"]').click();
+
+  await page.locator('#bankList button[data-bank-manual-name="Supino"][data-bank-manual-mode="circuit"]').click();
+
+  await expect(page.locator("#manualParts .builder-part")).toHaveCount(1);
+  await expect(page.locator("#manualParts .builder-item span")).toHaveCount(2);
+  await expect(page.locator("#manualParts")).toContainText("Crucifixo");
+  await expect(page.locator("#manualParts")).toContainText("Supino");
+});
+
 test("adiciona três exercícios ao mesmo circuito de uma só vez", async ({ page }) => {
   await page.locator("#manualPartType").selectOption("circuit");
   await page.locator("#manualAddPart").click();
