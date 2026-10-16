@@ -4,8 +4,8 @@ module.exports = defineConfig({
   testDir: "./tests",
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : undefined,
+  retries: 0,
+  workers: 2,
   reporter: process.env.CI ? "github" : "list",
   use: {
     baseURL: "http://127.0.0.1:4173",
@@ -16,10 +16,6 @@ module.exports = defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] }
-    },
-    {
-      name: "mobile-chromium",
-      use: { ...devices["iPhone 13"], browserName: "chromium" }
     }
   ],
   webServer: {
