@@ -810,7 +810,7 @@ function manualOpenPlay(){
  if(!manualParts.length||!manualParts.some(p=>p.items.length)){document.getElementById("manualStatus").textContent="Adicione partes e itens antes de iniciar o Modo Play.";return}
  manualPlayItems=[];
  manualParts.forEach((p,pi)=>{
-  if(p.type==="rest"||p.type==="transition"){manualPlayItems.push({name:p.type==="transition"?"TROCA PARA LUTA":"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Troca para luta · ":"Descanso · ")+p.seconds+" s",partIndex:pi});return}
+  if(p.type==="rest"||p.type==="transition"){manualPlayItems.push({name:p.type==="transition"?"TROCA PARA LUTA":"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Troca para luta · ":"Descanso · ")+p.seconds+" s",partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||90});return}
   const isCircuit=p.type==="circuit"||p.type==="fightCircuit";
   if(isCircuit){
    const duration=Math.max(1,Number(p.durationMinutes)||10)*60,itemSeconds=Math.max(1,Number(p.seconds)||50),restSeconds=Math.max(0,Number(p.rest)||0);
@@ -852,7 +852,7 @@ function manualRenderPlay(){
    document.getElementById("playType").textContent=(it.isCircuitRest?"DESCANSO":"Exercício") +" · item "+manualFormatTime(itemRemaining)+" · circuito "+manualFormatTime(remaining);
   };
   tick();manualTimerInterval=setInterval(tick,250);
- }else{manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=null}
+ }else if(it.isPause){manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=Date.now()+(Number(it.durationSeconds)||90)*1000;const tick=()=>{const left=(manualItemDeadline-Date.now())/1000;if(left<=0){manualStopTimer();if(manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}else{document.getElementById("playType").textContent="Pausa concluída";document.getElementById("playNext").disabled=true}return}document.getElementById("playType").textContent=it.detail+" · "+manualFormatTime(left)};tick();manualTimerInterval=setInterval(tick,250)}else{manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=null}
 }
 document.getElementById("manualPlay").addEventListener("click",manualOpenPlay);
 
