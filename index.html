@@ -77,7 +77,7 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
  <h2 style="margin:8px 0 6px;font-size:21px">Escolha o modelo</h2>
  <p class="builder-intro">Primeiro escolha o tipo de treino e depois o modelo de aula. O gerador respeita as categorias do Fullbody ou do Leg Blast; você pode editar os exercícios antes de começar.</p><div class="builder-field" style="max-width:420px;margin:14px 0"><label for="presetWorkoutType">TIPO DE TREINO</label><select id="presetWorkoutType"><option value="fullbody">Fullbody — corpo todo</option><option value="legblast">Leg Blast — pernas e abdômen</option></select></div>
  <div class="builder-grid" hidden aria-hidden="true"><div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Nome do treino"></div><div class="builder-field"><label for="manualPartType">Parte</label><select id="manualPartType"><option value="circuit">Circuito</option></select></div></div>
- <div class="builder-toolbar manual-tabs" role="tablist" aria-label="Áreas do montador"><button type="button" class="secondary" id="manualBuilderTab" role="tab" aria-selected="true">✎ Montador</button><button type="button" class="secondary" id="manualPresetsTab" role="tab" aria-selected="false">▦ Presets</button><button type="button" class="secondary" id="manualPreviewButton">👁 Visualizar exercícios</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div>
+ <div class="builder-toolbar manual-tabs" role="tablist" aria-label="Áreas do montador"><button type="button" class="secondary" id="manualBuilderTab" role="tab" aria-selected="true">✎ Montador</button><button type="button" class="secondary" id="manualPreviewButton">👁 Visualizar exercícios</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div>
  <section id="manualPreview" class="manual-preview" hidden><div class="manual-preview-head"><div><div class="eyebrow purple">VISUALIZAÇÃO LIMPA</div><h3 style="margin:5px 0 0">Exercícios montados</h3><p class="builder-intro" style="margin:6px 0 0">Roteiro limpo e numerado para acompanhar os exercícios em outro cronômetro.</p></div><button type="button" class="primary" id="manualPreviewBack">← Voltar à edição</button></div><div id="manualPreviewContent"></div></section><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">1. TIPO DE TREINO  ·  2. MODELO DE AULA</strong><button type="button" class="primary" id="loadOption1">Aplicar Opção 1 · Começa no funcional</button><button type="button" class="primary" id="loadOption2">Aplicar Opção 2 · Começa na luta</button></div>
  <div class="builder-play-note">Opção 1 começa pelo funcional e inclui circuitos. Opção 2 começa pela luta e usa exercícios funcionais individuais. As trocas duram 1min30s.</div>
  <div id="manualParts" class="builder-parts"><div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div></div>
@@ -844,21 +844,9 @@ function manualLoadLibrary(){
   const x=JSON.parse(raw||"[]");
   if(!Array.isArray(x))return[];
   const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="Circuito de luta"?"Sequências de luta individuais":(p.title||"Sequências de luta individuais")}:p;
-  let items=x.map(entry=>{if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry});
   const starterIds=new Set(["starter-circuit-superior","starter-circuit-inferior-core","starter-circuit-funcional"]);
-  items=items.map(entry=>starterIds.has(entry.id)&&entry.kind==="part"&&entry.part?.type==="circuit"?{...entry,part:{...entry.part,durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10}}:entry);
-  const seedKey="mc-manual-starter-circuits-v1";
-  if(!localStorage.getItem(seedKey)){
-   const starters=[
-    {id:"starter-circuit-superior",kind:"part",name:"Circuito 1",part:{id:"starter-circuit-superior-part",type:"circuit",title:"Circuito 1",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items:[{name:"Supino",detail:"Peito"},{name:"Remada aberta",detail:"Costas"},{name:"Desenvolvimento",detail:"Ombros"}]},savedAt:new Date().toISOString()},
-    {id:"starter-circuit-inferior-core",kind:"part",name:"Circuito 2",part:{id:"starter-circuit-inferior-core-part",type:"circuit",title:"Circuito 2",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items:[{name:"Agachamento",detail:"Pernas"},{name:"Stiff",detail:"Posterior de coxa"},{name:"Abdominal bicicleta",detail:"Core"}]},savedAt:new Date().toISOString()},
-    {id:"starter-circuit-funcional",kind:"part",name:"Circuito 3",part:{id:"starter-circuit-funcional-part",type:"circuit",title:"Circuito 3",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items:[{name:"Terra com desenvolvimento",detail:"Funcional"},{name:"Agachamento com panturrilha",detail:"Pernas"},{name:"Joelhada no step alternada",detail:"Cardio/Funcional"}]},savedAt:new Date().toISOString()}
-   ];
-   const existingIds=new Set(items.map(entry=>entry.id));
-   starters.forEach(entry=>{if(!existingIds.has(entry.id))items.push(entry)});
-   localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
-   localStorage.setItem(seedKey,"1");
-  }
+  const items=x.filter(entry=>!starterIds.has(entry?.id)).map(entry=>{if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry});
+  if(items.length!==x.length)localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
   return items;
  }catch(e){return[]}
 }
@@ -1343,26 +1331,8 @@ document.getElementById("manualSaveWorkout").addEventListener("click",()=>{
  document.getElementById("manualLibrary").hidden=false;document.getElementById("manualLibrary").scrollIntoView({behavior:"smooth",block:"center"});
 });
 document.getElementById("manualShowLibrary").addEventListener("click",()=>{document.getElementById("manualLibrary").hidden=false;manualRenderLibrary();document.getElementById("manualLibrary").scrollIntoView({behavior:"smooth",block:"center"})});
-function manualSwitchTab(tab){
- const presets=tab==="presets";
- document.getElementById("manualBuilderTab").setAttribute("aria-selected",String(!presets));
- document.getElementById("manualPresetsTab").setAttribute("aria-selected",String(presets));
- const library=document.getElementById("manualLibrary");
- if(presets){
-  library.hidden=false;
-  document.getElementById("manualLibraryKind").value="part";
-  manualSaveMode="part";
-  manualRenderLibrary();
-  document.getElementById("manualLibraryList").scrollIntoView({behavior:"smooth",block:"start"});
- }else{
-  library.hidden=true;
-  document.getElementById("manualParts").scrollIntoView({behavior:"smooth",block:"start"});
- }
-}
-document.getElementById("manualBuilderTab").addEventListener("click",()=>manualSwitchTab("builder"));
-document.getElementById("manualPresetsTab").addEventListener("click",()=>manualSwitchTab("presets"));
-
-document.getElementById("manualCloseLibrary").addEventListener("click",()=>document.getElementById("manualLibrary").hidden=true);
+document.getElementById("manualBuilderTab").addEventListener("click",()=>{document.getElementById("manualLibrary").hidden=true;document.getElementById("manualParts").scrollIntoView({behavior:"smooth",block:"start"})});
+ document.getElementById("manualCloseLibrary").addEventListener("click",()=>document.getElementById("manualLibrary").hidden=true);
 document.getElementById("manualLibraryKind").addEventListener("change",()=>{manualSaveMode=document.getElementById("manualLibraryKind").value});
 document.getElementById("manualConfirmSave").addEventListener("click",()=>{
  const kind=document.getElementById("manualLibraryKind").value,name=document.getElementById("manualLibraryName").value.trim();
