@@ -341,3 +341,31 @@ test("audita botões de criar, desfazer, limpar, salvar e editar sequência de l
   await page.locator("#clearSequence").click();
   await expect(page.locator("#sequencePreview")).toBeEmpty();
 });
+
+
+test("audita mover, trocar e excluir exercício do treino gerado", async ({ page }) => {
+  await page.locator("#generate").click();
+  const block = page.locator(".block").nth(0);
+  const firstBefore = await block.locator(".exercise").nth(0).locator(".ename").textContent();
+  await block.locator(".exercise").nth(0).getByRole("button", { name: "Mover para baixo" }).click();
+  const firstAfter = await page.locator(".block").nth(0).locator(".exercise").nth(0).locator(".ename").textContent();
+  expect(firstAfter).not.toBe(firstBefore);
+
+  await page.locator(".block").nth(0).locator(".exercise").nth(0).getByRole("button", { name: "↻ Trocar" }).click();
+  const picker = page.locator(".replace-picker").first();
+  await expect(picker).toBeVisible();
+  const category = picker.locator("select").nth(0);
+  const categoryValues = await category.locator("option").evaluateAll(os => os.map(o => o.value).filter(Boolean));
+  expect(categoryValues.length).toBeGreaterThan(0);
+  await category.selectOption(categoryValues[0]);
+  const item = picker.locator("select").nth(1);
+  const itemValues = await item.locator("option").evaluateAll(os => os.map(o => o.value).filter(Boolean));
+  expect(itemValues.length).toBeGreaterThan(0);
+  await item.selectOption(itemValues[0]);
+  await picker.getByRole("button", { name: "Substituir" }).click();
+  await expect(page.locator(".replace-picker")).toHaveCount(0);
+
+  const countBeforeDelete = await page.locator(".block").nth(0).locator(".exercise").count();
+  await page.locator(".block").nth(0).locator(".exercise").nth(0).getByRole("button", { name: "Excluir" }).click();
+  await expect(page.locator(".block").nth(0).locator(".exercise")).toHaveCount(countBeforeDelete - 1);
+});
