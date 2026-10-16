@@ -1193,7 +1193,7 @@ function manualOpenPlay(){
   }else if(p.type==="individual"){
    const duration=Math.max(0,Number(p.durationMinutes??Math.floor((Number(p.seconds)||50)/60)))*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??((Number(p.seconds)||50)%60))));
    const rest=Math.max(0,Number(p.restMinutes??Math.floor((Number(p.rest)||0)/60)))*60+Math.max(0,Math.min(59,Number(p.restExtraSeconds??((Number(p.rest)||0)%60))));
-   p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:"Exercício · "+manualFormatTime(duration),partIndex:pi,isTimedIndividual:true,durationSeconds:duration});if(rest>0)manualPlayItems.push({name:"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:"Descanso · "+manualFormatTime(rest),partIndex:pi,isPause:true,durationSeconds:rest})});
+   p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:"Exercício · "+manualFormatTime(duration),partIndex:pi,itemIndex:ii,isTimedIndividual:true,durationSeconds:duration});if(rest>0)manualPlayItems.push({name:"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:"Descanso · "+manualFormatTime(rest),partIndex:pi,isPause:true,durationSeconds:rest})});
   }else p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+manualFormatTime(Number(p.seconds)||55),partIndex:pi,durationSeconds:Number(p.seconds)||55,isTimedIndividual:true});if((p.type==="fight"||p.type==="fightCircuit")&&Number(p.rest)>0&&ii<p.items.length-1)manualPlayItems.push({name:"DESCANSO ENTRE SEQUÊNCIAS",group:p.title||manualTypeLabel(p.type),detail:"Descanso · "+manualFormatTime(Number(p.rest)),partIndex:pi,isPause:true,durationSeconds:Number(p.rest)});});
  });
  manualPlayIndex=0;manualCircuitDeadline=null;manualItemDeadline=null;manualCurrentCircuitPart=null;manualStopTimer();manualRenderPlay();document.getElementById("playOverlay").hidden=false;
@@ -1280,6 +1280,30 @@ document.getElementById("playCircuitItems").addEventListener("click",e=>{
   manualRenderPlay();
  });
  select.addEventListener("blur",()=>{if(!select.value)manualRenderPlay()});
+});
+document.getElementById("playName").addEventListener("click",e=>{
+ const it=manualPlayItems[manualPlayIndex];
+ if(!it||!it.isTimedIndividual||it.isPause||it.isTimedCircuit)return;
+ const part=manualParts[it.partIndex],itemIndex=it.itemIndex;
+ if(!part||!part.items[itemIndex])return;
+ const current=part.items[itemIndex].name;
+ const options=manualOptions(part);
+ const select=document.createElement("select");
+ select.setAttribute("aria-label","Trocar exercício");
+ const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent="Escolha o exercício…";select.appendChild(placeholder);
+ const grouped={};options.forEach(o=>{const cat=bankCategoryLabels[o.cat]||o.cat||"Outros";(grouped[cat]||(grouped[cat]=[])).push(o)});
+ Object.keys(grouped).sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(cat=>{const group=document.createElement("optgroup");group.label=cat;grouped[cat].forEach(o=>{const option=document.createElement("option");option.value=o.name;option.textContent=o.name;if(o.name===current)option.selected=true;group.appendChild(option)});select.appendChild(group)});
+ const name=document.getElementById("playName");name.replaceWith(select);select.id="playName";select.style.cssText="max-width:100%;background:#0d0a12;color:#fff;border:1px solid #9b5cff;border-radius:8px;padding:12px;font:700 22px Inter,sans-serif;text-align:center";
+ select.focus();
+ select.addEventListener("change",()=>{
+  if(!select.value)return;
+  const chosen=options.find(o=>o.name===select.value);if(!chosen)return;
+  part.items[itemIndex]={...chosen};
+  manualPlayItems.forEach(x=>{if(x.partIndex===it.partIndex&&x.itemIndex===itemIndex&&x.isTimedIndividual)x.name=chosen.name});
+  const h=document.createElement("h1");h.id="playName";h.className="play-name";h.textContent=chosen.name;select.replaceWith(h);
+  h.addEventListener("click",()=>h.dispatchEvent(new Event("click")));
+ });
+ select.addEventListener("blur",()=>{if(!select.value){const h=document.createElement("h1");h.id="playName";h.className="play-name";h.textContent=current;select.replaceWith(h);manualRenderPlay()}});
 });
 document.getElementById("manualPlay").addEventListener("click",manualOpenPlay);
 
