@@ -764,8 +764,11 @@ document.getElementById("manualParts").addEventListener("change",e=>{
  const prop=e.target.dataset.manualProp;if(!prop)return;
  const p=manualParts[Number(e.target.dataset.p)];if(!p)return;
  p[prop]=prop==="title"?e.target.value:Number(e.target.value);
- const heading=e.target.closest(".builder-part")?.querySelector(".builder-part-head strong");
+ const card=e.target.closest(".builder-part");
+ const heading=card?.querySelector(".builder-part-head strong");
+ const meta=card?.querySelector(".builder-part-head small");
  if(prop==="title"&&heading)heading.textContent=p.title;
+ if(meta&&p.type==="circuit")meta.textContent=manualTypeLabel(p.type)+" · "+p.items.length+" item(ns) · "+String(Math.max(0,Number(p.durationMinutes)||0)).padStart(2,"0")+":"+String(Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0))).padStart(2,"0");
 });
 document.getElementById("manualParts").addEventListener("click",e=>{
  const b=e.target.closest("button[data-manual-action]");if(!b)return;
