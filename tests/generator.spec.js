@@ -11,6 +11,31 @@ test("a página inicial carrega com as opções de treino", async ({ page }) => 
   await expect(page.locator("#generate")).toBeVisible();
 });
 
+test("audita as alterações de interface solicitadas", async ({ page }) => {
+  const partType = page.locator("#manualPartType");
+  await expect(partType.locator("option")).toHaveText([
+    "Circuito funcional",
+    "Exercício individual",
+    "Sequências de luta individuais",
+    "Descanso / transição"
+  ]);
+  await expect(partType).not.toContainText("Bloco de exercícios individuais");
+  await expect(partType).not.toContainText("Circuito de luta");
+
+  const categories = page.locator("#bankList details.bank-category");
+  await expect(categories).not.toHaveCount(0);
+  await expect(page.locator("#bankList details.bank-category[open]")).toHaveCount(0);
+
+  await page.locator("#bankCategoryFilter").selectOption("peito");
+  await expect(page.locator("#bankList details.bank-category[open]")).toHaveCount(1);
+  await expect(page.locator("#bankList details.bank-category summary")).toContainText("PEITO");
+
+  await page.locator("#manualPartType").selectOption("circuit");
+  await page.locator("#manualAddPart").click();
+  const groupedOptions = page.locator('#manualParts [data-manual-select="0"] optgroup');
+  await expect(groupedOptions).toContainText(["PEITO", "COSTAS", "OMBROS", "BÍCEPS", "TRÍCEPS", "PERNAS", "POSTERIOR", "COMPOSTOS", "CORE E ABDOMINAIS", "CARDIO E FUNCIONAL"]);
+});
+
 for (const workoutType of [
   { label: "Full Body", value: "fullbody" },
   { label: "Leg Blast", value: "legblast" }
@@ -180,7 +205,7 @@ test("adiciona um exercício do banco como avulso, sem criar circuito", async ({
   await button.click();
 
   await expect(page.locator("#manualParts .builder-part")).toHaveCount(1);
-  await expect(page.locator("#manualParts .builder-part")).toContainText("Exercícios individuais");
+  await expect(page.locator("#manualParts .builder-part")).toContainText("Exercício individual");
   await expect(page.locator("#manualParts .builder-item span")).toHaveCount(1);
   await expect(page.locator("#manualParts")).toContainText("Supino");
   await expect(page.locator("#manualParts .builder-part")).not.toContainText("Circuito funcional");
@@ -234,7 +259,7 @@ test("audita botões do montador manual e suas ações", async ({ page }) => {
   await page.locator("#manualPartType").selectOption("individual");
   await page.locator("#manualAddPart").click();
   await page.locator('[data-manual-action="up"][data-p="1"]').click();
-  await expect(page.locator("#manualParts .builder-part").first()).toContainText("Exercícios individuais");
+  await expect(page.locator("#manualParts .builder-part").first()).toContainText("Exercício individual");
   await page.locator('[data-manual-action="down"][data-p="0"]').click();
   await expect(page.locator("#manualParts .builder-part").first()).toContainText("Circuito funcional");
   await page.locator('[data-manual-action="remove-item"][data-p="0"][data-i="0"]').click();
