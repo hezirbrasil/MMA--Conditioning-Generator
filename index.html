@@ -737,7 +737,7 @@ function manualOptions(part){
   const list=getExerciseBank().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
   return list.map(x=>({name:x.name,detail:"Exercício funcional",cat:x.cat}));
  }
- if(part.type==="fight"||part.type==="fightCircuit")return getFightBank().map(name=>{const first=String(name).split(/\s*(?:\+|→|,|\-|\/|›)\s*/)[0].trim().toLocaleLowerCase("pt-BR");let cat="Outros golpes";if(first.startsWith("jab"))cat="Começam com Jab";else if(first.startsWith("direto"))cat="Começam com Direto";else if(first.startsWith("upper"))cat="Começam com Uppercut";else if(first.startsWith("cruzado"))cat="Começam com Cruzado";else if(first.startsWith("chute"))cat="Começam com Chute";return {name,detail:"Sequência de luta",cat}});
+ if(part.type==="fight"||part.type==="fightCircuit"){const order={"Começam com Jab":0,"Começam com Direto":1,"Começam com Uppercut":2,"Começam com Cruzado":3,"Começam com Chute":4,"Outros golpes":5};return getFightBank().map((name,index)=>{const first=String(name).split(/\s*(?:\+|→|,|\-|\/|›)\s*/)[0].trim().toLocaleLowerCase("pt-BR");let cat="Outros golpes";if(first.startsWith("jab"))cat="Começam com Jab";else if(first.startsWith("direto"))cat="Começam com Direto";else if(first.startsWith("upper"))cat="Começam com Uppercut";else if(first.startsWith("cruzado"))cat="Começam com Cruzado";else if(first.startsWith("chute"))cat="Começam com Chute";return {name,detail:"Sequência de luta",cat,index,moves:String(name).split(/\s*\+\s*/).length}}).sort((a,b)=>order[a.cat]-order[b.cat]||a.moves-b.moves||a.index-b.index)}
  return [];
 }
 function manualOptionsMarkup(opts){
