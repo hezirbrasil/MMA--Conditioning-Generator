@@ -469,7 +469,7 @@ document.getElementById("openPlay").addEventListener("click",openPlay);
 document.getElementById("closePlay").addEventListener("click",()=>{document.getElementById("playOverlay").hidden=true;if(typeof manualPlayItems!=="undefined")manualPlayItems=[]});
 document.getElementById("playPrev").addEventListener("click",()=>{if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){if(manualPlayIndex>0)manualPlayIndex--;manualRenderPlay()}else if(playIndex>0){playIndex--;renderPlay()}});
 document.getElementById("playNext").addEventListener("click",()=>{if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){if(manualPlayIndex<manualPlayItems.length-1)manualPlayIndex++;manualRenderPlay()}else if(playIndex<playItems.length-1){playIndex++;renderPlay()}});
-document.addEventListener("keydown",e=>{if(document.getElementById("playOverlay").hidden)return;if(e.key==="Escape")document.getElementById("playOverlay").hidden=true;if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){if(e.key==="ArrowRight"&&manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}if(e.key==="ArrowLeft"&&manualPlayIndex>0){manualPlayIndex--;manualRenderPlay()}}else{if(e.key==="ArrowRight"&&playIndex<playItems.length-1){playIndex++;renderPlay()}if(e.key==="ArrowLeft"&&playIndex>0){playIndex--;renderPlay()}}});
+document.addEventListener("keydown",e=>{if(document.getElementById("playOverlay").hidden)return;if(e.key==="Escape"){document.getElementById("playOverlay").hidden=true;if(typeof manualPlayItems!=="undefined")manualPlayItems=[];}if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){if(e.key==="ArrowRight"&&manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}if(e.key==="ArrowLeft"&&manualPlayIndex>0){manualPlayIndex--;manualRenderPlay()}}else{if(e.key==="ArrowRight"&&playIndex<playItems.length-1){playIndex++;renderPlay()}if(e.key==="ArrowLeft"&&playIndex>0){playIndex--;renderPlay()}}});
 function workoutText(){const title=document.getElementById("resultName").textContent;const sections=[...document.querySelectorAll(".block")].map(b=>b.querySelector(".blockhead").innerText+"\n"+[...b.querySelectorAll(".exercise .ename")].map((e,i)=>(i+1)+". "+e.innerText).join("\n")).join("\n\n");return "MMA CONDITIONING — "+title+"\n\n"+sections}
 document.getElementById("generate").addEventListener("click",createWorkout);
 document.getElementById("again").addEventListener("click",createWorkout);
@@ -760,7 +760,7 @@ function manualOpenPlay(){
  manualParts.forEach((p,pi)=>{
   if(p.type==="rest"){manualPlayItems.push({name:"DESCANSO / TRANSIÇÃO",group:p.title||"Descanso",detail:"Pausa de "+p.seconds+" segundos"});return}
   const rounds=(p.type==="circuit"||p.type==="fightCircuit")?Math.max(1,Number(p.rounds)||1):1;
-  for(let r=1;r<=rounds;r++)p.items.forEach(it=>manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+(rounds>1?" · Volta "+r+"/"+rounds:"")+" · "+p.seconds+" s"}));
+  for(let r=1;r<=rounds;r++)p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+(rounds>1?" · Volta "+r+"/"+rounds:"")+" · "+p.seconds+" s"});if(Number(p.rest)>0)manualPlayItems.push({name:"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:"Pausa de "+p.rest+" segundos"+(rounds>1?" · após volta "+r:"")})});
  });
  manualPlayIndex=0;manualRenderPlay();document.getElementById("playOverlay").hidden=false;
 }
