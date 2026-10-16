@@ -139,6 +139,7 @@ test("monta um circuito manual e repete os itens pelo número de voltas", async 
   await page.locator('[data-manual-select="0"]').selectOption({ label: "Supino" });
   await page.locator('[data-manual-action="add-item"][data-p="0"]').click();
   await page.locator('[data-manual-prop="rounds"][data-p="0"]').selectOption("3");
+  await page.locator('[data-manual-prop="rest"][data-p="0"]').selectOption("0");
 
   await expect(page.locator("#manualParts")).toContainText("Supino");
   await expect(page.locator("#manualParts")).toContainText("3 volta");
