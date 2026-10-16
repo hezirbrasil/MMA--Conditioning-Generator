@@ -467,9 +467,9 @@ function renderPlay(){
 function openPlay(){if(!workoutGroups.length||!workoutGroups.some(g=>g.items.length)){document.getElementById("status").textContent="Gere um treino antes de abrir o Modo Play.";return}playIndex=0;renderPlay();document.getElementById("playOverlay").hidden=false}
 document.getElementById("openPlay").addEventListener("click",openPlay);
 document.getElementById("closePlay").addEventListener("click",()=>{document.getElementById("playOverlay").hidden=true});
-document.getElementById("playPrev").addEventListener("click",()=>{if(playIndex>0){playIndex--;renderPlay()}});
-document.getElementById("playNext").addEventListener("click",()=>{if(playIndex<playItems.length-1){playIndex++;renderPlay()}});
-document.addEventListener("keydown",e=>{if(document.getElementById("playOverlay").hidden)return;if(e.key==="Escape")document.getElementById("playOverlay").hidden=true;if(e.key==="ArrowRight"&&playIndex<playItems.length-1){playIndex++;renderPlay()}if(e.key==="ArrowLeft"&&playIndex>0){playIndex--;renderPlay()}});
+document.getElementById("playPrev").addEventListener("click",()=>{if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){if(manualPlayIndex>0)manualPlayIndex--;manualRenderPlay()}else if(playIndex>0){playIndex--;renderPlay()}});
+document.getElementById("playNext").addEventListener("click",()=>{if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){if(manualPlayIndex<manualPlayItems.length-1)manualPlayIndex++;manualRenderPlay()}else if(playIndex<playItems.length-1){playIndex++;renderPlay()}});
+document.addEventListener("keydown",e=>{if(document.getElementById("playOverlay").hidden)return;if(e.key==="Escape")document.getElementById("playOverlay").hidden=true;if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){if(e.key==="ArrowRight"&&manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}if(e.key==="ArrowLeft"&&manualPlayIndex>0){manualPlayIndex--;manualRenderPlay()}}else{if(e.key==="ArrowRight"&&playIndex<playItems.length-1){playIndex++;renderPlay()}if(e.key==="ArrowLeft"&&playIndex>0){playIndex--;renderPlay()}}});
 function workoutText(){const title=document.getElementById("resultName").textContent;const sections=[...document.querySelectorAll(".block")].map(b=>b.querySelector(".blockhead").innerText+"\n"+[...b.querySelectorAll(".exercise .ename")].map((e,i)=>(i+1)+". "+e.innerText).join("\n")).join("\n\n");return "MMA CONDITIONING — "+title+"\n\n"+sections}
 document.getElementById("generate").addEventListener("click",createWorkout);
 document.getElementById("again").addEventListener("click",createWorkout);
@@ -678,6 +678,7 @@ let manualParts=[];
 let manualPlayItems=[];
 let manualPlayIndex=0;
 let manualSaveMode="workout";
+let manualSavePartId=null;
 const manualPartDefaults={
  circuit:{title:"Circuito funcional",rounds:4,seconds:50,rest:10,items:[]},
  fightCircuit:{title:"Circuito de luta",rounds:4,seconds:50,rest:10,items:[]},
@@ -733,12 +734,12 @@ document.getElementById("manualParts").addEventListener("click",e=>{
   const select=document.querySelector('[data-manual-select="'+pi+'"]'),name=select&&select.value;
   if(!name){document.getElementById("manualStatus").textContent="Escolha um item antes de adicionar.";return}
   if(p.items.some(x=>x.name===name)){document.getElementById("manualStatus").textContent="Esse item já está nesta parte.";return}
-  const option=manualOptions(p).find(x=>x.name===name);p.items.push(option||{name,detail:"Item personalizado"});manualRenderParts();document.getElementById("manualStatus").textContent="Item adicionado.";
- }else if(action==="remove-item"){p.items.splice(Number(b.dataset.i),1);manualRenderParts()}
+  const option=manualOptions(p).find(x=>x.name===name);const chosen=option||{name,detail:"Item personalizado"};const pair=name.match(/^(.*) ([ED])$/);if(pair){const otherName=pair[1]+" "+(pair[2]==="E"?"D":"E");const other=manualOptions(p).find(x=>x.name===otherName);if(other){const left=pair[2]==="E"?chosen:other,right=pair[2]==="D"?chosen:other;if(p.items.some(x=>x.name===left.name||x.name===right.name)){document.getElementById("manualStatus").textContent="Esse par E/D já está nesta parte.";return}p.items.push(left,right);manualRenderParts();document.getElementById("manualStatus").textContent="Par unilateral adicionado: lado E e lado D.";return}}p.items.push(chosen);manualRenderParts();document.getElementById("manualStatus").textContent="Item adicionado.";
+ }else if(action==="remove-item"){const index=Number(b.dataset.i),removed=p.items[index];if(removed){const pair=removed.name.match(/^(.*) ([ED])$/);if(pair){const other=pair[1]+" "+(pair[2]==="E"?"D":"E");p.items=p.items.filter(x=>x.name!==removed.name&&x.name!==other)}else p.items.splice(index,1)}manualRenderParts()}
  else if(action==="delete-part"){manualParts.splice(pi,1);manualRenderParts()}
  else if(action==="up"&&pi>0){[manualParts[pi-1],manualParts[pi]]=[manualParts[pi],manualParts[pi-1]];manualRenderParts()}
  else if(action==="down"&&pi<manualParts.length-1){[manualParts[pi+1],manualParts[pi]]=[manualParts[pi],manualParts[pi+1]];manualRenderParts()}
- else if(action==="save-part"){manualSaveMode="part";document.getElementById("manualLibraryKind").value="part";document.getElementById("manualLibraryName").value=p.title||manualTypeLabel(p.type);document.getElementById("manualLibrary").hidden=false;document.getElementById("manualLibrary").scrollIntoView({behavior:"smooth",block:"center"});document.getElementById("manualStatus").textContent="Confirme o nome para salvar esta parte reutilizável."}
+ else if(action==="save-part"){manualSaveMode="part";manualSavePartId=p.id;document.getElementById("manualLibraryKind").value="part";document.getElementById("manualLibraryName").value=p.title||manualTypeLabel(p.type);document.getElementById("manualLibrary").hidden=false;document.getElementById("manualLibrary").scrollIntoView({behavior:"smooth",block:"center"});document.getElementById("manualStatus").textContent="Confirme o nome para salvar esta parte reutilizável."}
 });
 function manualExpandItems(){
  const items=[];
@@ -796,8 +797,7 @@ document.getElementById("manualConfirmSave").addEventListener("click",()=>{
   let selectedPart=null;
   if(manualSaveMode==="part"){
    const text=document.getElementById("manualStatus").textContent;
-   const match=manualParts.find(p=>p.title===document.getElementById("manualLibraryName").value.trim());
-   selectedPart=match||manualParts[manualParts.length-1];
+   selectedPart=manualParts.find(p=>p.id===manualSavePartId)||manualParts[manualParts.length-1];
   }else{
    selectedPart=manualParts[manualParts.length-1];
   }
