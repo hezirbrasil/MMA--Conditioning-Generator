@@ -20,7 +20,7 @@ for (const workoutType of [
     await page.locator("#generate").click();
 
     await expect(page.locator("#result")).toBeVisible();
-    await expect(page.locator("#resultName")).toHaveText(workoutType.label);
+    await expect(page.locator("#resultName")).toHaveText(workoutType.label.toUpperCase());
     await expect(page.locator(".block")).toHaveCount(4);
     await expect(page.locator(".blockhead")).toHaveText([
       /BLOCO 1 — FUNCIONAL/,
@@ -100,6 +100,7 @@ test("salva um treino e o recupera depois de recarregar", async ({ page }) => {
 
   await expect(page.locator("#savedItemsList")).toContainText("Teste automatizado");
   await page.reload();
+  await page.locator("#generate").click();
   await page.locator("#openSavedButton").click();
   await expect(page.locator("#savedItemsList")).toContainText("Teste automatizado");
 
@@ -152,12 +153,11 @@ test("monta um circuito manual e repete os itens pelo número de voltas", async 
 
 test("adiciona os dois lados de exercício unilateral no montador manual", async ({ page }) => {
   await page.locator("#manualAddPart").click();
-  await page.locator('[data-manual-select="0"]').selectOption({ label: "Remada unilateral E" });
+  await page.locator('[data-manual-select="0"]').selectOption({ label: "Remada unilateral (E/D)" });
   await page.locator('[data-manual-action="add-item"][data-p="0"]').click();
 
   const items = await page.locator("#manualParts .builder-item span").allTextContents();
-  expect(items.some(name => name.includes("Remada unilateral E"))).toBe(true);
-  expect(items.some(name => name.includes("Remada unilateral D"))).toBe(true);
+  expect(items.some(name => name.includes("Remada unilateral (E/D)"))).toBe(true);
 });
 
 test("salva e carrega uma parte reutilizável no montador manual", async ({ page }) => {
@@ -172,4 +172,20 @@ test("salva e carrega uma parte reutilizável no montador manual", async ({ page
   await page.locator("#manualParts").locator('[data-manual-action="delete-part"]').click();
   await page.locator("#manualLibraryList").locator('[data-library-action="insert"]').click();
   await expect(page.locator("#manualParts")).toContainText("Supino");
+});
+
+test("adiciona três exercícios ao mesmo circuito de uma só vez", async ({ page }) => {
+  await page.locator("#manualPartType").selectOption("circuit");
+  await page.locator("#manualAddPart").click();
+  const selectors = page.locator('[data-manual-batch-select="0"]');
+  await selectors.nth(0).selectOption({ label: "Supino" });
+  await selectors.nth(1).selectOption({ label: "Crucifixo" });
+  await selectors.nth(2).selectOption({ label: "Agachamento Livre" });
+  await page.locator('[data-manual-action="add-batch"][data-p="0"]').click();
+
+  await expect(page.locator("#manualParts .builder-part")).toHaveCount(1);
+  await expect(page.locator("#manualParts .builder-item span")).toHaveCount(3);
+  await expect(page.locator("#manualParts")).toContainText("Supino");
+  await expect(page.locator("#manualParts")).toContainText("Crucifixo");
+  await expect(page.locator("#manualParts")).toContainText("Agachamento Livre");
 });
