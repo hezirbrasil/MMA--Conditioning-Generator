@@ -878,11 +878,11 @@ function presetPart(type,title,extra={}){
 function presetPause(title,seconds,type="rest"){
  return presetPart(type,title,{seconds,durationMinutes:Math.floor(seconds/60),durationExtraSeconds:seconds%60,items:[{name:title,detail:title}]});
 }
-let presetExerciseCursor=0,presetFightCursor=0,presetSelectedType="fullbody",presetFunctionalPhase=0,presetSegmentPickIndex=0,presetUsedNames=new Set(),presetOption=1;
+let presetExerciseCursor=0,presetFightCursor=0,presetSelectedType="fullbody",presetFunctionalPhase=0,presetSegmentPickIndex=0,presetUsedNames=new Set(),presetUsedFightNames=new Set(),presetOption=1;
 function presetResetFunctionalPhase(phase){presetFunctionalPhase=phase;presetSegmentPickIndex=0;presetUsedNames=new Set();presetExerciseCursor=0}
 function presetPickExercise(){
  const type=presetSelectedType;
- const all=getExerciseBank().filter(x=>Array.isArray(x.types)&&x.types.includes(type)).slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
+ const all=getExerciseBank().filter(x=>Array.isArray(x.types)&&x.types.includes(type));
  if(!all.length)return {name:"Exercício não cadastrado",cat:"cardio",types:[type]};
  let targetCat=null;
  if(type==="fullbody"&&presetFunctionalPhase===0){
@@ -895,7 +895,6 @@ function presetPickExercise(){
   const cardioCount=total-lowerCount-coreCount;
   const lowerSeq=Array.from({length:lowerCount},(_,i)=>["pernas","composto","posterior"][i%3]);
   const cats=[...lowerSeq,...Array(coreCount).fill("core"),...Array(cardioCount).fill("cardio")];
-  // Intercale os grupos para não concentrar pernas, core e cardio em sequência.
   const interleaved=[];
   const lower=cats.filter(c=>["pernas","composto","posterior"].includes(c));
   const core=cats.filter(c=>c==="core"),cardio=cats.filter(c=>c==="cardio");
@@ -903,11 +902,12 @@ function presetPickExercise(){
   for(let i=0;i<max;i++){if(lower[i])interleaved.push(lower[i]);if(core[i])interleaved.push(core[i]);if(cardio[i])interleaved.push(cardio[i])}
   targetCat=interleaved[presetSegmentPickIndex]||"pernas";
  }
+ // Randomiza dentro da categoria prevista e evita repetir nomes até esgotar as opções.
  let choices=targetCat?all.filter(x=>x.cat===targetCat&&!presetUsedNames.has(x.name)):[];
  if(!choices.length&&targetCat)choices=all.filter(x=>x.cat===targetCat);
  if(!choices.length)choices=all.filter(x=>!presetUsedNames.has(x.name));
  if(!choices.length)choices=all;
- const it=choices[presetExerciseCursor%choices.length];
+ const it=shuffle(choices)[0];
  presetExerciseCursor++;presetSegmentPickIndex++;presetUsedNames.add(it.name);
  return {...it};
 }
@@ -926,9 +926,12 @@ function presetCircuit(label,addFinalRest=false){
  manualParts.push(presetPause("Descanso do circuito",40));
 }
 function presetFightBlock(label,addPauseAfter=false){
- const list=getFightBank(),items=[];
+ const list=getFightBank().filter((name,index,arr)=>arr.indexOf(name)===index),items=[];
+ let available=shuffle(list.filter(name=>!presetUsedFightNames.has(name)));
+ if(available.length<4)available=shuffle([...available,...shuffle(list.filter(name=>presetUsedFightNames.has(name)))]);
  for(let i=0;i<4;i++){
-  const name=list[(presetFightCursor++)%list.length];
+  const name=available.length?available[i%available.length]:"Jab + Direto";
+  presetUsedFightNames.add(name);presetFightCursor++;
   items.push({name,detail:"Sequência de luta",cat:classifyFightCombo(name)});
  }
  manualParts.push(presetPart("fight",label,{seconds:55,durationMinutes:0,durationExtraSeconds:55,rest:5,items}));
@@ -936,7 +939,7 @@ function presetFightBlock(label,addPauseAfter=false){
 }
 function loadWorkoutOption(option){
  if(manualParts.length&&!confirm("Aplicar este modelo vai substituir as partes que estão no montador. Quer continuar?"))return;
- manualParts=[];presetExerciseCursor=0;presetFightCursor=0;presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetOption=option;presetResetFunctionalPhase(0);
+ manualParts=[];presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetOption=option;presetResetFunctionalPhase(0);
  const addSwitch=title=>manualParts.push(presetPause(title,90,"transition"));
  manualParts.push(presetPause("AQUECIMENTO",180));
  if(option===1){
