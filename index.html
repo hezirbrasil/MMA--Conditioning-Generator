@@ -751,7 +751,7 @@ function manualRenderParts(){
   const isRest=p.type==="rest"||p.type==="transition";
   const opts=manualOptions(p);
   const itemRows=p.items.map((it,ii)=>'<div class="builder-item"><span><b>'+String(ii+1).padStart(2,"0")+'.</b> '+escHtml(it.name)+'</span><button type="button" class="secondary remove" data-manual-action="remove-item" data-p="'+pi+'" data-i="'+ii+'">Remover</button></div>').join("");
-  const settings='<div class="builder-grid" style="margin-bottom:12px"><div class="builder-field"><label>Nome da parte</label><input data-manual-prop="title" data-p="'+pi+'" maxlength="80" value="'+escHtml(p.title||manualTypeLabel(p.type))+'"></div>'+(isCircuit?'<div class="builder-field"><label>Tempo total do circuito</label><select data-manual-prop="durationMinutes" data-p="'+pi+'">'+[3,5,8,10,12,15,20,30].map(n=>'<option value="'+n+'"'+(Number(p.durationMinutes||10)===n?' selected':'')+'>'+n+' minutos</option>').join("")+'</select></div>':'')+(!isRest?'<div class="builder-field"><label>Tempo por item (segundos)</label><select data-manual-prop="seconds" data-p="'+pi+'">'+[15,20,30,40,45,50,60,90,120].map(n=>'<option value="'+n+'"'+(Number(p.seconds)===n?' selected':'')+'>'+n+' s</option>').join("")+'</select></div><div class="builder-field"><label>Descanso após cada item (segundos)</label><select data-manual-prop="rest" data-p="'+pi+'">'+[0,5,10,15,20,30,45,60,90].map(n=>'<option value="'+n+'"'+(Number(p.rest)===n?' selected':'')+'>'+n+' s</option>').join("")+'</select></div>':'<div class="builder-field"><label>Duração da pausa (segundos)</label><select data-manual-prop="seconds" data-p="'+pi+'">'+[15,30,45,60,90,120,180].map(n=>'<option value="'+n+'"'+(Number(p.seconds)===n?' selected':'')+'>'+n+' s</option>').join("")+'</select></div>')+'</div>';
+  const settings='<div class="builder-grid" style="margin-bottom:12px"><div class="builder-field"><label>Nome da parte</label><input data-manual-prop="title" data-p="'+pi+'" maxlength="80" value="'+escHtml(p.title||manualTypeLabel(p.type))+'"></div>'+(isCircuit?'<div class="builder-field"><label>Timer do circuito — minutos</label><input type="number" min="0" max="180" step="1" inputmode="numeric" data-manual-prop="durationMinutes" data-p="'+pi+'" value="'+Math.max(0,Number(p.durationMinutes??10))+'"></div><div class="builder-field"><label>Timer do circuito — segundos</label><input type="number" min="0" max="59" step="1" inputmode="numeric" data-manual-prop="durationExtraSeconds" data-p="'+pi+'" value="'+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0))+'"></div>':'')+(!isRest&&!isCircuit?'<div class="builder-field"><label>Tempo por item (segundos)</label><select data-manual-prop="seconds" data-p="'+pi+'">'+[15,20,30,40,45,50,60,90,120].map(n=>'<option value="'+n+'"'+(Number(p.seconds)===n?' selected':'')+'>'+n+' s</option>').join("")+'</select></div><div class="builder-field"><label>Descanso após cada item (segundos)</label><select data-manual-prop="rest" data-p="'+pi+'">'+[0,5,10,15,20,30,45,60,90].map(n=>'<option value="'+n+'"'+(Number(p.rest)===n?' selected':'')+'>'+n+' s</option>').join("")+'</select></div>':isRest?'<div class="builder-field"><label>Duração da pausa (segundos)</label><select data-manual-prop="seconds" data-p="'+pi+'">'+[15,30,45,60,90,120,180].map(n=>'<option value="'+n+'"'+(Number(p.seconds)===n?' selected':'')+'>'+n+' s</option>').join("")+'</select></div>':'')+'</div>';
   const slotCount=Math.max(3,Math.min(30,Number(p.batchSlots)||3));
   const batchFields=Array.from({length:slotCount},(_,si)=>'<div class="builder-field"><label>Item '+(si+1)+'</label><select data-manual-batch-select="'+pi+'"><option value="">Escolha um item…</option>'+manualOptionsMarkup(opts)+'</select></div>').join("");
   const batchButtonLabel=isCircuit?"＋ Adicionar selecionados ao mesmo circuito":"＋ Adicionar selecionados à mesma parte";
@@ -813,12 +813,8 @@ function manualOpenPlay(){
   if(p.type==="rest"||p.type==="transition"){manualPlayItems.push({name:p.type==="transition"?"TROCA PARA LUTA":"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Troca para luta · ":"Descanso · ")+p.seconds+" s",partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||90});return}
   const isCircuit=p.type==="circuit"||p.type==="fightCircuit";
   if(isCircuit){
-   const duration=Math.max(1,Number(p.durationMinutes)||10)*60,itemSeconds=Math.max(1,Number(p.seconds)||50),restSeconds=Math.max(0,Number(p.rest)||0);
-   const cycleSeconds=Math.max(1,p.items.length*(itemSeconds+restSeconds));
-   for(let cycle=0;cycle<Math.ceil(duration/cycleSeconds);cycle++)p.items.forEach((it,ii)=>{
-    manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type),partIndex:pi,isTimedCircuit:true,circuitDuration:cycle===0&&ii===0?duration:null,durationSeconds:itemSeconds});
-    if(restSeconds>0)manualPlayItems.push({name:"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:"Pausa",partIndex:pi,isTimedCircuit:true,isCircuitRest:true,durationSeconds:restSeconds});
-   });
+   const duration=Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
+   p.items.forEach((it,ii)=>manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:"Circuito · "+manualFormatTime(duration),partIndex:pi,isTimedCircuit:true,circuitDuration:ii===0?duration:null}));
   }else p.items.forEach(it=>manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+p.seconds+" s",partIndex:pi}));
  });
  manualPlayIndex=0;manualCircuitDeadline=null;manualItemDeadline=null;manualCurrentCircuitPart=null;manualStopTimer();manualRenderPlay();document.getElementById("playOverlay").hidden=false;
@@ -838,18 +834,16 @@ function manualRenderPlay(){
  document.getElementById("playNext").disabled=manualPlayIndex===manualPlayItems.length-1;
  if(it.isTimedCircuit){
   if(manualCurrentCircuitPart!==it.partIndex){manualCurrentCircuitPart=it.partIndex;manualCircuitDeadline=Date.now()+(Number(it.circuitDuration)||600)*1000}
-  manualItemDeadline=Date.now()+(Number(it.durationSeconds)||50)*1000;
   manualStopTimer();
   const tick=()=>{
-   const now=Date.now(),remaining=(manualCircuitDeadline-now)/1000,itemRemaining=(manualItemDeadline-now)/1000;
+   const remaining=(manualCircuitDeadline-Date.now())/1000;
    if(remaining<=0){
     const next=manualPlayItems.findIndex((x,i)=>i>manualPlayIndex&&x.partIndex>it.partIndex);
     manualStopTimer();manualCurrentCircuitPart=null;
     if(next>=0){manualPlayIndex=next;manualRenderPlay()}else{document.getElementById("playName").textContent="TEMPO ESGOTADO";document.getElementById("playType").textContent="Circuito concluído";document.getElementById("playCount").textContent="FIM DO CIRCUITO";document.getElementById("playNext").disabled=true}
     return;
    }
-   if(itemRemaining<=0){manualPlayIndex++;manualRenderPlay();return}
-   document.getElementById("playType").textContent=(it.isCircuitRest?"DESCANSO":"Exercício") +" · item "+manualFormatTime(itemRemaining)+" · circuito "+manualFormatTime(remaining);
+   document.getElementById("playType").textContent="Tempo restante no circuito · "+manualFormatTime(remaining);
   };
   tick();manualTimerInterval=setInterval(tick,250);
  }else if(it.isPause){manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=Date.now()+(Number(it.durationSeconds)||90)*1000;const tick=()=>{const left=(manualItemDeadline-Date.now())/1000;if(left<=0){manualStopTimer();if(manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}else{document.getElementById("playType").textContent="Pausa concluída";document.getElementById("playNext").disabled=true}return}document.getElementById("playType").textContent=it.detail+" · "+manualFormatTime(left)};tick();manualTimerInterval=setInterval(tick,250)}else{manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=null}
