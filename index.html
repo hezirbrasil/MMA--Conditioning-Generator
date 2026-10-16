@@ -1029,7 +1029,7 @@ function presetFightBlock(label,addPauseAfter=false){
   items.push({name,detail:"Sequência de luta",cat:classifyFightCombo(name)});
  }
  manualParts.push(presetPart("fight",label,{seconds:55,durationMinutes:0,durationExtraSeconds:55,rest:5,items}));
- if(addPauseAfter){manualParts.push(presetPause("Pausa ativa",30,"activePause"));manualParts.push(presetPause("Descanso após pausa ativa",10));}
+ if(addPauseAfter){manualParts.push(presetPause("Pausa ativa",30,"activePause"));}
 }
 function loadWorkoutOption(option){
  if(manualParts.length&&!confirm("Aplicar este modelo vai substituir as partes que estão no montador. Quer continuar?"))return;
