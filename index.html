@@ -67,15 +67,15 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
 <body>
 <header class="top"><div class="brand"><span class="mark"><img src="./icon.svg?v=octagon2" alt="MMA Conditioning — octógono roxo e preto"></span><span>MMA <em>CONDITIONING</em><small>MODELOS DE AULA • TREINO</small></span></div><span class="tag">2 MODELOS DE AULA</span></header>
 <main class="wrap">
-<section class="hero"><div class="eyebrow">● MMA CONDITIONING</div><h1>Escolha sua<br><span>aula.</span></h1><p>Selecione um dos dois modelos de aula para montar a sequência completa, editar os exercícios e iniciar o treino no Modo Play.</p></section>
+<section class="hero"><div class="eyebrow">● MMA CONDITIONING</div><h1>Monte seu<br><span>treino.</span></h1><p>Escolha Fullbody ou Leg Blast e combine com um dos dois modelos de aula para montar a sequência completa e iniciar no Modo Play.</p></section>
 <div hidden aria-hidden="true"><select id="type"><option value="fullbody">Full Body</option><option value="legblast">Leg Blast</option></select><button id="generate" type="button"></button></div>
 
 <section class="panel custom-builder" id="manualBuilder">
  <div class="eyebrow purple">MODELOS DE AULA</div>
  <h2 style="margin:8px 0 6px;font-size:21px">Escolha o modelo</h2>
- <p class="builder-intro">As opções abaixo carregam a estrutura completa da aula. Os exercícios são preenchidos a partir do banco do aplicativo e podem ser editados antes de começar.</p>
+ <p class="builder-intro">Primeiro escolha o tipo de treino e depois o modelo de aula. O gerador respeita as categorias do Fullbody ou do Leg Blast; você pode editar os exercícios antes de começar.</p><div class="builder-field" style="max-width:420px;margin:14px 0"><label for="presetWorkoutType">TIPO DE TREINO</label><select id="presetWorkoutType"><option value="fullbody">Fullbody — corpo todo</option><option value="legblast">Leg Blast — pernas e abdômen</option></select></div>
  <div class="builder-grid" hidden aria-hidden="true"><div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Nome do treino"></div><div class="builder-field"><label for="manualPartType">Parte</label><select id="manualPartType"><option value="circuit">Circuito</option></select></div></div>
- <div class="builder-toolbar"><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">MODELOS DE AULA — MMA CONDITIONING</strong><button type="button" class="primary" id="loadOption1">Aplicar Opção 1 · Começa no funcional</button><button type="button" class="primary" id="loadOption2">Aplicar Opção 2 · Começa na luta</button></div>
+ <div class="builder-toolbar"><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">1. TIPO DE TREINO  ·  2. MODELO DE AULA</strong><button type="button" class="primary" id="loadOption1">Aplicar Opção 1 · Começa no funcional</button><button type="button" class="primary" id="loadOption2">Aplicar Opção 2 · Começa na luta</button></div>
  <div class="builder-play-note">Opção 1 começa pelo funcional e inclui circuitos. Opção 2 começa pela luta e usa exercícios funcionais individuais. As trocas duram 1min30s.</div>
  <div id="manualParts" class="builder-parts"><div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div></div>
  <div id="manualStatus" class="builder-status" aria-live="polite"></div>
@@ -860,20 +860,50 @@ function presetPart(type,title,extra={}){
 function presetPause(title,seconds,type="rest"){
  return presetPart(type,title,{seconds,durationMinutes:Math.floor(seconds/60),durationExtraSeconds:seconds%60,items:[{name:title,detail:title}]});
 }
-let presetExerciseCursor=0,presetFightCursor=0;
+let presetExerciseCursor=0,presetFightCursor=0,presetSelectedType="fullbody",presetFunctionalPhase=0,presetSegmentPickIndex=0,presetUsedNames=new Set(),presetOption=1;
+function presetResetFunctionalPhase(phase){presetFunctionalPhase=phase;presetSegmentPickIndex=0;presetUsedNames=new Set();presetExerciseCursor=0}
+function presetPickExercise(){
+ const type=presetSelectedType;
+ const all=getExerciseBank().filter(x=>Array.isArray(x.types)&&x.types.includes(type)).slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
+ if(!all.length)return {name:"Exercício não cadastrado",cat:"cardio",types:[type]};
+ let targetCat=null;
+ if(type==="fullbody"&&presetFunctionalPhase===0){
+  const cats=["peito","costas","ombros","bíceps","tríceps","pernas","posterior","composto","core","cardio"];
+  targetCat=cats[presetSegmentPickIndex]||["composto","pernas","posterior","core","cardio"][((presetSegmentPickIndex-cats.length)%5+5)%5];
+ }else if(type==="legblast"){
+  const total=presetFunctionalPhase===0?(presetOption===1?10:12):(presetOption===1?7:8);
+  const lowerCount=total===12?7:total===10?6:4;
+  const coreCount=total===12?3:2;
+  const cardioCount=total-lowerCount-coreCount;
+  const lowerSeq=Array.from({length:lowerCount},(_,i)=>["pernas","composto","posterior"][i%3]);
+  const cats=[...lowerSeq,...Array(coreCount).fill("core"),...Array(cardioCount).fill("cardio")];
+  // Intercale os grupos para não concentrar pernas, core e cardio em sequência.
+  const interleaved=[];
+  const lower=cats.filter(c=>["pernas","composto","posterior"].includes(c));
+  const core=cats.filter(c=>c==="core"),cardio=cats.filter(c=>c==="cardio");
+  const max=Math.max(lower.length,core.length,cardio.length);
+  for(let i=0;i<max;i++){if(lower[i])interleaved.push(lower[i]);if(core[i])interleaved.push(core[i]);if(cardio[i])interleaved.push(cardio[i])}
+  targetCat=interleaved[presetSegmentPickIndex]||"pernas";
+ }
+ let choices=targetCat?all.filter(x=>x.cat===targetCat&&!presetUsedNames.has(x.name)):[];
+ if(!choices.length&&targetCat)choices=all.filter(x=>x.cat===targetCat);
+ if(!choices.length)choices=all.filter(x=>!presetUsedNames.has(x.name));
+ if(!choices.length)choices=all;
+ const it=choices[presetExerciseCursor%choices.length];
+ presetExerciseCursor++;presetSegmentPickIndex++;presetUsedNames.add(it.name);
+ return {...it};
+}
 function presetExerciseBlock(label,addFinalRest=false){
- const list=getExerciseBank().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
  for(let i=0;i<4;i++){
-  const it=list[(presetExerciseCursor++)%list.length];
+  const it=presetPickExercise();
   manualParts.push(presetPart("individual",label+" · Exercício "+(i+1),{seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:0,selectedExercise:it.name,items:[{...it}]}));
   if(i<3)manualParts.push(presetPause("Descanso entre exercícios",10));
  }
  if(addFinalRest)manualParts.push(presetPause("Descanso funcional",40));
 }
 function presetCircuit(label,addFinalRest=false){
- const list=getExerciseBank().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
  const items=[];
- for(let i=0;i<3;i++)items.push({...list[(presetExerciseCursor++)%list.length]});
+ for(let i=0;i<3;i++)items.push(presetPickExercise());
  manualParts.push(presetPart("circuit",label,{durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items}));
  if(addFinalRest)manualParts.push(presetPause("Descanso do circuito",40));
 }
@@ -888,7 +918,7 @@ function presetFightBlock(label,addPauseAfter=false){
 }
 function loadWorkoutOption(option){
  if(manualParts.length&&!confirm("Aplicar este modelo vai substituir as partes que estão no montador. Quer continuar?"))return;
- manualParts=[];presetExerciseCursor=0;presetFightCursor=0;
+ manualParts=[];presetExerciseCursor=0;presetFightCursor=0;presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetOption=option;presetResetFunctionalPhase(0);
  const addSwitch=title=>manualParts.push(presetPause(title,90,"transition"));
  manualParts.push(presetPause("AQUECIMENTO",180));
  if(option===1){
@@ -900,6 +930,7 @@ function loadWorkoutOption(option){
   presetFightBlock("Luta · Bloco 2",true);
   presetFightBlock("Luta · Bloco 3",false);
   addSwitch("TROCA PARA O FUNCIONAL");
+  presetResetFunctionalPhase(1);
   presetExerciseBlock("Funcional · Exercícios individuais",true);
   presetCircuit("Funcional · Circuito final",false);
   addSwitch("TROCA PARA A LUTA");
@@ -917,13 +948,14 @@ function loadWorkoutOption(option){
   presetFightBlock("Luta · Bloco 1",true);
   presetFightBlock("Luta · Bloco 2",false);
   addSwitch("TROCA PARA O FUNCIONAL");
+  presetResetFunctionalPhase(1);
   presetExerciseBlock("Funcional · Bloco 1",true);
   presetExerciseBlock("Funcional · Bloco 2",false);
  }
  manualParts.push(presetPause("FIM",60));
- document.getElementById("manualWorkoutName").value=option===1?"MMA Conditioning — Opção 1 (Funcional primeiro)":"MMA Conditioning — Opção 2 (Luta primeiro)";
+ document.getElementById("manualWorkoutName").value=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" — "+(option===1?"Opção 1 (Funcional primeiro)":"Opção 2 (Luta primeiro)");
  manualRenderParts();
- document.getElementById("manualStatus").textContent="Modelo aplicado! Os exercícios foram preenchidos com itens da sua biblioteca. Você pode trocar qualquer exercício e salvar o treino completo.";
+ document.getElementById("manualStatus").textContent=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" aplicado com "+(option===1?"Opção 1":"Opção 2")+". Você pode trocar qualquer exercício e salvar o treino completo.";
  document.getElementById("manualBuilder").scrollIntoView({behavior:"smooth",block:"start"});
 }
 document.getElementById("loadOption1").addEventListener("click",()=>loadWorkoutOption(1));
