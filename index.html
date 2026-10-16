@@ -711,15 +711,15 @@ let manualSaveMode="workout";
 let manualSavePartId=null;
 const manualPartDefaults={
  circuit:{title:"Circuito funcional",durationMinutes:10,seconds:50,rest:10,items:[]},
- fightCircuit:{title:"Circuito de luta",durationMinutes:10,seconds:50,rest:10,items:[]},
+ fightCircuit:{title:"Sequências de luta individuais",rounds:1,seconds:50,rest:10,items:[]},
  individual:{title:"Exercício individual",rounds:1,seconds:50,rest:10,items:[]},
  fight:{title:"Sequências de luta individuais",rounds:1,seconds:50,rest:10,items:[]},
  rest:{title:"Descanso / transição",rounds:1,seconds:90,rest:0,items:[{name:"Descanso / transição",detail:"Pausa"}]}
 };
 function manualId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
-function manualLoadLibrary(){try{const x=JSON.parse(localStorage.getItem(MANUAL_LIBRARY_KEY)||"[]");return Array.isArray(x)?x:[]}catch(e){return[]}}
+function manualLoadLibrary(){try{const x=JSON.parse(localStorage.getItem(MANUAL_LIBRARY_KEY)||"[]");if(!Array.isArray(x))return[];return x.map(entry=>{const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="Circuito de luta"?"Sequências de luta individuais":(p.title||"Sequências de luta individuais")}:p;if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry})}catch(e){return[]}}
 function manualStoreLibrary(items){try{localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));return true}catch(e){return false}}
-function manualTypeLabel(type){return ({circuit:"Circuito funcional",fightCircuit:"Circuito de luta",individual:"Exercício individual",fight:"Sequências de luta",rest:"Descanso / transição"})[type]||"Parte"}
+function manualTypeLabel(type){return ({circuit:"Circuito funcional",fightCircuit:"Sequências de luta",individual:"Exercício individual",fight:"Sequências de luta",rest:"Descanso / transição"})[type]||"Parte"}
 function manualOptions(part){
  if(part.type==="circuit"||part.type==="individual"){
   const list=getExerciseBank().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
@@ -746,7 +746,7 @@ function manualRenderParts(){
  const host=document.getElementById("manualParts");
  if(!manualParts.length){host.innerHTML='<div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div>';return}
  host.innerHTML=manualParts.map((p,pi)=>{
-  const isCircuit=p.type==="circuit"||p.type==="fightCircuit";
+  const isCircuit=p.type==="circuit";
   const isRest=p.type==="rest";
   const opts=manualOptions(p);
   const itemRows=p.items.map((it,ii)=>'<div class="builder-item"><span><b>'+String(ii+1).padStart(2,"0")+'.</b> '+escHtml(it.name)+'</span><button type="button" class="secondary remove" data-manual-action="remove-item" data-p="'+pi+'" data-i="'+ii+'">Remover</button></div>').join("");
