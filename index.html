@@ -37,13 +37,13 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
 <section class="panel custom-builder" id="manualBuilder">
  <div class="eyebrow purple">MONTE DO SEU JEITO</div>
  <h2 style="margin:8px 0 6px;font-size:21px">＋ Treino personalizado</h2>
- <p class="builder-intro">Comece em branco e combine circuitos funcionais por tempo, exercícios individuais, sequências de luta e pausas na ordem que quiser. No circuito, repita a sequência quantas vezes conseguir até o tempo acabar. O gerador tradicional continua disponível abaixo.</p>
+ <p class="builder-intro">Monte seu treino com circuito, exercício individual, combo de luta, troca para luta e descanso, na ordem que quiser. O circuito funcional se repete até o tempo acabar.</p>
  <div class="builder-grid">
   <div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Ex.: Condicionamento misto"></div>
-  <div class="builder-field"><label for="manualPartType">Parte que deseja adicionar</label><select id="manualPartType"><option value="circuit">Circuito funcional</option><option value="individual">Exercício individual</option><option value="fight">Sequências de luta individuais</option><option value="rest">Descanso / transição</option></select></div>
+  <div class="builder-field"><label for="manualPartType">Parte que deseja adicionar</label><select id="manualPartType"><option value="circuit">Circuito</option><option value="individual">Exercício individual</option><option value="fight">Combo</option><option value="transition">Troca</option><option value="rest">Descanso</option></select></div>
  </div>
  <div class="builder-toolbar"><button type="button" class="primary" id="manualAddPart">＋ Adicionar parte</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div>
- <div class="builder-play-note">Circuitos: escolha o tempo total, o tempo de cada exercício e o descanso. A sequência se repete até o cronômetro zerar, sem definir número de voltas. Partes individuais aparecem uma vez. Use as setas para reorganizar as partes.</div>
+ <div class="builder-play-note">Circuito: repita os exercícios pelo tempo definido. Combo: pratique sequências de luta. Troca: pausa para mudar do funcional para a luta. Descanso: pausa livre.</div>
  <div id="manualParts" class="builder-parts"><div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div></div>
  <div id="manualStatus" class="builder-status" aria-live="polite"></div>
  <div id="manualLibrary" class="builder-library" hidden><h3>Biblioteca pessoal</h3><p class="builder-intro">Salve partes para reutilizar em outros treinos ou carregue um treino completo. Tudo fica neste navegador.</p><div class="builder-grid"><div class="builder-field"><label for="manualLibraryName">Nome para salvar</label><input id="manualLibraryName" maxlength="80" type="text" placeholder="Nome da parte ou treino"></div><div class="builder-field"><label for="manualLibraryKind">Salvar como</label><select id="manualLibraryKind"><option value="part">Parte reutilizável</option><option value="workout">Treino completo</option></select></div></div><div class="builder-toolbar"><button type="button" class="primary" id="manualConfirmSave">Salvar na biblioteca</button><button type="button" class="secondary" id="manualCloseLibrary">Fechar biblioteca</button></div><div id="manualLibraryList" style="margin-top:14px"></div></div>
@@ -711,15 +711,16 @@ let manualSaveMode="workout";
 let manualSavePartId=null;
 const manualPartDefaults={
  circuit:{title:"Circuito funcional",durationMinutes:10,seconds:50,rest:10,items:[]},
- fightCircuit:{title:"Sequências de luta individuais",rounds:1,seconds:50,rest:10,items:[]},
+ fightCircuit:{title:"Combo",rounds:1,seconds:50,rest:10,items:[]},
  individual:{title:"Exercício individual",rounds:1,seconds:50,rest:10,items:[]},
- fight:{title:"Sequências de luta individuais",rounds:1,seconds:50,rest:10,items:[]},
- rest:{title:"Descanso / transição",rounds:1,seconds:90,rest:0,items:[{name:"Descanso / transição",detail:"Pausa"}]}
+ fight:{title:"Combo",rounds:1,seconds:50,rest:10,items:[]},
+  transition:{title:"Troca para luta",rounds:1,seconds:30,rest:0,items:[{name:"TROCA PARA LUTA",detail:"Transição"}]},
+ rest:{title:"Descanso",rounds:1,seconds:90,rest:0,items:[{name:"DESCANSO",detail:"Pausa"}]}
 };
 function manualId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
 function manualLoadLibrary(){try{const x=JSON.parse(localStorage.getItem(MANUAL_LIBRARY_KEY)||"[]");if(!Array.isArray(x))return[];return x.map(entry=>{const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="Circuito de luta"?"Sequências de luta individuais":(p.title||"Sequências de luta individuais")}:p;if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry})}catch(e){return[]}}
 function manualStoreLibrary(items){try{localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));return true}catch(e){return false}}
-function manualTypeLabel(type){return ({circuit:"Circuito funcional",fightCircuit:"Sequências de luta",individual:"Exercício individual",fight:"Sequências de luta",rest:"Descanso / transição"})[type]||"Parte"}
+function manualTypeLabel(type){return ({circuit:"Circuito funcional",fightCircuit:"Combo",individual:"Exercício individual",fight:"Combo",transition:"Troca",rest:"Descanso"})[type]||"Parte"}
 function manualOptions(part){
  if(part.type==="circuit"||part.type==="individual"){
   const list=getExerciseBank().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
@@ -747,7 +748,7 @@ function manualRenderParts(){
  if(!manualParts.length){host.innerHTML='<div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div>';return}
  host.innerHTML=manualParts.map((p,pi)=>{
   const isCircuit=p.type==="circuit";
-  const isRest=p.type==="rest";
+  const isRest=p.type==="rest"||p.type==="transition";
   const opts=manualOptions(p);
   const itemRows=p.items.map((it,ii)=>'<div class="builder-item"><span><b>'+String(ii+1).padStart(2,"0")+'.</b> '+escHtml(it.name)+'</span><button type="button" class="secondary remove" data-manual-action="remove-item" data-p="'+pi+'" data-i="'+ii+'">Remover</button></div>').join("");
   const settings='<div class="builder-grid" style="margin-bottom:12px"><div class="builder-field"><label>Nome da parte</label><input data-manual-prop="title" data-p="'+pi+'" maxlength="80" value="'+escHtml(p.title||manualTypeLabel(p.type))+'"></div>'+(isCircuit?'<div class="builder-field"><label>Tempo total do circuito</label><select data-manual-prop="durationMinutes" data-p="'+pi+'">'+[3,5,8,10,12,15,20,30].map(n=>'<option value="'+n+'"'+(Number(p.durationMinutes||10)===n?' selected':'')+'>'+n+' minutos</option>').join("")+'</select></div>':'')+(!isRest?'<div class="builder-field"><label>Tempo por item (segundos)</label><select data-manual-prop="seconds" data-p="'+pi+'">'+[15,20,30,40,45,50,60,90,120].map(n=>'<option value="'+n+'"'+(Number(p.seconds)===n?' selected':'')+'>'+n+' s</option>').join("")+'</select></div><div class="builder-field"><label>Descanso após cada item (segundos)</label><select data-manual-prop="rest" data-p="'+pi+'">'+[0,5,10,15,20,30,45,60,90].map(n=>'<option value="'+n+'"'+(Number(p.rest)===n?' selected':'')+'>'+n+' s</option>').join("")+'</select></div>':'<div class="builder-field"><label>Duração da pausa (segundos)</label><select data-manual-prop="seconds" data-p="'+pi+'">'+[15,30,45,60,90,120,180].map(n=>'<option value="'+n+'"'+(Number(p.seconds)===n?' selected':'')+'>'+n+' s</option>').join("")+'</select></div>')+'</div>';
@@ -799,7 +800,7 @@ function manualExpandItems(){
    const duration=Math.max(1,Number(p.durationMinutes)||10)*60;
    const cycleSeconds=Math.max(1,p.items.length*(Math.max(1,Number(p.seconds)||50)+Math.max(0,Number(p.rest)||0)));
    for(let cycle=0;cycle<Math.ceil(duration/cycleSeconds);cycle++)p.items.forEach((it,ii)=>items.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+p.seconds+" s",partIndex:pi,itemIndex:ii,isTimedCircuit:true,circuitDuration:cycle===0&&ii===0?duration:null}));
-  }else if(p.type==="rest")items.push({name:"DESCANSO / TRANSIÇÃO",group:p.title||"Descanso",detail:"Pausa de "+p.seconds+" segundos",partIndex:pi,itemIndex:0});
+  }else if(p.type==="rest"||p.type==="transition")items.push({name:p.type==="transition"?"TROCA PARA LUTA":"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Troca para luta: ":"Pausa de ")+p.seconds+" segundos",partIndex:pi,itemIndex:0});
   else p.items.forEach((it,ii)=>items.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+p.seconds+" s",partIndex:pi,itemIndex:ii}));
  });
  return items;
@@ -809,7 +810,7 @@ function manualOpenPlay(){
  if(!manualParts.length||!manualParts.some(p=>p.items.length)){document.getElementById("manualStatus").textContent="Adicione partes e itens antes de iniciar o Modo Play.";return}
  manualPlayItems=[];
  manualParts.forEach((p,pi)=>{
-  if(p.type==="rest"){manualPlayItems.push({name:"DESCANSO / TRANSIÇÃO",group:p.title||"Descanso",detail:"Pausa de "+p.seconds+" segundos",partIndex:pi});return}
+  if(p.type==="rest"||p.type==="transition"){manualPlayItems.push({name:p.type==="transition"?"TROCA PARA LUTA":"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Troca para luta · ":"Descanso · ")+p.seconds+" s",partIndex:pi});return}
   const isCircuit=p.type==="circuit"||p.type==="fightCircuit";
   if(isCircuit){
    const duration=Math.max(1,Number(p.durationMinutes)||10)*60,itemSeconds=Math.max(1,Number(p.seconds)||50),restSeconds=Math.max(0,Number(p.rest)||0);
