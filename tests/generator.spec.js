@@ -1,0 +1,133 @@
+const { test, expect } = require("@playwright/test");
+
+test.beforeEach(async ({ page }) => {
+  await page.goto("/");
+});
+
+test("a página inicial carrega com as opções de treino", async ({ page }) => {
+  await expect(page).toHaveTitle(/MMA Conditioning/);
+  await expect(page.locator("#type")).toBeVisible();
+  await expect(page.locator("#type option")).toHaveText(["Full Body", "Leg Blast"]);
+  await expect(page.locator("#generate")).toBeVisible();
+});
+
+for (const workoutType of [
+  { label: "Full Body", value: "fullbody" },
+  { label: "Leg Blast", value: "legblast" }
+]) {
+  test(`gera ${workoutType.label} com quatro blocos`, async ({ page }) => {
+    await page.locator("#type").selectOption(workoutType.value);
+    await page.locator("#generate").click();
+
+    await expect(page.locator("#result")).toBeVisible();
+    await expect(page.locator("#resultName")).toHaveText(workoutType.label);
+    await expect(page.locator(".block")).toHaveCount(4);
+    await expect(page.locator(".blockhead")).toHaveText([
+      /BLOCO 1 — FUNCIONAL/,
+      /BLOCO 2 — LUTA/,
+      /BLOCO 3 — FUNCIONAL/,
+      /BLOCO 4 — LUTA/
+    ]);
+
+    const blockCounts = await page.locator(".block").evaluateAll(blocks =>
+      blocks.map(block => block.querySelectorAll(".exercise").length)
+    );
+    expect(blockCounts).toEqual([12, 12, 8, 8]);
+    await expect(page.locator(".exercise")).toHaveCount(40);
+  });
+}
+
+test("não repete exercícios funcionais na mesma sessão", async ({ page }) => {
+  await page.locator("#generate").click();
+
+  const names = await page.locator(".block").nth(0).locator(".ename")
+    .allTextContents();
+  const secondBlockNames = await page.locator(".block").nth(2).locator(".ename")
+    .allTextContents();
+  const functionalNames = [...names, ...secondBlockNames];
+
+  expect(new Set(functionalNames).size).toBe(functionalNames.length);
+});
+
+test("o banco contém a sequência de golpes solicitada", async ({ page }) => {
+  const builtInSequence = await page.evaluate(() =>
+    typeof fight !== "undefined" &&
+    fight.includes("Direto + Uppercut T + Cruzado T")
+  );
+  expect(builtInSequence).toBe(true);
+});
+
+test("permite criar uma sequência e mantê-la após recarregar", async ({ page }) => {
+  await page.locator("#techniqueSelect").selectOption("Direto");
+  await page.locator("#addTechnique").click();
+  await page.locator("#techniqueSelect").selectOption("Uppercut T");
+  await page.locator("#addTechnique").click();
+  await page.locator("#techniqueSelect").selectOption("Cruzado T");
+  await page.locator("#addTechnique").click();
+
+  await expect(page.locator("#sequencePreview")).toContainText("Direto");
+  await page.locator("#saveSequence").click();
+  await expect(page.locator("#sequenceStatus")).toContainText("Sequência salva!");
+  await expect(page.locator("#customFightBank")).toContainText(
+    "Direto + Uppercut T + Cruzado T"
+  );
+
+  await page.reload();
+  await expect(page.locator("#customFightBank")).toContainText(
+    "Direto + Uppercut T + Cruzado T"
+  );
+});
+
+test("Modo Play avança, volta e fecha", async ({ page }) => {
+  await page.locator("#generate").click();
+  await page.locator("#openPlay").click();
+
+  await expect(page.locator("#playOverlay")).toBeVisible();
+  await expect(page.locator("#playCount")).toHaveText("ITEM 1 DE 40");
+  await page.locator("#playNext").click();
+  await expect(page.locator("#playCount")).toHaveText("ITEM 2 DE 40");
+  await page.locator("#playPrev").click();
+  await expect(page.locator("#playCount")).toHaveText("ITEM 1 DE 40");
+  await page.locator("#closePlay").click();
+  await expect(page.locator("#playOverlay")).toBeHidden();
+});
+
+test("salva um treino e o recupera depois de recarregar", async ({ page }) => {
+  await page.locator("#generate").click();
+  await page.locator("#saveWorkoutButton").click();
+  await page.locator("#savedWorkoutName").fill("Teste automatizado");
+  await page.locator("#confirmSaveItem").click();
+
+  await expect(page.locator("#savedItemsList")).toContainText("Teste automatizado");
+  await page.reload();
+  await page.locator("#openSavedButton").click();
+  await expect(page.locator("#savedItemsList")).toContainText("Teste automatizado");
+
+  await page.locator('[data-saved-action="load"]').click();
+  await expect(page.locator("#result")).toBeVisible();
+  await expect(page.locator(".exercise")).toHaveCount(40);
+});
+
+test("dados personalizados inválidos no armazenamento não impedem o carregamento", async ({ page }) => {
+  await page.evaluate(() => {
+    localStorage.setItem("mc-custom-fight", "{json inválido");
+    localStorage.setItem("mc-custom-exercises", "{json inválido");
+  });
+  await page.reload();
+
+  await expect(page.locator("#generate")).toBeVisible();
+  await page.locator("#generate").click();
+  await expect(page.locator("#result")).toBeVisible();
+});
+
+test("a interface não cria rolagem horizontal no celular", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator("#generate").click();
+
+  const dimensions = await page.evaluate(() => ({
+    viewport: document.documentElement.clientWidth,
+    document: document.documentElement.scrollWidth
+  }));
+  expect(dimensions.document).toBeLessThanOrEqual(dimensions.viewport + 1);
+  await expect(page.locator(".block").first()).toBeVisible();
+});
