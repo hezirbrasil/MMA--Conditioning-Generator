@@ -1034,7 +1034,13 @@ document.getElementById("manualParts").addEventListener("click",e=>{
  const b=e.target.closest("button[data-manual-action]");if(!b)return;
  const pi=Number(b.dataset.p),p=manualParts[pi];if(!p)return;
  const action=b.dataset.manualAction;
- if(action==="toggle-collapse"){p.collapsed=!p.collapsed;manualRenderParts();return}
+ if(action==="toggle-collapse"){
+  p.collapsed=!p.collapsed;
+  const card=b.closest(".builder-part"),body=card&&card.querySelector(".builder-part-body");
+  if(body)body.hidden=p.collapsed;
+  b.textContent=p.type==="circuit"?(p.collapsed?"＋ Editar circuito":"− Minimizar edição"):(p.collapsed?"＋ Expandir":"− Minimizar");
+  return;
+ }
  if(action==="add-slot"){
   p.batchSlots=Math.min(30,(Number(p.batchSlots)||3)+3);manualRenderParts();document.getElementById("manualStatus").textContent="Campos extras adicionados. Você pode incluir mais exercícios no mesmo circuito.";
  }else if(action==="add-batch"){
