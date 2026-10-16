@@ -1059,7 +1059,12 @@ document.getElementById("manualParts").addEventListener("click",e=>{
  if(action==="toggle-collapse"){
   p.collapsed=!p.collapsed;
   const card=b.closest(".builder-part"),body=card&&card.querySelector(".builder-part-body");
-  if(body)body.hidden=p.collapsed;
+  if(card)card.classList.toggle("is-collapsed",p.collapsed);
+  if(body){
+   body.hidden=p.collapsed;
+   if(p.collapsed)body.style.setProperty("display","none","important");
+   else body.style.removeProperty("display");
+  }
   b.textContent=p.type==="circuit"?(p.collapsed?"＋ Editar circuito":"− Minimizar edição"):(p.collapsed?"＋ Expandir":"− Minimizar");
   return;
  }
