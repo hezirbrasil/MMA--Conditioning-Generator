@@ -7,11 +7,11 @@
 <link rel="icon" type="image/svg+xml" href="./icon.svg?v=dumbbell2">
 <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=dumbbell2">
 
-<title>Workout Round Timer — Treinos e Intervalos</title>
+<title>MMA Conditioning — Modelos de Aula</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
 :root{--bg:#0b0910;--panel:#15111c;--purple:#9b5cff;--line:#332541;--muted:#aaa0b8;--text:#f7f3ff;--soft:#241731}
-#addExercisePanel{display:none!important}
+#addExercisePanel,#exerciseBankPanel,#fightBuilderPanel,#result{display:none!important}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#29133d,transparent 36%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
 .top{border-bottom:1px solid #2b2036;display:flex;align-items:center;justify-content:space-between;padding:17px max(18px,calc((100% - 1000px)/2))}
 .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:1px;font-size:13px}.mark{width:44px;height:44px;display:grid;place-items:center;background:#0b0910;border:1px solid var(--purple);border-radius:10px;box-shadow:0 0 14px #9b5cff55;overflow:hidden}.mark img{width:100%;height:100%;object-fit:cover}.brand em{color:var(--purple);font-style:normal}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:2px;margin-top:4px}
@@ -65,21 +65,18 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
 </style>
 </head>
 <body>
-<header class="top"><div class="brand"><span class="mark"><img src="./icon.svg?v=octagon2" alt="Workout Round Timer — octógono roxo e preto"></span><span>ROUND <em>WORKOUT TIMER</em><small>TREINOS • INTERVALOS</small></span></div><span class="tag">FULL BODY • LEG BLAST</span></header>
+<header class="top"><div class="brand"><span class="mark"><img src="./icon.svg?v=octagon2" alt="MMA Conditioning — octógono roxo e preto"></span><span>MMA <em>CONDITIONING</em><small>MODELOS DE AULA • TREINO</small></span></div><span class="tag">2 MODELOS DE AULA</span></header>
 <main class="wrap">
-<section class="hero"><div class="eyebrow">● SEU TREINO. SUAS REGRAS.</div><h1>Monte. Treine.<br><span>Supere limites.</span></h1><p>Crie circuitos, exercícios individuais e sequências de luta do seu jeito. Organize os blocos, ajuste os tempos e salve seus treinos favoritos.</p></section>
+<section class="hero"><div class="eyebrow">● MMA CONDITIONING</div><h1>Escolha sua<br><span>aula.</span></h1><p>Selecione um dos dois modelos de aula para montar a sequência completa, editar os exercícios e iniciar o treino no Modo Play.</p></section>
 <div hidden aria-hidden="true"><select id="type"><option value="fullbody">Full Body</option><option value="legblast">Leg Blast</option></select><button id="generate" type="button"></button></div>
 
 <section class="panel custom-builder" id="manualBuilder">
- <div class="eyebrow purple">MONTE DO SEU JEITO</div>
- <h2 style="margin:8px 0 6px;font-size:21px">＋ Treino personalizado</h2>
- <p class="builder-intro">Monte seu treino com circuito, exercício individual, combo de luta, troca para luta e descanso, na ordem que quiser. O circuito funcional se repete até o tempo acabar.</p>
- <div class="builder-grid">
-  <div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Ex.: Condicionamento misto"></div>
-  <div class="builder-field"><label for="manualPartType">Parte que deseja adicionar</label><select id="manualPartType"><option value="circuit">Circuito</option><option value="individual">Exercício individual</option><option value="fight">Combo</option><option value="transition">Troca</option><option value="rest">Descanso</option><option value="activePause">Pausa ativa</option></select></div>
- </div>
- <div class="builder-toolbar"><button type="button" class="primary" id="manualAddPart">＋ Adicionar parte</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">MODELOS DE AULA — MMA CONDITIONING</strong><button type="button" class="primary" id="loadOption1">Aplicar Opção 1 · Começa no funcional</button><button type="button" class="primary" id="loadOption2">Aplicar Opção 2 · Começa na luta</button></div>
- <div class="builder-play-note">Circuito: repita os exercícios pelo tempo definido. Combo: pratique sequências de luta. Troca: pausa para mudar do funcional para a luta. Descanso: pausa livre.</div>
+ <div class="eyebrow purple">MODELOS DE AULA</div>
+ <h2 style="margin:8px 0 6px;font-size:21px">Escolha o modelo</h2>
+ <p class="builder-intro">As opções abaixo carregam a estrutura completa da aula. Os exercícios são preenchidos a partir do banco do aplicativo e podem ser editados antes de começar.</p>
+ <div class="builder-grid" hidden aria-hidden="true"><div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Nome do treino"></div><div class="builder-field"><label for="manualPartType">Parte</label><select id="manualPartType"><option value="circuit">Circuito</option></select></div></div>
+ <div class="builder-toolbar"><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">MODELOS DE AULA — MMA CONDITIONING</strong><button type="button" class="primary" id="loadOption1">Aplicar Opção 1 · Começa no funcional</button><button type="button" class="primary" id="loadOption2">Aplicar Opção 2 · Começa na luta</button></div>
+ <div class="builder-play-note">Opção 1 começa pelo funcional e inclui circuitos. Opção 2 começa pela luta e usa exercícios funcionais individuais. As trocas duram 1min30s.</div>
  <div id="manualParts" class="builder-parts"><div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div></div>
  <div id="manualStatus" class="builder-status" aria-live="polite"></div>
  <div id="manualLibrary" class="builder-library" hidden><h3>Biblioteca pessoal</h3><p class="builder-intro">Salve partes para reutilizar em outros treinos ou carregue um treino completo. Tudo fica neste navegador.</p><div class="builder-grid"><div class="builder-field"><label for="manualLibraryName">Nome para salvar</label><input id="manualLibraryName" maxlength="80" type="text" placeholder="Nome da parte ou treino"></div><div class="builder-field"><label for="manualLibraryKind">Salvar como</label><select id="manualLibraryKind"><option value="part">Parte reutilizável</option><option value="workout">Treino completo</option></select></div></div><div class="builder-toolbar"><button type="button" class="primary" id="manualConfirmSave">Salvar na biblioteca</button><button type="button" class="secondary" id="manualCloseLibrary">Fechar biblioteca</button></div><div id="manualLibraryList" style="margin-top:14px"></div></div>
