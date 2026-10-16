@@ -76,7 +76,7 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
  <p class="builder-intro">Monte seu treino com circuito, exercício individual, combo de luta, troca para luta e descanso, na ordem que quiser. O circuito funcional se repete até o tempo acabar.</p>
  <div class="builder-grid">
   <div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Ex.: Condicionamento misto"></div>
-  <div class="builder-field"><label for="manualPartType">Parte que deseja adicionar</label><select id="manualPartType"><option value="circuit">Circuito</option><option value="individual">Exercício individual</option><option value="fight">Combo</option><option value="transition">Troca</option><option value="rest">Descanso</option></select></div>
+  <div class="builder-field"><label for="manualPartType">Parte que deseja adicionar</label><select id="manualPartType"><option value="circuit">Circuito</option><option value="individual">Exercício individual</option><option value="fight">Combo</option><option value="transition">Troca</option><option value="rest">Descanso</option><option value="activePause">Pausa ativa</option></select></div>
  </div>
  <div class="builder-toolbar"><button type="button" class="primary" id="manualAddPart">＋ Adicionar parte</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div>
  <div class="builder-play-note">Circuito: repita os exercícios pelo tempo definido. Combo: pratique sequências de luta. Troca: pausa para mudar do funcional para a luta. Descanso: pausa livre.</div>
@@ -809,12 +809,13 @@ const manualPartDefaults={
  individual:{title:"Exercício individual",rounds:1,seconds:50,rest:0,items:[]},
  fight:{title:"Combo",rounds:1,seconds:50,rest:0,items:[]},
   transition:{title:"Troca para luta",rounds:1,seconds:30,rest:0,items:[{name:"TROCA PARA LUTA",detail:"Transição"}]},
- rest:{title:"Descanso",rounds:1,seconds:90,rest:0,items:[{name:"DESCANSO",detail:"Pausa"}]}
+ rest:{title:"Descanso",rounds:1,seconds:90,rest:0,items:[{name:"DESCANSO",detail:"Pausa"}]},
+  activePause:{title:"Pausa ativa",rounds:1,seconds:30,rest:0,items:[{name:"PAUSA ATIVA",detail:"Recuperação ativa"}]}
 };
 function manualId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
 function manualLoadLibrary(){try{const x=JSON.parse(localStorage.getItem(MANUAL_LIBRARY_KEY)||"[]");if(!Array.isArray(x))return[];return x.map(entry=>{const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="Circuito de luta"?"Sequências de luta individuais":(p.title||"Sequências de luta individuais")}:p;if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry})}catch(e){return[]}}
 function manualStoreLibrary(items){try{localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));return true}catch(e){return false}}
-function manualTypeLabel(type){return ({circuit:"Circuito funcional",fightCircuit:"Combo",individual:"Exercício individual",fight:"Combo",transition:"Troca",rest:"Descanso"})[type]||"Parte"}
+function manualTypeLabel(type){return ({circuit:"Circuito funcional",fightCircuit:"Combo",individual:"Exercício individual",fight:"Combo",transition:"Troca",rest:"Descanso",activePause:"Pausa ativa"})[type]||"Parte"}
 
 const fightCategoryLabels={
  "Começam com Jab":"Jab",
@@ -868,7 +869,7 @@ function manualRenderParts(){
  if(!manualParts.length){host.innerHTML='<div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div>';return}
  host.innerHTML=manualParts.map((p,pi)=>{
   const isCircuit=p.type==="circuit";
-  const isRest=p.type==="rest"||p.type==="transition";
+  const isRest=p.type==="rest"||p.type==="transition"||p.type==="activePause";
   const opts=manualOptions(p);
   const fightCats=[...new Set(opts.map(o=>o.cat))];
   const selectedFightCat=p.fightCategory||fightCats[0]||"Começam com Jab";
@@ -959,7 +960,7 @@ function manualExpandItems(){
    const duration=Math.max(1,Number(p.durationMinutes)||10)*60;
    const cycleSeconds=Math.max(1,p.items.length*(Math.max(1,Number(p.seconds)||50)+Math.max(0,Number(p.rest)||0)));
    for(let cycle=0;cycle<Math.ceil(duration/cycleSeconds);cycle++)p.items.forEach((it,ii)=>items.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+p.seconds+" s",partIndex:pi,itemIndex:ii,isTimedCircuit:true,circuitDuration:cycle===0&&ii===0?duration:null}));
-  }else if(p.type==="rest"||p.type==="transition")items.push({name:p.type==="transition"?"TROCA PARA LUTA":"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Troca para luta: ":"Pausa de ")+p.seconds+" segundos",partIndex:pi,itemIndex:0});
+  }else if(p.type==="rest"||p.type==="transition"||p.type==="activePause")items.push({name:p.type==="transition"?"TROCA PARA LUTA":p.type==="activePause"?"PAUSA ATIVA":"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Troca para luta: ":p.type==="activePause"?"Recuperação ativa: ":"Pausa de ")+p.seconds+" segundos",partIndex:pi,itemIndex:0});
   else p.items.forEach((it,ii)=>items.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+p.seconds+" s",partIndex:pi,itemIndex:ii}));
  });
  return items;
@@ -970,7 +971,7 @@ function manualOpenPlay(){
  if(!manualParts.length||!manualParts.some(p=>p.items.length)){document.getElementById("manualStatus").textContent="Adicione partes e itens antes de iniciar o Modo Play.";return}
  manualPlayItems=[];
  manualParts.forEach((p,pi)=>{
-  if(p.type==="rest"||p.type==="transition"){manualPlayItems.push({name:p.type==="transition"?"TROCA PARA LUTA":"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Troca para luta · ":"Descanso · ")+p.seconds+" s",partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||90});return}
+  if(p.type==="rest"||p.type==="transition"||p.type==="activePause"){manualPlayItems.push({name:p.type==="transition"?"TROCA PARA LUTA":p.type==="activePause"?"PAUSA ATIVA":"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Troca para luta · ":p.type==="activePause"?"Recuperação ativa · ":"Descanso · ")+p.seconds+" s",partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||(p.type==="activePause"?30:90)});return}
   const isCircuit=p.type==="circuit"||p.type==="fightCircuit";
   if(isCircuit){
    const duration=Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
