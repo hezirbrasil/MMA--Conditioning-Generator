@@ -952,7 +952,14 @@ function loadWorkoutOption(option){
   presetExerciseBlock("Funcional · Bloco 1",true);
   presetExerciseBlock("Funcional · Bloco 2",false);
  }
- manualParts.push(presetPause("FIM",60));
+ const targetSeconds=3000;
+ const estimatedSeconds=manualParts.reduce((sum,p)=>{
+  if(p.type==="circuit"||p.type==="fightCircuit")return sum+Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
+  if(p.type==="rest"||p.type==="transition"||p.type==="activePause")return sum+Math.max(0,Number(p.seconds)||0);
+  const count=(p.items||[]).length,work=Math.max(0,Number(p.seconds)||0),rest=Math.max(0,Number(p.rest)||0);
+  return sum+count*work+Math.max(0,count-1)*rest;
+ },0);
+ manualParts.push(presetPause("FIM",Math.max(0,targetSeconds-estimatedSeconds)));
  document.getElementById("manualWorkoutName").value=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" — "+(option===1?"Opção 1 (Funcional primeiro)":"Opção 2 (Luta primeiro)");
  manualRenderParts();
  document.getElementById("manualStatus").textContent=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" aplicado com "+(option===1?"Opção 1":"Opção 2")+". Você pode trocar qualquer exercício e salvar o treino completo.";
@@ -1089,7 +1096,7 @@ function manualExpandItems(){
  manualParts.forEach((p,pi)=>{
   const isCircuit=p.type==="circuit"||p.type==="fightCircuit";
   if(isCircuit){
-   const duration=Math.max(1,Number(p.durationMinutes)||10)*60;
+   const duration=Math.max(1,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
    const cycleSeconds=Math.max(1,p.items.length*(Math.max(1,Number(p.seconds)||50)+Math.max(0,Number(p.rest)||0)));
    for(let cycle=0;cycle<Math.ceil(duration/cycleSeconds);cycle++)p.items.forEach((it,ii)=>items.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+p.seconds+" s",partIndex:pi,itemIndex:ii,isTimedCircuit:true,circuitDuration:cycle===0&&ii===0?duration:null}));
   }else if(p.type==="rest"||p.type==="transition"||p.type==="activePause")items.push({name:p.type==="transition"?"TROCA PARA LUTA":p.type==="activePause"?"PAUSA ATIVA":"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Troca para luta: ":p.type==="activePause"?"Recuperação ativa: ":"Pausa de ")+p.seconds+" segundos",partIndex:pi,itemIndex:0});
