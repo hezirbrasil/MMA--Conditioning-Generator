@@ -334,11 +334,41 @@ function renderExerciseBank(){
  const all=getExerciseBank(),filtered=all.filter(x=>(category==="all"||x.cat===category)&&x.name.toLocaleLowerCase("pt-BR").includes(query));
  document.getElementById("bankSummary").textContent=filtered.length+" de "+all.length+" exercícios exibidos.";
  const groups=Object.keys(bankCategoryLabels).map(cat=>({cat,label:bankCategoryLabels[cat],items:filtered.filter(x=>x.cat===cat)})).filter(g=>g.items.length);
- document.getElementById("bankList").innerHTML=groups.length?groups.map((g,i)=>'<details class="bank-category" '+(query||category!=="all"||i===0?'open':'')+'><summary>'+escHtml(g.label)+'<span>'+g.items.length+' EXERCÍCIOS</span></summary><ul class="bank-list">'+g.items.map(x=>'<li><span class="bank-item-name">'+escHtml(x.name)+(x.custom?' <span style="color:#c5a4f5;font-size:10px">· ADICIONADO</span>':'')+'</span><span class="bank-item-actions"><button type="button" class="secondary" data-bank-name="'+escHtml(x.name)+'" data-bank-target="0">＋ Bloco 1</button><button type="button" class="secondary" data-bank-name="'+escHtml(x.name)+'" data-bank-target="2">＋ Bloco 3</button></span></li>').join("")+'</ul></details>').join(""):'<div class="bank-empty">Nenhum exercício encontrado com esses filtros.</div>';
+ document.getElementById("bankList").innerHTML=groups.length?groups.map((g,i)=>'<details class="bank-category" '+(query||category!=="all"||i===0?'open':'')+'><summary>'+escHtml(g.label)+'<span>'+g.items.length+' EXERCÍCIOS</span></summary><ul class="bank-list">'+g.items.map(x=>'<li><span class="bank-item-name">'+escHtml(x.name)+(x.custom?' <span style="color:#c5a4f5;font-size:10px">· ADICIONADO</span>':'')+'</span><span class="bank-item-actions"><button type="button" class="secondary" data-bank-manual-name="'+escHtml(x.name)+'" data-bank-manual-mode="individual">＋ Avulso</button><button type="button" class="secondary" data-bank-manual-name="'+escHtml(x.name)+'" data-bank-manual-mode="circuit">＋ Circuito</button><button type="button" class="secondary" data-bank-name="'+escHtml(x.name)+'" data-bank-target="0">＋ Bloco 1</button><button type="button" class="secondary" data-bank-name="'+escHtml(x.name)+'" data-bank-target="2">＋ Bloco 3</button></span></li>').join("")+'</ul></details>').join(""):'<div class="bank-empty">Nenhum exercício encontrado com esses filtros.</div>';
 }
 document.getElementById("bankSearch").addEventListener("input",renderExerciseBank);
 document.getElementById("bankCategoryFilter").addEventListener("change",renderExerciseBank);
+function addBankExerciseToManualBuilder(name,mode){
+ const exercise=getExerciseBank().find(x=>x.name===name);
+ const status=document.getElementById("bankSummary");
+ if(!exercise){status.textContent="Não encontrei esse exercício no banco.";return}
+ let part;
+ if(mode==="circuit"){
+  part=[...manualParts].reverse().find(p=>p.type==="circuit");
+  if(!part){manualAddPart("circuit");part=manualParts[manualParts.length-1]}
+ }else{
+  part=[...manualParts].reverse().find(p=>p.type==="individual");
+  if(!part){manualAddPart("individual");part=manualParts[manualParts.length-1]}
+ }
+ if(part.items.some(item=>item.name===exercise.name)){
+  status.textContent=exercise.name+" já está nesta parte.";
+  document.getElementById("manualParts").scrollIntoView({behavior:"smooth",block:"start"});
+  return;
+ }
+ part.items.push({name:exercise.name,detail:exercise.detail||"Exercício funcional"});
+ manualRenderParts();
+ const msg=mode==="circuit"?"Adicionado ao circuito: "+exercise.name+".":"Adicionado como exercício avulso: "+exercise.name+".";
+ document.getElementById("manualStatus").textContent=msg;
+ status.textContent=msg;
+ document.getElementById("manualParts").scrollIntoView({behavior:"smooth",block:"start"});
+}
 document.getElementById("bankList").addEventListener("click",event=>{
+ const manualButton=event.target.closest("button[data-bank-manual-name][data-bank-manual-mode]");
+ if(manualButton){
+  event.preventDefault();
+  addBankExerciseToManualBuilder(manualButton.dataset.bankManualName,manualButton.dataset.bankManualMode);
+  return;
+ }
  const button=event.target.closest("button[data-bank-name][data-bank-target]");
  if(!button)return;
  window.addBankExerciseToBlock(event,button.dataset.bankName,Number(button.dataset.bankTarget));
