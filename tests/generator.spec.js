@@ -158,22 +158,22 @@ test("a interface não cria rolagem horizontal no celular", async ({ page }) => 
   await expect(page.locator(".block").first()).toBeVisible();
 });
 
-test("monta um circuito manual e repete os itens pelo número de voltas", async ({ page }) => {
-  await page.locator("#manualWorkoutName").fill("Circuito de teste");
+test("circuito manual usa duração e repete os exercícios até o tempo acabar", async ({ page }) => {
+  await page.locator("#manualWorkoutName").fill("Circuito por tempo");
   await page.locator("#manualPartType").selectOption("circuit");
   await page.locator("#manualAddPart").click();
   await page.locator('[data-manual-select="0"]').selectOption({ label: "Supino" });
   await page.locator('[data-manual-action="add-item"][data-p="0"]').click();
-  await page.locator('[data-manual-prop="rounds"][data-p="0"]').selectOption("3");
+  await page.locator('[data-manual-prop="durationMinutes"][data-p="0"]').selectOption("3");
+  await page.locator('[data-manual-prop="seconds"][data-p="0"]').selectOption("15");
   await page.locator('[data-manual-prop="rest"][data-p="0"]').selectOption("0");
-
+  await expect(page.locator('[data-manual-prop="rounds"]')).toHaveCount(0);
+  await expect(page.locator("#manualParts")).toContainText("3 min");
   await expect(page.locator("#manualParts")).toContainText("Supino");
-  await expect(page.locator("#manualParts")).toContainText("3 volta");
   await page.locator("#manualPlay").click();
   await expect(page.locator("#playOverlay")).toBeVisible();
-  await expect(page.locator("#playCount")).toHaveText("ITEM 1 DE 3");
-  await page.locator("#playNext").click();
-  await expect(page.locator("#playType")).toContainText("Volta 2/3");
+  await expect(page.locator("#playCount")).toHaveText("ITEM 1 DE 12");
+  await expect(page.locator("#playType")).toContainText("circuito 03:00");
 });
 
 test("adiciona os dois lados de exercício unilateral no montador manual", async ({ page }) => {
