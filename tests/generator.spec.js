@@ -58,23 +58,23 @@ test("o banco contém a sequência de golpes solicitada", async ({ page }) => {
 });
 
 test("permite criar uma sequência e mantê-la após recarregar", async ({ page }) => {
-  await page.locator("#techniqueSelect").selectOption("Direto");
+  await page.locator("#techniqueSelect").selectOption("Jab");
   await page.locator("#addTechnique").click();
-  await page.locator("#techniqueSelect").selectOption("Uppercut T");
+  await page.locator("#techniqueSelect").selectOption("Chute alto T");
   await page.locator("#addTechnique").click();
-  await page.locator("#techniqueSelect").selectOption("Cruzado T");
+  await page.locator("#techniqueSelect").selectOption("Esquiva");
   await page.locator("#addTechnique").click();
 
   await expect(page.locator("#sequencePreview")).toContainText("Direto");
   await page.locator("#saveSequence").click();
   await expect(page.locator("#sequenceStatus")).toContainText("Sequência salva!");
   await expect(page.locator("#customFightBank")).toContainText(
-    "Direto + Uppercut T + Cruzado T"
+    "Jab + Chute alto T + Esquiva"
   );
 
   await page.reload();
   await expect(page.locator("#customFightBank")).toContainText(
-    "Direto + Uppercut T + Cruzado T"
+    "Jab + Chute alto T + Esquiva"
   );
 });
 
