@@ -855,7 +855,7 @@ function manualOptionsMarkup(opts){
 }
 function presetPart(type,title,extra={}){
  const defaults=JSON.parse(JSON.stringify(manualPartDefaults[type]||manualPartDefaults.rest));
- return {id:manualId(),type,...defaults,...extra,title:title||defaults.title,items:extra.items||defaults.items||[]};
+ return {id:manualId(),type,...defaults,...extra,title:title||defaults.title,items:extra.items||defaults.items||[],collapsed:true};
 }
 function presetPause(title,seconds,type="rest"){
  return presetPart(type,title,{seconds,durationMinutes:Math.floor(seconds/60),durationExtraSeconds:seconds%60,items:[{name:title,detail:title}]});
