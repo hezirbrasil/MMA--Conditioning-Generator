@@ -37,13 +37,38 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
 .builder-part-body[hidden]{display:none!important}
 .builder-part-collapse{font-size:10px!important;padding:7px 9px!important}
 @media(max-width:480px){.timer-ring{width:160px;height:160px}}
+
+/* Visual refinements: premium MMA block cards */
+.custom-builder{border:1px solid #51356d!important;border-radius:20px!important;background:radial-gradient(ellipse at top right,rgba(135,62,211,.13),transparent 48%),linear-gradient(155deg,#17111f,#0d0a12 75%)!important;box-shadow:0 18px 48px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.035)}
+.builder-part{position:relative;border:1px solid #4b3562;border-radius:15px;background:linear-gradient(145deg,#17111f,#0e0b13 78%);box-shadow:0 8px 22px rgba(0,0,0,.2);transition:border-color .2s,transform .2s,box-shadow .2s}
+.builder-part:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(180deg,#c084fc,#7427c7,#3b1761);opacity:.95}
+.builder-part-head{position:relative;background:linear-gradient(105deg,rgba(109,48,158,.28),rgba(36,23,49,.82));padding:15px 14px 14px 17px;border-bottom:1px solid rgba(171,112,230,.18)}
+.builder-part-head strong{font-size:14px;letter-spacing:.2px;color:#fff}
+.builder-part-head small{font-size:11px;color:#c9a7f5;margin-top:5px}
+.builder-part-actions{gap:6px}
+.builder-part-actions button{border-radius:9px;min-height:31px;border-color:#49365c;background:#1a1322}
+.builder-part-actions button:hover{border-color:#a66be8;background:#2b1a3b}
+.builder-part-actions .remove{color:#ffb4c0;border-color:#643345}
+.builder-part-body{padding:15px 14px 15px 17px}
+.builder-item-list{gap:8px}
+.builder-item{position:relative;border:1px solid #342542;border-radius:10px;background:linear-gradient(100deg,#1c1426,#15101c);padding:11px 10px;min-height:44px}
+.builder-item span{font-size:13px;color:#eee6f8}
+.builder-item span b{display:inline-flex;align-items:center;justify-content:center;min-width:25px;height:24px;margin-right:5px;border-radius:7px;background:#342047;color:#d8b7ff;font-size:10px}
+.builder-item-add{margin-top:13px}
+.builder-item-add select{border-radius:10px;background:#0c0911;border-color:#49345f;min-height:43px}
+.builder-item-add .primary,.builder-toolbar .primary{border-radius:10px;box-shadow:0 5px 16px rgba(130,55,196,.2)}
+.builder-field input,.builder-field select{border-radius:10px;min-height:43px;background:#0d0a12;border-color:#40304f}
+.builder-field input:focus,.builder-field select:focus,.builder-item-add select:focus{outline:2px solid rgba(176,112,239,.45);outline-offset:1px;border-color:#a56ae8}
+.builder-empty{border-radius:11px;border-color:#5a3a73;background:rgba(100,54,135,.08)}
+.builder-part[aria-current="true"]{border-color:#a56ae8}
+@media(max-width:520px){.builder-part-head{align-items:flex-start;padding:13px 10px 12px 14px}.builder-part-actions{width:100%;margin-top:7px}.builder-part-actions button{padding:7px 9px}.builder-part-body{padding:12px 10px 13px 14px}.builder-item-add{grid-template-columns:minmax(0,1fr)}.builder-item-add button{width:100%}}
 </style>
 </head>
 <body>
 <header class="top"><div class="brand"><span class="mark"><img src="./icon.svg?v=octagon2" alt="Workout Round Timer — octógono roxo e preto"></span><span>ROUND <em>WORKOUT TIMER</em><small>TREINOS • INTERVALOS</small></span></div><span class="tag">FULL BODY • LEG BLAST</span></header>
 <main class="wrap">
-<section class="hero"><div class="eyebrow">● SEU TREINO. SUAS REGRAS.</div><h1>Monte. Treine.<br><span>Supere limites.</span></h1><p>Gerador direto ao ponto: escolha Full Body ou Leg Blast e receba a sequência fixa em quatro blocos.</p></section>
-<section class="panel config"><div class="controlrow"><div class="field"><label for="type">Tipo de treino</label><select id="type"><option value="fullbody">Full Body</option><option value="legblast">Leg Blast</option></select></div><button id="generate" class="primary">✦ GERAR TREINO</button></div><p class="tip">Formato fixo: 12 exercícios funcionais → 12 sequências de luta → 8 exercícios funcionais → 8 sequências de luta. Os exercícios funcionais não se repetem na mesma sessão. As sequências de luta aparecem por extenso.</p></section>
+<section class="hero"><div class="eyebrow">● SEU TREINO. SUAS REGRAS.</div><h1>Monte. Treine.<br><span>Supere limites.</span></h1><p>Crie circuitos, exercícios individuais e sequências de luta do seu jeito. Organize os blocos, ajuste os tempos e salve seus treinos favoritos.</p></section>
+<div hidden aria-hidden="true"><select id="type"><option value="fullbody">Full Body</option><option value="legblast">Leg Blast</option></select><button id="generate" type="button"></button></div>
 
 <section class="panel custom-builder" id="manualBuilder">
  <div class="eyebrow purple">MONTE DO SEU JEITO</div>
@@ -850,6 +875,7 @@ function manualExpandItems(){
 }
 function iiNotLast(p,pi){return false}
 function manualOpenPlay(){
+ manualPrepareAudio();manualLastBeepSecond=null;
  if(!manualParts.length||!manualParts.some(p=>p.items.length)){document.getElementById("manualStatus").textContent="Adicione partes e itens antes de iniciar o Modo Play.";return}
  manualPlayItems=[];
  manualParts.forEach((p,pi)=>{
@@ -869,6 +895,25 @@ function manualOpenPlay(){
 let manualCircuitDeadline=null,manualItemDeadline=null,manualCurrentCircuitPart=null,manualTimerInterval=null;
 function manualStopTimer(){if(manualTimerInterval){clearInterval(manualTimerInterval);manualTimerInterval=null}}
 function manualFormatTime(seconds){const n=Math.max(0,Math.ceil(seconds));return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")}
+
+let manualAudioContext=null,manualLastBeepSecond=null;
+function manualPrepareAudio(){
+ try{const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;if(!manualAudioContext)manualAudioContext=new Ctx();if(manualAudioContext.state==="suspended")manualAudioContext.resume()}catch(e){}
+}
+function manualCountdownBeep(remaining){
+ const second=Math.ceil(remaining);
+ if(second<1||second>3||second===manualLastBeepSecond)return;
+ manualLastBeepSecond=second;
+ try{
+  if(!manualAudioContext)manualPrepareAudio();
+  if(!manualAudioContext)return;
+  if(manualAudioContext.state==="suspended")manualAudioContext.resume();
+  const osc=manualAudioContext.createOscillator(),gain=manualAudioContext.createGain(),now=manualAudioContext.currentTime;
+  osc.type="sine";osc.frequency.setValueAtTime(second===1?1046:880,now);
+  gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.22,now+.012);gain.gain.exponentialRampToValueAtTime(.0001,now+.13);
+  osc.connect(gain);gain.connect(manualAudioContext.destination);osc.start(now);osc.stop(now+.14);
+ }catch(e){}
+}
 function manualSetTimerRing(remaining,total,show=true){
  const ring=document.getElementById("playTimerRing"),progress=document.getElementById("playTimerProgress"),label=document.getElementById("playTimerText");
  if(!ring||!progress||!label)return;
@@ -887,10 +932,11 @@ function manualRenderPlay(){
  document.getElementById("playPrev").disabled=manualPlayIndex===0;
  document.getElementById("playNext").disabled=manualPlayIndex===manualPlayItems.length-1;
  if(it.isTimedCircuit){
-  if(manualCurrentCircuitPart!==it.partIndex){manualCurrentCircuitPart=it.partIndex;manualCircuitDeadline=Date.now()+(Number(it.circuitDuration)||600)*1000}
+  if(manualCurrentCircuitPart!==it.partIndex){manualCurrentCircuitPart=it.partIndex;manualCircuitDeadline=Date.now()+(Number(it.circuitDuration)||600)*1000;manualLastBeepSecond=null}
   manualStopTimer();
   const tick=()=>{
    const remaining=(manualCircuitDeadline-Date.now())/1000;
+   manualCountdownBeep(remaining);
    if(remaining<=0){
     const next=manualPlayItems.findIndex((x,i)=>i>manualPlayIndex&&x.partIndex>it.partIndex);
     manualStopTimer();manualCurrentCircuitPart=null;
@@ -900,7 +946,7 @@ function manualRenderPlay(){
    document.getElementById("playType").textContent="Tempo restante no circuito · "+manualFormatTime(remaining);manualSetTimerRing(remaining,Number(it.circuitDuration)||600,true);
   };
   tick();manualTimerInterval=setInterval(tick,250);
- }else if(it.isTimedIndividual){manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=Date.now()+Math.max(0,Number(it.durationSeconds)||0)*1000;const tick=()=>{const left=(manualItemDeadline-Date.now())/1000;if(left<=0){manualStopTimer();document.getElementById("playType").textContent="Tempo do exercício concluído";if(manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}else{document.getElementById("playNext").disabled=true}return}document.getElementById("playType").textContent="Tempo do exercício · "+manualFormatTime(left);manualSetTimerRing(left,Number(it.durationSeconds)||1,true)};tick();manualTimerInterval=setInterval(tick,250)}else if(it.isPause){manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=Date.now()+Math.max(0,Number(it.durationSeconds)||0)*1000;const tick=()=>{const left=(manualItemDeadline-Date.now())/1000;if(left<=0){manualStopTimer();if(manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}else{document.getElementById("playType").textContent="Pausa concluída";document.getElementById("playNext").disabled=true}return}document.getElementById("playType").textContent=it.detail+" · "+manualFormatTime(left);manualSetTimerRing(left,Number(it.durationSeconds)||90,true)};tick();manualTimerInterval=setInterval(tick,250)}else{manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=null;manualSetTimerRing(0,1,false)}
+ }else if(it.isTimedIndividual){manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=Date.now()+Math.max(0,Number(it.durationSeconds)||0)*1000;manualLastBeepSecond=null;const tick=()=>{const left=(manualItemDeadline-Date.now())/1000;manualCountdownBeep(left);if(left<=0){manualStopTimer();document.getElementById("playType").textContent="Tempo do exercício concluído";if(manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}else{document.getElementById("playNext").disabled=true}return}document.getElementById("playType").textContent="Tempo do exercício · "+manualFormatTime(left);manualSetTimerRing(left,Number(it.durationSeconds)||1,true)};tick();manualTimerInterval=setInterval(tick,250)}else if(it.isPause){manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=Date.now()+Math.max(0,Number(it.durationSeconds)||0)*1000;manualLastBeepSecond=null;const tick=()=>{const left=(manualItemDeadline-Date.now())/1000;manualCountdownBeep(left);if(left<=0){manualStopTimer();if(manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}else{document.getElementById("playType").textContent="Pausa concluída";document.getElementById("playNext").disabled=true}return}document.getElementById("playType").textContent=it.detail+" · "+manualFormatTime(left);manualSetTimerRing(left,Number(it.durationSeconds)||90,true)};tick();manualTimerInterval=setInterval(tick,250)}else{manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=null;manualSetTimerRing(0,1,false)}
 }
 document.getElementById("manualPlay").addEventListener("click",manualOpenPlay);
 
