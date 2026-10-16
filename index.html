@@ -953,20 +953,20 @@ function presetExerciseBlock(label,addFinalRest=false){
  manualParts.push(presetPause("Descanso funcional",15));
 }
 const presetCircuitBlocks=[
- [{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada aberta",detail:"Costas",cat:"costas"},{name:"Desenvolvimento",detail:"Ombros",cat:"ombros"}],
- [{name:"Agachamento",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}],
- [{name:"Terra com desenvolvimento",detail:"Funcional",cat:"composto"},{name:"Agachamento com panturrilha",detail:"Pernas",cat:"pernas"},{name:"Joelhada no step",detail:"Cardio e funcional",cat:"cardio"}]
+ {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada aberta",detail:"Costas",cat:"costas"},{name:"Desenvolvimento",detail:"Ombros",cat:"ombros"}]},
+ {types:["fullbody","legblast"],items:[{name:"Agachamento",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}]},
+ {types:["fullbody","legblast"],items:[{name:"Terra com desenvolvimento",detail:"Funcional",cat:"composto"},{name:"Agachamento com panturrilha",detail:"Pernas",cat:"pernas"},{name:"Joelhada no step",detail:"Cardio e funcional",cat:"cardio"}]}
 ];
 let presetCircuitOrder=[];
 let presetCircuitCursor=0;
 function presetResetCircuitOrder(){
- presetCircuitOrder=shuffle(presetCircuitBlocks.map((_,i)=>i));
+ presetCircuitOrder=shuffle(presetCircuitBlocks.map((block,i)=>({block,i})).filter(x=>x.block.types.includes(presetSelectedType)).map(x=>x.i));
  presetCircuitCursor=0;
 }
 function presetCircuit(label,addFinalRest=false){
  if(presetCircuitCursor>=presetCircuitOrder.length)presetResetCircuitOrder();
  const circuitIndex=presetCircuitOrder[presetCircuitCursor++];
- const items=JSON.parse(JSON.stringify(presetCircuitBlocks[circuitIndex]));
+ const items=JSON.parse(JSON.stringify(presetCircuitBlocks[circuitIndex].items));
  manualParts.push(presetPart("circuit",label,{durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items}));
  manualParts.push(presetPause("Descanso do circuito",40));
 }
@@ -984,7 +984,7 @@ function presetFightBlock(label,addPauseAfter=false){
 }
 function loadWorkoutOption(option){
  if(manualParts.length&&!confirm("Aplicar este modelo vai substituir as partes que estão no montador. Quer continuar?"))return;
- manualParts=[];presetResetCircuitOrder();presetResetBlock050Order();presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetOption=option;presetResetFunctionalPhase(0);
+ manualParts=[];presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetResetCircuitOrder();presetResetBlock050Order();presetOption=option;presetResetFunctionalPhase(0);
  const addSwitch=title=>manualParts.push(presetPause(title,90,"transition"));
  manualParts.push(presetPause("AQUECIMENTO",180));
  if(option===1){
