@@ -229,6 +229,7 @@ test("adiciona três exercícios ao mesmo circuito de uma só vez", async ({ pag
   await page.locator("#manualPartType").selectOption("circuit");
   await page.locator("#manualAddPart").click();
   const selectors = page.locator('[data-manual-batch-select="0"]');
+  await expect(page.locator('[data-manual-action="add-batch"][data-p="0"]')).toHaveText("＋ Adicionar selecionados ao mesmo circuito");
   await selectors.nth(0).selectOption({ label: "Supino" });
   await selectors.nth(1).selectOption({ label: "Crucifixo" });
   await selectors.nth(2).selectOption({ label: "Agachamento Livre" });
