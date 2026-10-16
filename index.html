@@ -1184,6 +1184,27 @@ function manualRenderPlay(){
   tick();manualTimerInterval=setInterval(tick,250);
  }else if(it.isTimedIndividual){manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=Date.now()+Math.max(0,Number(it.durationSeconds)||0)*1000;manualLastBeepSecond=null;const tick=()=>{const left=(manualItemDeadline-Date.now())/1000;manualCountdownBeep(left);if(left<=0){manualStopTimer();document.getElementById("playType").textContent="Tempo do exercício concluído";if(manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}else{document.getElementById("playNext").disabled=true}return}document.getElementById("playType").textContent="Tempo do exercício · "+manualFormatTime(left);manualSetTimerRing(left,Number(it.durationSeconds)||1,true)};tick();manualTimerInterval=setInterval(tick,250)}else if(it.isPause){manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=Date.now()+Math.max(0,Number(it.durationSeconds)||0)*1000;manualLastBeepSecond=null;const tick=()=>{const left=(manualItemDeadline-Date.now())/1000;manualCountdownBeep(left);if(left<=0){manualStopTimer();if(manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}else{document.getElementById("playType").textContent="Pausa concluída";document.getElementById("playNext").disabled=true}return}document.getElementById("playType").textContent=it.detail+" · "+manualFormatTime(left);manualSetTimerRing(left,Number(it.durationSeconds)||90,true)};tick();manualTimerInterval=setInterval(tick,250)}else{manualStopTimer();manualCurrentCircuitPart=null;manualCircuitDeadline=null;manualItemDeadline=null;manualSetTimerRing(0,1,false)}
 }
+document.getElementById("playCircuitItems").addEventListener("click",e=>{
+ const row=e.target.closest("[data-play-circuit-item]");if(!row)return;
+ const it=manualPlayItems[manualPlayIndex];if(!it||!it.isTimedCircuit)return;
+ const part=manualParts[it.partIndex],itemIndex=Number(row.dataset.playCircuitItem);if(!part||!part.items[itemIndex])return;
+ const current=part.items[itemIndex].name;
+ const options=manualOptions(part).filter(o=>!(/ [ED]$/.test(o.name))||o.name===current);
+ const select=document.createElement("select");
+ const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent="Escolha o exercício…";select.appendChild(placeholder);
+ const grouped={};options.forEach(o=>{const cat=bankCategoryLabels[o.cat]||o.cat||"Outros";(grouped[cat]||(grouped[cat]=[])).push(o)});
+ Object.keys(grouped).sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(cat=>{const group=document.createElement("optgroup");group.label=cat;grouped[cat].forEach(o=>{const option=document.createElement("option");option.value=o.name;option.textContent=o.name;if(o.name===current)option.selected=true;group.appendChild(option)});select.appendChild(group)});
+ row.innerHTML='<span>'+(itemIndex+1)+'</span>';row.appendChild(select);select.focus();
+ select.addEventListener("change",()=>{
+  if(!select.value)return;
+  const chosen=options.find(o=>o.name===select.value);if(!chosen)return;
+  part.items[itemIndex]={...chosen};
+  const samePart=manualPlayItems.filter(x=>x.isTimedCircuit&&x.partIndex===it.partIndex);
+  if(samePart[itemIndex])samePart[itemIndex].name=chosen.name;
+  manualRenderPlay();
+ });
+ select.addEventListener("blur",()=>{if(!select.value)manualRenderPlay()});
+});
 document.getElementById("manualPlay").addEventListener("click",manualOpenPlay);
 
 
