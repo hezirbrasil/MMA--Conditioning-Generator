@@ -853,7 +853,7 @@ function manualOptions(part){
 }
 function manualOptionsMarkup(opts){
  if(!opts.some(o=>o.cat))return opts.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("");
- const labels=opts.some(o=>o.detail==="Sequência de luta")?["Começam com Jab","Começam com Direto","Começam com Uppercut","Começam com Cruzado","Começam com Chute","Outros golpes"]:Object.keys(bankCategoryLabels);
+ const labels=opts.some(o=>o.detail==="Sequência de luta")?Object.keys(fightCategoryLabels):Object.keys(bankCategoryLabels);
  return labels.map(cat=>{
   const group=opts.filter(o=>o.cat===cat);
   return group.length?'<optgroup label="'+escHtml(bankCategoryLabels[cat]||cat)+'">'+group.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("")+'</optgroup>':"";
