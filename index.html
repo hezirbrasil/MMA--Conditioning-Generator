@@ -823,8 +823,6 @@ const fightCategoryLabels={
  "Começam com Cruzado":"Cruzados",
  "Começam com Chute":"Chutes",
  "Começam com Joelhada":"Joelhadas e clinch",
- "Defesa e movimentação":"Defesa e movimentação",
- "Condicionamento":"Condicionamento",
  "Outros golpes":"Outros golpes"
 };
 function classifyFightCombo(name){
@@ -835,8 +833,6 @@ function classifyFightCombo(name){
  if(first.startsWith("cruzado"))return "Começam com Cruzado";
  if(first.startsWith("chute"))return "Começam com Chute";
  if(first.startsWith("joelhada")||first.startsWith("clinch"))return "Começam com Joelhada";
- if(/^(esquiva|recuo|bloqueio|defesa|passo)/.test(first))return "Defesa e movimentação";
- if(/^(\d+ polichinelos?|touch down|agachamento|sprawl)/.test(first))return "Condicionamento";
  return "Outros golpes";
 }
 function manualOptions(part){
