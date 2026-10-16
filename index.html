@@ -933,19 +933,20 @@ function presetPickExercise(){
  return {...it};
 }
 const presetBlock050Blocks=[
- [{name:"Deitar, sentar levantar no step",detail:"Cardio e funcional",cat:"cardio"},{name:"Infra alternado",detail:"Core",cat:"core"},{name:"Abdominal bicicleta",detail:"Core",cat:"core"},{name:"Desenvolvimento com polichinelo",detail:"Ombros e cardio",cat:"ombros"}],
- [{name:"Stiff unilateral E",detail:"Posterior",cat:"posterior"},{name:"Stiff unilateral D",detail:"Posterior",cat:"posterior"},{name:"Afundo E",detail:"Pernas",cat:"pernas"},{name:"Afundo D",detail:"Pernas",cat:"pernas"}],
- [{name:"Prancha alta | prancha baixo",detail:"Core e estabilidade",cat:"core"},{name:"Prancha tocando o pé",detail:"Core",cat:"core"},{name:"Abdominal + Jab | Direto",detail:"Core e luta",cat:"core"},{name:"Abdominal Infra",detail:"Core",cat:"core"}]
+ {types:["fullbody"],items:[{name:"Deitar, sentar levantar no step",detail:"Cardio e funcional",cat:"cardio"},{name:"Infra alternado",detail:"Core",cat:"core"},{name:"Abdominal bicicleta",detail:"Core",cat:"core"},{name:"Desenvolvimento com polichinelo",detail:"Ombros e cardio",cat:"ombros"}]},
+ {types:["fullbody","legblast"],items:[{name:"Stiff unilateral E",detail:"Posterior",cat:"posterior"},{name:"Stiff unilateral D",detail:"Posterior",cat:"posterior"},{name:"Afundo E",detail:"Pernas",cat:"pernas"},{name:"Afundo D",detail:"Pernas",cat:"pernas"}]},
+ {types:["fullbody","legblast"],items:[{name:"Prancha alta | prancha baixo",detail:"Core e estabilidade",cat:"core"},{name:"Prancha tocando o pé",detail:"Core",cat:"core"},{name:"Abdominal + Jab | Direto",detail:"Core e luta",cat:"core"},{name:"Abdominal Infra",detail:"Core",cat:"core"}]}
 ];
 let presetBlock050Order=[];
 let presetBlock050Cursor=0;
 function presetResetBlock050Order(){
- presetBlock050Order=shuffle(presetBlock050Blocks.map((_,i)=>i));
+ presetBlock050Order=shuffle(presetBlock050Blocks.map((block,i)=>({block,i})).filter(x=>x.block.types.includes(presetSelectedType)).map(x=>x.i));
  presetBlock050Cursor=0;
 }
 function presetExerciseBlock(label,addFinalRest=false){
  if(presetBlock050Cursor>=presetBlock050Order.length)presetResetBlock050Order();
- const items=JSON.parse(JSON.stringify(presetBlock050Blocks[presetBlock050Order[presetBlock050Cursor++]]));
+ if(!presetBlock050Order.length)return;
+ const items=JSON.parse(JSON.stringify(presetBlock050Blocks[presetBlock050Order[presetBlock050Cursor++]].items));
  items.forEach((it,i)=>{
   manualParts.push(presetPart("individual",label+" · Exercício "+(i+1),{seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:0,selectedExercise:it.name,items:[{...it}]}));
   if(i<items.length-1)manualParts.push(presetPause("Descanso entre exercícios",10));
