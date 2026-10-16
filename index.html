@@ -332,6 +332,25 @@ function chooseUnique(pool,n,exclude=new Set()){
  }
  return [];
 }
+function organizeByMuscleGroup(items,mode){
+ const categoryOrder=mode==="fullbody"
+  ?["composto","peito","costas","ombros","bíceps","tríceps","pernas","posterior","core","cardio"]
+  :["pernas","posterior","composto","core","cardio"];
+ const rank=cat=>{const i=categoryOrder.indexOf(String(cat||"").toLowerCase());return i<0?categoryOrder.length:i};
+ const byName=new Map(items.map(x=>[x.name,x])),seen=new Set(),units=[];
+ items.forEach(ex=>{
+  if(seen.has(ex.name))return;
+  const m=ex.name.match(/^(.*) ([ED])$/);
+  if(m){
+   const other=byName.get(m[1]+" "+(m[2]==="E"?"D":"E"));
+   if(other){const pair=m[2]==="E"?[ex,other]:[other,ex];pair.forEach(x=>seen.add(x.name));units.push(pair);return}
+  }
+  seen.add(ex.name);units.push([ex]);
+ });
+ const randomized=shuffle(units);
+ randomized.sort((a,b)=>rank(a[0].cat)-rank(b[0].cat)||Number(isMultiArticularExercise(b[0]))-Number(isMultiArticularExercise(a[0])));
+ return randomized.flat();
+}
 let workoutGroups=[], currentPool=[], currentLabel="Full Body";
 function normalizeFightNames(name){return String(name).replaceAll("Uppercut da frente","Uppercut F").replaceAll("Uppercut de trás","Uppercut T").replaceAll("Cruzado da frente","Cruzado F").replaceAll("Cruzado de trás","Cruzado T").replace(/Chute baixo(?! [FT])/g,"Chute baixo F").replace(/Chute médio(?! [FT])/g,"Chute médio F").replace(/Chute alto(?! [FT])/g,"Chute alto F").replace(/Chute frontal(?! [FT])/g,"Chute frontal F")}
 function loadCustomFight(){try{const saved=JSON.parse(localStorage.getItem("mc-custom-fight")||"[]");return Array.isArray(saved)?saved.filter(x=>typeof x==="string"&&x.trim()).map(normalizeFightNames):[]}catch(e){return []}}
@@ -560,9 +579,12 @@ function createWorkout(){
  const type=document.getElementById("type").value; currentLabel=type==="fullbody"?"Full Body":"Leg Blast";
  const allowed=type==="fullbody"?fullBodyCats:legCats;
  currentPool=getExerciseBank().filter(x=>allowed.has(x.cat));
- const first=type==="fullbody"?chooseFullBodyCoverage(currentPool,12):chooseLegBlastBalanced(currentPool,12);
- const used=new Set(first.map(x=>x.name));
- const second=type==="fullbody"?chooseUnique(currentPool,8,used):chooseLegBlastBalanced(currentPool,8,used);
+ const firstRaw=type==="fullbody"?chooseFullBodyCoverage(currentPool,12):chooseLegBlastBalanced(currentPool,12);
+ const used=new Set(firstRaw.map(x=>x.name));
+ const secondRaw=type==="fullbody"?chooseUnique(currentPool,8,used):chooseLegBlastBalanced(currentPool,8,used);
+ // Aleatório dentro dos grupamentos, com exercícios complementares próximos e pares E/D juntos.
+ const first=organizeByMuscleGroup(firstRaw,type);
+ const second=organizeByMuscleGroup(secondRaw,type);
  if(first.length!==12||second.length!==8){document.getElementById("status").textContent="Não há exercícios suficientes para montar esta sessão sem repetição e mantendo os lados juntos.";return}
  const allCombos=getFightBank().map(normalizeFightNames);
  const progressionPair=["Jab + Jab + Direto","Jab + Jab + Direto + Chute baixo F"];
