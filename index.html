@@ -776,8 +776,8 @@ function manualRenderPlay(){
  document.getElementById("playNext").disabled=manualPlayIndex===manualPlayItems.length-1;
 }
 document.getElementById("manualPlay").addEventListener("click",manualOpenPlay);
-document.getElementById("playPrev").addEventListener("click",()=>{if(manualPlayItems.length){if(manualPlayIndex>0)manualPlayIndex--;manualRenderPlay()}});
-document.getElementById("playNext").addEventListener("click",()=>{if(manualPlayItems.length){if(manualPlayIndex<manualPlayItems.length-1)manualPlayIndex++;manualRenderPlay()}});
+
+
 document.getElementById("manualSaveWorkout").addEventListener("click",()=>{
  if(!manualParts.length){document.getElementById("manualStatus").textContent="Adicione partes antes de salvar o treino.";return}
  manualSaveMode="workout";document.getElementById("manualLibraryKind").value="workout";
