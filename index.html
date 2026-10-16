@@ -899,13 +899,13 @@ function presetExerciseBlock(label,addFinalRest=false){
   manualParts.push(presetPart("individual",label+" · Exercício "+(i+1),{seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:0,selectedExercise:it.name,items:[{...it}]}));
   if(i<3)manualParts.push(presetPause("Descanso entre exercícios",10));
  }
- if(addFinalRest)manualParts.push(presetPause("Descanso funcional",40));
+ manualParts.push(presetPause("Descanso funcional",40));
 }
 function presetCircuit(label,addFinalRest=false){
  const items=[];
  for(let i=0;i<3;i++)items.push(presetPickExercise());
- manualParts.push(presetPart("circuit",label,{durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items}));
- if(addFinalRest)manualParts.push(presetPause("Descanso do circuito",40));
+ manualParts.push(presetPart("circuit",label,{durationMinutes:3,durationExtraSeconds:50,seconds:50,rest:10,items}));
+ manualParts.push(presetPause("Descanso do circuito",40));
 }
 function presetFightBlock(label,addPauseAfter=false){
  const list=getFightBank(),items=[];
