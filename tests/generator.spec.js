@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("a página inicial carrega com as opções de treino", async ({ page }) => {
-  await expect(page).toHaveTitle(/MMA Conditioning/);
+  await expect(page).toHaveTitle(/Round Workout Timer/);
   await expect(page.locator("#type")).toBeVisible();
   await expect(page.locator("#type option")).toHaveText(["Full Body", "Leg Blast"]);
   await expect(page.locator("#generate")).toBeVisible();
