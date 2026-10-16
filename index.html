@@ -1047,7 +1047,8 @@ function loadWorkoutOption(option){
   addSwitch("TROCA PARA O FUNCIONAL");
   presetResetFunctionalPhase(1);
   presetExerciseBlock("Funcional · Exercícios individuais",true);
-  presetCircuit("Funcional · Circuito final",false);
+  // Estrutura fixa da Opção 1: dois circuitos no início e exatamente um circuito no final funcional.
+  presetCircuit("Funcional · Circuito final (único circuito final)",false);
   addSwitch("TROCA PARA A LUTA");
   presetFightBlock("Luta · Bloco 1",true);
   presetFightBlock("Luta · Bloco 2",false);
@@ -1066,6 +1067,17 @@ function loadWorkoutOption(option){
   presetResetFunctionalPhase(1);
   presetExerciseBlock("Funcional · Bloco 1",true);
   presetExerciseBlock("Funcional · Bloco 2",false);
+ }
+ if(option===1){
+  const circuitParts=manualParts.filter(p=>p.type==="circuit");
+  const circuitTitles=circuitParts.map(p=>p.title||"");
+  const structureValid=circuitTitles.length===3&&circuitTitles[0].includes("Circuito 1")&&circuitTitles[1].includes("Circuito 2")&&circuitTitles[2].includes("Circuito final");
+  if(!structureValid){
+   document.getElementById("manualStatus").textContent="Erro na estrutura: a Opção 1 exige 2 circuitos no início e 1 no final. A geração foi interrompida para preservar seu modelo.";
+   manualParts=[];
+   manualRenderParts();
+   return;
+  }
  }
  const targetSeconds=3000;
  const estimatedSeconds=manualParts.reduce((sum,p)=>{
