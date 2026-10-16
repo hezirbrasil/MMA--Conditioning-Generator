@@ -215,3 +215,129 @@ test("adiciona três exercícios ao mesmo circuito de uma só vez", async ({ pag
   await expect(page.locator("#manualParts")).toContainText("Crucifixo");
   await expect(page.locator("#manualParts")).toContainText("Agachamento Livre");
 });
+
+
+test("audita botões do montador manual e suas ações", async ({ page }) => {
+  await page.locator("#manualPartType").selectOption("circuit");
+  await page.locator("#manualAddPart").click();
+  await page.locator('[data-manual-batch-select="0"]').nth(0).selectOption({ label: "Supino" });
+  await page.locator('[data-manual-batch-select="0"]').nth(1).selectOption({ label: "Crucifixo" });
+  await page.locator('[data-manual-action="add-batch"][data-p="0"]').click();
+  await expect(page.locator("#manualParts .builder-item")).toHaveCount(2);
+
+  await page.locator('[data-manual-action="add-slot"][data-p="0"]').click();
+  await expect(page.locator('[data-manual-batch-select="0"]')).toHaveCount(6);
+  await page.locator('[data-manual-select="0"]').selectOption({ label: "Agachamento Livre" });
+  await page.locator('[data-manual-action="add-item"][data-p="0"]').click();
+  await expect(page.locator("#manualParts .builder-item")).toHaveCount(3);
+
+  await page.locator("#manualPartType").selectOption("individual");
+  await page.locator("#manualAddPart").click();
+  await page.locator('[data-manual-action="up"][data-p="1"]').click();
+  await expect(page.locator("#manualParts .builder-part").first()).toContainText("Exercícios individuais");
+  await page.locator('[data-manual-action="down"][data-p="0"]').click();
+  await expect(page.locator("#manualParts .builder-part").first()).toContainText("Circuito funcional");
+  await page.locator('[data-manual-action="remove-item"][data-p="0"][data-i="0"]').click();
+  await expect(page.locator("#manualParts .builder-item")).toHaveCount(2);
+
+  await page.locator('[data-manual-action="save-part"][data-p="0"]').click();
+  await page.locator("#manualLibraryName").fill("Parte de auditoria");
+  await page.locator("#manualConfirmSave").click();
+  await expect(page.locator("#manualLibraryList")).toContainText("Parte de auditoria");
+  await page.locator("#manualCloseLibrary").click();
+
+  await page.locator("#manualSaveWorkout").click();
+  await page.locator("#manualLibraryName").fill("Treino de auditoria");
+  await page.locator("#manualConfirmSave").click();
+  await expect(page.locator("#manualLibraryList")).toContainText("Treino de auditoria");
+  await page.locator("#manualShowLibrary").click();
+  await expect(page.locator("#manualLibrary")).toBeVisible();
+  await page.locator("#manualCloseLibrary").click();
+
+  await page.locator("#manualPlay").click();
+  await expect(page.locator("#playOverlay")).toBeVisible();
+  await page.locator("#playNext").click();
+  await page.locator("#playPrev").click();
+  await page.locator("#closePlay").click();
+  await expect(page.locator("#playOverlay")).toBeHidden();
+
+  await page.locator('#manualLibraryList [data-library-action="insert"]').first().click();
+  await expect(page.locator("#manualParts .builder-part")).toHaveCount(3);
+  await page.locator('#manualLibraryList [data-library-action="load"]').first().click();
+  await expect(page.locator("#manualParts .builder-part")).toHaveCount(2);
+  await page.locator('#manualLibraryList [data-library-action="delete"]').first().click();
+  await page.locator('[data-manual-action="delete-part"]').first().click();
+  await expect(page.locator("#manualParts .builder-part")).toHaveCount(1);
+});
+
+test("audita botões do banco, do treino tradicional e dos favoritos", async ({ page }) => {
+  await page.locator('#bankList button[data-bank-manual-name="Supino"][data-bank-manual-mode="individual"]').click();
+  await expect(page.locator("#manualParts")).toContainText("Supino");
+  await page.locator('#bankList button[data-bank-manual-name="Crucifixo"][data-bank-manual-mode="circuit"]').click();
+  await expect(page.locator("#manualParts")).toContainText("Crucifixo");
+
+  await page.locator("#generate").click();
+  await page.locator('#bankList button[data-bank-name="Agachamento Livre"][data-bank-target="0"]').click();
+  await expect(page.locator(".block").nth(0)).toContainText("Agachamento Livre");
+  await page.locator('#bankList button[data-bank-name="Supino"][data-bank-target="2"]').click();
+  await expect(page.locator(".block").nth(2)).toContainText("Supino");
+
+  await page.locator("#again").click();
+  await expect(page.locator(".block")).toHaveCount(4);
+  await page.locator("#openPlay").click();
+  await page.locator("#playNext").click();
+  await page.locator("#playPrev").click();
+  await page.locator("#closePlay").click();
+
+  await page.locator("#saveWorkoutButton").click();
+  await page.locator("#savedWorkoutName").fill("Botões auditados");
+  await page.locator("#confirmSaveItem").click();
+  await expect(page.locator("#savedItemsList")).toContainText("Botões auditados");
+  await page.locator("#openSavedButton").click();
+  await page.locator('#savedItemsList [data-saved-action="load"]').click();
+  await expect(page.locator("#result")).toBeVisible();
+  await page.locator("#openSavedButton").click();
+  await page.locator('#savedItemsList [data-saved-action="delete"]').click();
+  await expect(page.locator("#savedItemsList")).not.toContainText("Botões auditados");
+  await page.locator("#closeSavedPanel").click();
+
+  await page.evaluate(() => { window.__printCalled = false; window.print = () => { window.__printCalled = true; }; });
+  await page.locator("#print").click();
+  expect(await page.evaluate(() => window.__printCalled)).toBe(true);
+  await page.locator("#copy").click();
+});
+
+test("audita botões de criar, desfazer, limpar, salvar e editar sequência de luta", async ({ page }) => {
+  await page.locator("#techniqueSelect").selectOption("Jab");
+  await page.locator("#addTechnique").click();
+  await expect(page.locator("#sequencePreview")).toContainText("Jab");
+  await page.locator("#undoTechnique").click();
+  await expect(page.locator("#sequencePreview")).not.toContainText("Jab");
+
+  for (const technique of ["Jab", "Chute alto T", "Esquiva"]) {
+    await page.locator("#techniqueSelect").selectOption(technique);
+    await page.locator("#addTechnique").click();
+  }
+  await page.locator("#saveSequence").click();
+  await expect(page.locator("#customFightBank")).toContainText("Jab + Chute alto T + Esquiva");
+
+  await page.locator('#customFightBank button[data-fight-target="1"]').click();
+  await expect(page.locator(".block").nth(1)).toContainText("Jab + Chute alto T + Esquiva");
+  await page.locator('.block').nth(1).getByRole("button", { name: "Editar golpe" }).first().click();
+  await expect(page.locator("#fightEditPanel")).toBeVisible();
+  await page.locator("#cancelFightEdit").click();
+  await page.locator('.block').nth(1).getByRole("button", { name: "Editar golpe" }).first().click();
+  const replacement = page.locator("#fightEditReplacement");
+  const options = await replacement.locator("option").evaluateAll(os => os.map(o => o.value).filter(Boolean));
+  if (options.length) {
+    await replacement.selectOption(options[0]);
+    await page.locator("#applyFightEdit").click();
+  } else {
+    await page.locator("#cancelFightEdit").click();
+  }
+
+  await page.locator('#customFightBank button[data-custom-fight-delete]').click();
+  await expect(page.locator("#customFightBank")).not.toContainText("Jab + Chute alto T + Esquiva");
+  await page.locator("#clearSequence").click();
+  await expect(page.locator("#sequencePreview")).toBeEmpty();
+});
