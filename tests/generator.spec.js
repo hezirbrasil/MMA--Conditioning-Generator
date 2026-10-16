@@ -65,7 +65,7 @@ test("permite criar uma sequência e mantê-la após recarregar", async ({ page 
   await page.locator("#techniqueSelect").selectOption("Esquiva");
   await page.locator("#addTechnique").click();
 
-  await expect(page.locator("#sequencePreview")).toContainText("Direto");
+  await expect(page.locator("#sequencePreview")).toContainText("Jab");
   await page.locator("#saveSequence").click();
   await expect(page.locator("#sequenceStatus")).toContainText("Sequência salva!");
   await expect(page.locator("#customFightBank")).toContainText(
