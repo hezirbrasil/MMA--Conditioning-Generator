@@ -14,10 +14,11 @@ test("a página inicial carrega com as opções de treino", async ({ page }) => 
 test("audita as alterações de interface solicitadas", async ({ page }) => {
   const partType = page.locator("#manualPartType");
   await expect(partType.locator("option")).toHaveText([
-    "Circuito funcional",
+    "Circuito",
     "Exercício individual",
-    "Sequências de luta individuais",
-    "Descanso / transição"
+    "Combo",
+    "Troca",
+    "Descanso"
   ]);
   await expect(partType).not.toContainText("Bloco de exercícios individuais");
   await expect(partType).not.toContainText("Circuito de luta");
