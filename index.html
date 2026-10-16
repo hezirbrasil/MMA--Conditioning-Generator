@@ -837,7 +837,28 @@ const manualPartDefaults={
   activePause:{title:"Pausa ativa",rounds:1,seconds:30,rest:0,items:[{name:"PAUSA ATIVA",detail:"Recuperação ativa"}]}
 };
 function manualId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
-function manualLoadLibrary(){try{const x=JSON.parse(localStorage.getItem(MANUAL_LIBRARY_KEY)||"[]");if(!Array.isArray(x))return[];return x.map(entry=>{const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="Circuito de luta"?"Sequências de luta individuais":(p.title||"Sequências de luta individuais")}:p;if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry})}catch(e){return[]}}
+function manualLoadLibrary(){
+ try{
+  const raw=localStorage.getItem(MANUAL_LIBRARY_KEY);
+  const x=JSON.parse(raw||"[]");
+  if(!Array.isArray(x))return[];
+  const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="Circuito de luta"?"Sequências de luta individuais":(p.title||"Sequências de luta individuais")}:p;
+  let items=x.map(entry=>{if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry});
+  const seedKey="mc-manual-starter-circuits-v1";
+  if(!localStorage.getItem(seedKey)){
+   const starters=[
+    {id:"starter-circuit-superior",kind:"part",name:"Circuito 1",part:{id:"starter-circuit-superior-part",type:"circuit",title:"Circuito 1",durationMinutes:10,durationExtraSeconds:0,seconds:50,rest:10,items:[{name:"Supino",detail:"Peito"},{name:"Remada aberta",detail:"Costas"},{name:"Desenvolvimento",detail:"Ombros"}]},savedAt:new Date().toISOString()},
+    {id:"starter-circuit-inferior-core",kind:"part",name:"Circuito 2",part:{id:"starter-circuit-inferior-core-part",type:"circuit",title:"Circuito 2",durationMinutes:10,durationExtraSeconds:0,seconds:50,rest:10,items:[{name:"Agachamento",detail:"Pernas"},{name:"Stiff",detail:"Posterior de coxa"},{name:"Abdominal bicicleta",detail:"Core"}]},savedAt:new Date().toISOString()},
+    {id:"starter-circuit-funcional",kind:"part",name:"Circuito 3",part:{id:"starter-circuit-funcional-part",type:"circuit",title:"Circuito 3",durationMinutes:10,durationExtraSeconds:0,seconds:50,rest:10,items:[{name:"Terra com desenvolvimento",detail:"Funcional"},{name:"Agachamento com panturrilha",detail:"Pernas"},{name:"Joelhada no step alternada",detail:"Cardio/Funcional"}]},savedAt:new Date().toISOString()}
+   ];
+   const existingIds=new Set(items.map(entry=>entry.id));
+   starters.forEach(entry=>{if(!existingIds.has(entry.id))items.push(entry)});
+   localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
+   localStorage.setItem(seedKey,"1");
+  }
+  return items;
+ }catch(e){return[]}
+}
 function manualStoreLibrary(items){try{localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));return true}catch(e){return false}}
 function manualTypeLabel(type){return ({circuit:"Circuito",fightCircuit:"Combo",individual:"Exercício individual",fight:"Combo",transition:"Troca",rest:"Descanso",activePause:"Pausa ativa"})[type]||"Parte"}
 
