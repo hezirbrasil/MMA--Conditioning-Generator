@@ -131,3 +131,44 @@ test("a interface não cria rolagem horizontal no celular", async ({ page }) => 
   expect(dimensions.document).toBeLessThanOrEqual(dimensions.viewport + 1);
   await expect(page.locator(".block").first()).toBeVisible();
 });
+
+test("monta um circuito manual e repete os itens pelo número de voltas", async ({ page }) => {
+  await page.locator("#manualWorkoutName").fill("Circuito de teste");
+  await page.locator("#manualPartType").selectOption("circuit");
+  await page.locator("#manualAddPart").click();
+  await page.locator('[data-manual-select="0"]').selectOption({ label: "Supino" });
+  await page.locator('[data-manual-action="add-item"][data-p="0"]').click();
+  await page.locator('[data-manual-prop="rounds"][data-p="0"]').selectOption("3");
+
+  await expect(page.locator("#manualParts")).toContainText("Supino");
+  await expect(page.locator("#manualParts")).toContainText("3 volta");
+  await page.locator("#manualPlay").click();
+  await expect(page.locator("#playOverlay")).toBeVisible();
+  await expect(page.locator("#playCount")).toHaveText("ITEM 1 DE 3");
+  await page.locator("#playNext").click();
+  await expect(page.locator("#playType")).toContainText("Volta 2/3");
+});
+
+test("adiciona os dois lados de exercício unilateral no montador manual", async ({ page }) => {
+  await page.locator("#manualAddPart").click();
+  await page.locator('[data-manual-select="0"]').selectOption({ label: "Remada unilateral E" });
+  await page.locator('[data-manual-action="add-item"][data-p="0"]').click();
+
+  const items = await page.locator("#manualParts .builder-item span").allTextContents();
+  expect(items.some(name => name.includes("Remada unilateral E"))).toBe(true);
+  expect(items.some(name => name.includes("Remada unilateral D"))).toBe(true);
+});
+
+test("salva e carrega uma parte reutilizável no montador manual", async ({ page }) => {
+  await page.locator("#manualAddPart").click();
+  await page.locator('[data-manual-select="0"]').selectOption({ label: "Supino" });
+  await page.locator('[data-manual-action="add-item"][data-p="0"]').click();
+  await page.locator('[data-manual-action="save-part"][data-p="0"]').click();
+  await page.locator("#manualLibraryName").fill("Circuito reutilizável");
+  await page.locator("#manualConfirmSave").click();
+
+  await expect(page.locator("#manualLibraryList")).toContainText("Circuito reutilizável");
+  await page.locator("#manualParts").locator('[data-manual-action="delete-part"]').click();
+  await page.locator("#manualLibraryList").locator('[data-library-action="insert"]').click();
+  await expect(page.locator("#manualParts")).toContainText("Supino");
+});
