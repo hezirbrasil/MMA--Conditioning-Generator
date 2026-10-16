@@ -34,7 +34,7 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
 .timer-ring .timer-progress{stroke:var(--purple);stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:0;filter:drop-shadow(0 0 7px #9b5cff88);transition:stroke-dashoffset .2s linear}
 .timer-ring-value{position:absolute;font:800 clamp(27px,6vw,43px)/1 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums;letter-spacing:1px}
 .timer-ring[hidden]{display:none!important}
-.play-circuit-items{display:grid;gap:12px;width:min(100%,620px);margin:18px auto 22px}.play-circuit-item{display:flex;align-items:center;gap:14px;text-align:left;padding:16px 18px;border:1px solid #68468b;border-radius:12px;background:linear-gradient(135deg,#251833,#15101e);font-size:clamp(17px,4vw,24px);font-weight:800;line-height:1.25}.play-circuit-item span{display:grid;place-items:center;flex:0 0 36px;height:36px;border-radius:50%;background:#6d28d9;color:#fff;font-size:15px}.play-circuit-items[hidden]{display:none!important}
+.play-content.is-circuit-play{gap:clamp(8px,1.6vh,14px);min-height:0;justify-content:flex-start;padding:10px 0}.play-circuit-items{display:grid;grid-template-columns:1fr;gap:8px;width:min(100%,520px);margin:2px auto 6px}.play-circuit-item{width:100%;display:flex;align-items:center;gap:10px;text-align:left;padding:clamp(9px,2vh,14px) 12px;border:1px solid #68468b;border-radius:10px;background:linear-gradient(135deg,#251833,#15101e);color:#fff;font:700 clamp(14px,3.7vw,19px)/1.22 Inter,sans-serif;min-height:54px;cursor:pointer}.play-circuit-item:active{border-color:#c084fc;background:#322044}.play-circuit-item span{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:50%;background:#6d28d9;color:#fff;font-size:13px}.play-circuit-item select{width:100%;min-width:0;padding:9px;background:#15111f;color:#fff;border:1px solid #9b5cff;border-radius:7px;font-size:14px}.play-circuit-items[hidden]{display:none!important}.play-content.is-circuit-play .timer-ring{width:min(34vw,138px);height:min(34vw,138px);flex-shrink:0}.play-content.is-circuit-play .timer-ring-value{font-size:clamp(23px,5vw,32px)}.play-content.is-circuit-play .play-type{font-size:12px}.play-content.is-circuit-play .play-count{margin-top:0}@media(max-height:700px){.play-content.is-circuit-play{gap:6px;padding:4px 0}.play-content.is-circuit-play .timer-ring{width:112px;height:112px}.play-circuit-item{min-height:46px;padding:8px 10px}}
 .builder-part-body[hidden]{display:none!important}.builder-part.is-collapsed .builder-part-body{display:none!important}
 .builder-part-collapse{font-size:10px!important;padding:7px 9px!important}
 @media(max-width:480px){.timer-ring{width:160px;height:160px}}
@@ -1158,8 +1158,9 @@ function manualRenderPlay(){
  const circuitItems=document.getElementById("playCircuitItems");
  const isCircuitDisplay=!!it.isTimedCircuit;
  circuitItems.hidden=!isCircuitDisplay;
+ document.querySelector(".play-content").classList.toggle("is-circuit-play",isCircuitDisplay);
  document.getElementById("playName").hidden=isCircuitDisplay;
- if(isCircuitDisplay){const names=manualPlayItems.filter(x=>x.isTimedCircuit&&x.partIndex===it.partIndex).map(x=>x.name);circuitItems.innerHTML=names.map((name,i)=>'<div class="play-circuit-item"><span>'+(i+1)+'</span><div>'+escHtml(name)+'</div></div>').join("");}
+ if(isCircuitDisplay){const names=manualPlayItems.filter(x=>x.isTimedCircuit&&x.partIndex===it.partIndex);circuitItems.innerHTML=names.map((item,i)=>'<button type="button" class="play-circuit-item" data-play-circuit-item="'+i+'"><span>'+(i+1)+'</span><div>'+escHtml(item.name)+'</div></button>').join("");}
  document.getElementById("playGroup").textContent=it.group;
  document.getElementById("playName").textContent=it.name;
  document.getElementById("playType").textContent=it.detail;
