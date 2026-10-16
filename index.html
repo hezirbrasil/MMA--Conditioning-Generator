@@ -899,12 +899,12 @@ function presetExerciseBlock(label,addFinalRest=false){
   manualParts.push(presetPart("individual",label+" · Exercício "+(i+1),{seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:0,selectedExercise:it.name,items:[{...it}]}));
   if(i<3)manualParts.push(presetPause("Descanso entre exercícios",10));
  }
- manualParts.push(presetPause("Descanso funcional",12));
+ manualParts.push(presetPause("Descanso funcional",15));
 }
 function presetCircuit(label,addFinalRest=false){
  const items=[];
  for(let i=0;i<3;i++)items.push(presetPickExercise());
- manualParts.push(presetPart("circuit",label,{durationMinutes:3,durationExtraSeconds:22,seconds:50,rest:10,items}));
+ manualParts.push(presetPart("circuit",label,{durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items}));
  manualParts.push(presetPause("Descanso do circuito",40));
 }
 function presetFightBlock(label,addPauseAfter=false){
@@ -959,7 +959,9 @@ function loadWorkoutOption(option){
   const count=(p.items||[]).length,work=Math.max(0,Number(p.seconds)||0),rest=Math.max(0,Number(p.rest)||0);
   return sum+count*work+Math.max(0,count-1)*rest;
  },0);
- manualParts.push(presetPause("FIM",Math.max(0,targetSeconds-estimatedSeconds)));
+ const remainingSeconds=Math.max(0,targetSeconds-estimatedSeconds);
+ const roundedRemainingSeconds=Math.ceil(remainingSeconds/5)*5;
+ manualParts.push(presetPause("FIM",roundedRemainingSeconds));
  document.getElementById("manualWorkoutName").value=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" — "+(option===1?"Opção 1 (Funcional primeiro)":"Opção 2 (Luta primeiro)");
  manualRenderParts();
  document.getElementById("manualStatus").textContent=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" aplicado com "+(option===1?"Opção 1":"Opção 2")+". Você pode trocar qualquer exercício e salvar o treino completo.";
