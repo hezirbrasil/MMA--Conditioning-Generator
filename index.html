@@ -401,6 +401,16 @@ function normalizeUnilateralBank(items){
  return output;
 }
 function getExerciseBank(){return normalizeUnilateralBank([...bank,...loadCustomBank()])}
+function getExerciseBankSeparateSides(){
+ const output=[],seen=new Set();
+ for(const ex of [...bank,...loadCustomBank()]){
+  const name=String(ex.name||"");
+  const legacy=name.match(/^(.*) \(E\/D\)$/);
+  const entries=legacy?[{...ex,name:legacy[1]+" E"},{...ex,name:legacy[1]+" D"}]:[ex];
+  for(const item of entries){if(!item.name||seen.has(item.name))continue;seen.add(item.name);output.push(item)}
+ }
+ return output;
+}
 function saveCustomBank(items){localStorage.setItem("mc-custom-exercises",JSON.stringify(items))}
 function addExerciseToBank(event){
  event.preventDefault();
@@ -410,21 +420,21 @@ function addExerciseToBank(event){
  const sideMatch=name.match(/^(.*) ([ED])$/i);
  if(sideMatch&&!paired){status.textContent="Para manter os lados juntos, marque a opção unilateral E/D.";return}
  if(paired){name=name.replace(/\s+[ED]$/i,"").trim();if(!name){status.textContent="Digite o nome-base do exercício.";return}}
- const names=paired?[name+" (E/D)"]:[name];
- const existing=getExerciseBank().map(x=>x.name.toLocaleLowerCase("pt-BR"));
+const names=paired?[name+" E",name+" D"]:[name];
+ const existing=getExerciseBankSeparateSides().map(x=>x.name.toLocaleLowerCase("pt-BR"));
  if(names.some(n=>existing.includes(n.toLocaleLowerCase("pt-BR")))){status.textContent="Esse exercício, ou um dos lados, já está cadastrado.";return}
  const custom=loadCustomBank();
  names.forEach(n=>custom.push({name:n,cat,types:["fullbody","legblast"],custom:true}));
  try{saveCustomBank(custom)}catch(e){status.textContent="Não consegui salvar neste navegador. Verifique o espaço disponível.";return}
  nameInput.value="";document.getElementById("newExercisePair").checked=false;
- status.textContent=paired?"Exercício unilateral adicionado como um único item (E/D).":"Exercício adicionado ao banco: "+name+". ";
+ status.textContent=paired?"Exercício unilateral cadastrado separadamente: "+name+" E e "+name+" D.":"Exercício adicionado ao banco: "+name+". ";
  renderExerciseBank();
 }
 document.getElementById("addExerciseForm").addEventListener("submit",addExerciseToBank);
 const bankCategoryLabels={peito:"PEITO",costas:"COSTAS",ombros:"OMBROS",bíceps:"BÍCEPS",tríceps:"TRÍCEPS",pernas:"PERNAS",posterior:"POSTERIOR",composto:"COMPOSTOS",core:"CORE E ABDOMINAIS",cardio:"CARDIO E FUNCIONAL"};
 function renderExerciseBank(){
  const query=document.getElementById("bankSearch").value.trim().toLocaleLowerCase("pt-BR"),category=document.getElementById("bankCategoryFilter").value;
- const all=getExerciseBank(),filtered=all.filter(x=>(category==="all"||x.cat===category)&&x.name.toLocaleLowerCase("pt-BR").includes(query));
+  const all=getExerciseBankSeparateSides(),filtered=all.filter(x=>(category==="all"||x.cat===category)&&x.name.toLocaleLowerCase("pt-BR").includes(query));
  document.getElementById("bankSummary").textContent=filtered.length+" de "+all.length+" exercícios exibidos.";
  const groups=Object.keys(bankCategoryLabels).map(cat=>({cat,label:bankCategoryLabels[cat],items:filtered.filter(x=>x.cat===cat)})).filter(g=>g.items.length);
  document.getElementById("bankList").innerHTML=groups.length?groups.map(g=>'<details class="bank-category" '+(query||category!=="all"?'open':'')+'><summary>'+escHtml(g.label)+'<span>'+g.items.length+' EXERCÍCIOS</span></summary><ul class="bank-list">'+g.items.map(x=>'<li><span class="bank-item-name">'+escHtml(x.name)+(x.custom?' <span style="color:#c5a4f5;font-size:10px">· ADICIONADO</span>':'')+'</span><span class="bank-item-actions"><button type="button" class="secondary" data-bank-manual-name="'+escHtml(x.name)+'" data-bank-manual-mode="individual">＋ Avulso</button><button type="button" class="secondary" data-bank-manual-name="'+escHtml(x.name)+'" data-bank-manual-mode="circuit">＋ Circuito</button><button type="button" class="secondary" data-bank-name="'+escHtml(x.name)+'" data-bank-target="0">＋ Bloco 1</button><button type="button" class="secondary" data-bank-name="'+escHtml(x.name)+'" data-bank-target="2">＋ Bloco 3</button></span></li>').join("")+'</ul></details>').join(""):'<div class="bank-empty">Nenhum exercício encontrado com esses filtros.</div>';
@@ -432,7 +442,7 @@ function renderExerciseBank(){
 document.getElementById("bankSearch").addEventListener("input",renderExerciseBank);
 document.getElementById("bankCategoryFilter").addEventListener("change",renderExerciseBank);
 function addBankExerciseToManualBuilder(name,mode){
- const exercise=getExerciseBank().find(x=>x.name===name);
+  const exercise=getExerciseBankSeparateSides().find(x=>x.name===name);
  const status=document.getElementById("bankSummary");
  if(!exercise){status.textContent="Não encontrei esse exercício no banco.";return}
  let part;
@@ -854,7 +864,7 @@ function classifyFightCombo(name){
 }
 function manualOptions(part){
  if(part.type==="circuit"||part.type==="individual"){
-  const list=getExerciseBank().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
+   const list=getExerciseBankSeparateSides().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
   return list.map(x=>({name:x.name,detail:"Exercício funcional",cat:x.cat}));
  }
  if(part.type==="fight"||part.type==="fightCircuit"){
@@ -1099,11 +1109,7 @@ document.getElementById("manualParts").addEventListener("change",e=>{
    const options=manualOptions(p),chosen=options.find(x=>x.name===name);
    if(!chosen)p.items=[];
    else{
-    const pair=name.match(/^(.*) ([ED])$/);
-    if(pair){
-     const otherName=pair[1]+" "+(pair[2]==="E"?"D":"E"),other=options.find(x=>x.name===otherName);
-     p.items=other?(pair[2]==="E"?[chosen,other]:[other,chosen]):[chosen];
-    }else p.items=[chosen];
+p.items=[chosen];
    }
   }
   manualRenderParts();
@@ -1159,8 +1165,8 @@ document.getElementById("manualParts").addEventListener("click",e=>{
   const select=document.querySelector('[data-manual-select="'+pi+'"]'),name=select&&select.value;
   if(!name){document.getElementById("manualStatus").textContent="Escolha um item antes de adicionar.";return}
   if(p.items.some(x=>x.name===name)){document.getElementById("manualStatus").textContent="Esse item já está nesta parte.";return}
-  const option=manualOptions(p).find(x=>x.name===name);const chosen=option||{name,detail:"Item personalizado"};const pair=name.match(/^(.*) ([ED])$/);if(pair){const otherName=pair[1]+" "+(pair[2]==="E"?"D":"E");const other=manualOptions(p).find(x=>x.name===otherName);if(other){const left=pair[2]==="E"?chosen:other,right=pair[2]==="D"?chosen:other;if(p.items.some(x=>x.name===left.name||x.name===right.name)){document.getElementById("manualStatus").textContent="Esse par E/D já está nesta parte.";return}p.items.push(left,right);manualRenderParts();document.getElementById("manualStatus").textContent="Par unilateral adicionado: lado E e lado D.";return}}p.items.push(chosen);manualRenderParts();document.getElementById("manualStatus").textContent="Item adicionado.";
- }else if(action==="remove-item"){const index=Number(b.dataset.i),removed=p.items[index];if(removed){const pair=removed.name.match(/^(.*) ([ED])$/);if(pair){const other=pair[1]+" "+(pair[2]==="E"?"D":"E");p.items=p.items.filter(x=>x.name!==removed.name&&x.name!==other)}else p.items.splice(index,1)}manualRenderParts()}
+   const option=manualOptions(p).find(x=>x.name===name);const chosen=option||{name,detail:"Item personalizado"};p.items.push(chosen);manualRenderParts();document.getElementById("manualStatus").textContent="Item adicionado: "+name+". ";
+  }else if(action==="remove-item"){const index=Number(b.dataset.i);if(index>=0&&index<p.items.length)p.items.splice(index,1);manualRenderParts()}
  else if(action==="delete-part"){manualParts.splice(pi,1);manualRenderParts()}
  else if(action==="up"&&pi>0){[manualParts[pi-1],manualParts[pi]]=[manualParts[pi],manualParts[pi-1]];manualRenderParts()}
  else if(action==="down"&&pi<manualParts.length-1){[manualParts[pi+1],manualParts[pi]]=[manualParts[pi],manualParts[pi+1]];manualRenderParts()}
