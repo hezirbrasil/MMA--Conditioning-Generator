@@ -77,7 +77,7 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
  <p class="builder-intro">Primeiro escolha o tipo de treino e depois o modelo de aula. O gerador respeita as categorias do Fullbody ou do Leg Blast; você pode editar os exercícios antes de começar.</p><div class="builder-field" style="max-width:420px;margin:14px 0"><label for="presetWorkoutType">TIPO DE TREINO</label><select id="presetWorkoutType"><option value="fullbody">Fullbody — corpo todo</option><option value="legblast">Leg Blast — pernas e abdômen</option></select></div>
  <div class="builder-grid" hidden aria-hidden="true"><div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Nome do treino"></div><div class="builder-field"><label for="manualPartType">Parte</label><select id="manualPartType"><option value="circuit">Circuito</option></select></div></div>
  <div class="builder-toolbar"><button type="button" class="secondary" id="manualPreviewButton">👁 Visualizar exercícios</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div>
- <section id="manualPreview" class="manual-preview" hidden><div class="manual-preview-head"><div><div class="eyebrow purple">VISUALIZAÇÃO LIMPA</div><h3 style="margin:5px 0 0">Exercícios montados</h3><p class="builder-intro" style="margin:6px 0 0">Somente as partes e os exercícios do treino, sem os controles de edição.</p></div><button type="button" class="primary" id="manualPreviewBack">← Voltar à edição</button></div><div id="manualPreviewContent"></div></section><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">1. TIPO DE TREINO  ·  2. MODELO DE AULA</strong><button type="button" class="primary" id="loadOption1">Aplicar Opção 1 · Começa no funcional</button><button type="button" class="primary" id="loadOption2">Aplicar Opção 2 · Começa na luta</button></div>
+ <section id="manualPreview" class="manual-preview" hidden><div class="manual-preview-head"><div><div class="eyebrow purple">VISUALIZAÇÃO LIMPA</div><h3 style="margin:5px 0 0">Exercícios montados</h3><p class="builder-intro" style="margin:6px 0 0">Roteiro limpo e numerado para acompanhar os exercícios em outro cronômetro.</p></div><button type="button" class="primary" id="manualPreviewBack">← Voltar à edição</button></div><div id="manualPreviewContent"></div></section><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">1. TIPO DE TREINO  ·  2. MODELO DE AULA</strong><button type="button" class="primary" id="loadOption1">Aplicar Opção 1 · Começa no funcional</button><button type="button" class="primary" id="loadOption2">Aplicar Opção 2 · Começa na luta</button></div>
  <div class="builder-play-note">Opção 1 começa pelo funcional e inclui circuitos. Opção 2 começa pela luta e usa exercícios funcionais individuais. As trocas duram 1min30s.</div>
  <div id="manualParts" class="builder-parts"><div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div></div>
  <div id="manualStatus" class="builder-status" aria-live="polite"></div>
@@ -1049,23 +1049,10 @@ function manualRenderPreview(){
  host.innerHTML=parts.map((p,idx)=>{
   const sourceItems=(p.items||[]).map((it,originalIndex)=>({it,originalIndex})).filter(x=>x.it&&x.it.name&&!["DESCANSO","PAUSA ATIVA","TROCA PARA LUTA"].includes(String(x.it.name).toUpperCase()));
   const title=escHtml(p.title||manualTypeLabel(p.type));
-  const rows=sourceItems.map((x,n)=>'<div class="manual-preview-row"><div class="manual-preview-number">'+String(n+1).padStart(2,"0")+'</div><div class="manual-preview-name">'+escHtml(x.it.name)+'</div><div class="manual-preview-actions"><button type="button" data-preview-action="up" data-pid="'+p.id+'" data-i="'+x.originalIndex+'" '+(n===0?'disabled':'')+'>↑</button><button type="button" data-preview-action="down" data-pid="'+p.id+'" data-i="'+x.originalIndex+'" '+(n===sourceItems.length-1?'disabled':'')+'>↓</button><button type="button" data-preview-action="swap" data-pid="'+p.id+'" data-i="'+x.originalIndex+'">↻ Trocar</button><button type="button" class="remove" data-preview-action="delete" data-pid="'+p.id+'" data-i="'+x.originalIndex+'">× Excluir</button></div></div>').join("");
+  const rows=sourceItems.map((x,n)=>'<div class="manual-preview-row"><div class="manual-preview-number">'+String(n+1).padStart(2,"0")+'</div><div class="manual-preview-name">'+escHtml(x.it.name)+'</div></div>').join("");
   return '<article class="manual-preview-part"><h4>'+String(idx+1).padStart(2,"0")+' · '+title+' <span style="color:#c5a4f5;font-weight:500">('+sourceItems.length+' exercícios)</span></h4>'+(rows?'<div class="manual-preview-list">'+rows+'</div>':'<div class="manual-preview-empty">Nenhum exercício nesta parte.</div>')+'</article>';
  }).join("");
 }
-document.getElementById("manualPreviewContent").addEventListener("click",e=>{
- const b=e.target.closest("button[data-preview-action]");if(!b)return;
- const p=manualParts.find(x=>x.id===b.dataset.pid),i=Number(b.dataset.i);if(!p||!p.items[i])return;
- const action=b.dataset.previewAction;
- if(action==="up"&&i>0){[p.items[i-1],p.items[i]]=[p.items[i],p.items[i-1]];manualRenderParts();manualRenderPreview();return}
- if(action==="down"&&i<p.items.length-1){[p.items[i+1],p.items[i]]=[p.items[i],p.items[i+1]];manualRenderParts();manualRenderPreview();return}
- if(action==="delete"){p.items.splice(i,1);manualRenderParts();manualRenderPreview();return}
- if(action==="swap"){
-  document.getElementById("manualPreview").hidden=true;document.getElementById("manualBuilder").classList.remove("preview-mode");document.getElementById("manualParts").hidden=false;manualRenderParts();
-  const pi=manualParts.findIndex(x=>x.id===p.id),swap=document.querySelector('[data-manual-action="swap-item"][data-p="'+pi+'"][data-i="'+i+'"]');
-  if(swap)swap.click();document.getElementById("manualParts").scrollIntoView({behavior:"smooth",block:"center"});
- }
-});
 document.getElementById("manualPreviewButton").addEventListener("click",()=>{
  manualRenderPreview();
  document.getElementById("manualPreview").hidden=false;
