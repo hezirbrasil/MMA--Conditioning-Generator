@@ -34,6 +34,20 @@ test("botão Adicionar parte cria os blocos do montador manual", async ({ page }
   await expect(parts).toHaveCount(5);
 });
 
+test("circuito usa timer total em minutos e segundos, sem tempo por item", async ({ page }) => {
+  await page.goto("/");
+  await page.locator("#manualPartType").selectOption("circuit");
+  await page.locator("#manualAddPart").click();
+  const circuit = page.locator("#manualParts .builder-part").first();
+  await expect(circuit.locator('[data-manual-prop="durationMinutes"]')).toBeVisible();
+  await expect(circuit.locator('[data-manual-prop="durationExtraSeconds"]')).toBeVisible();
+  await expect(circuit.getByText("Tempo por item (segundos)", { exact: true })).toHaveCount(0);
+  await expect(circuit.getByText("Descanso após cada item (segundos)", { exact: true })).toHaveCount(0);
+  await circuit.locator('[data-manual-prop="durationMinutes"]').fill("2");
+  await circuit.locator('[data-manual-prop="durationExtraSeconds"]').fill("30");
+  await expect(circuit.locator(".builder-part-head")).toContainText("02:30");
+});
+
 test("a interface não cria rolagem horizontal no celular", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
