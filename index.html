@@ -40,7 +40,7 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
  <p class="builder-intro">Comece em branco e combine circuitos, exercícios individuais, sequências de luta e pausas na ordem que quiser. Cada circuito tem sua própria quantidade de voltas. O gerador tradicional continua disponível abaixo.</p>
  <div class="builder-grid">
   <div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Ex.: Condicionamento misto"></div>
-  <div class="builder-field"><label for="manualPartType">Parte que deseja adicionar</label><select id="manualPartType"><option value="circuit">Circuito funcional</option><option value="individual">Bloco de exercícios individuais</option><option value="fight">Sequências de luta individuais</option><option value="rest">Descanso / transição</option></select></div>
+  <div class="builder-field"><label for="manualPartType">Parte que deseja adicionar</label><select id="manualPartType"><option value="circuit">Circuito funcional</option><option value="individual">Exercício individual</option><option value="fight">Sequências de luta individuais</option><option value="rest">Descanso / transição</option></select></div>
  </div>
  <div class="builder-toolbar"><button type="button" class="primary" id="manualAddPart">＋ Adicionar parte</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div>
  <div class="builder-play-note">Circuitos: os itens são executados na ordem e repetidos pelo número de voltas escolhido. Partes individuais aparecem uma vez. Use as setas para reorganizar as partes.</div>
@@ -712,14 +712,14 @@ let manualSavePartId=null;
 const manualPartDefaults={
  circuit:{title:"Circuito funcional",rounds:4,seconds:50,rest:10,items:[]},
  fightCircuit:{title:"Circuito de luta",rounds:4,seconds:50,rest:10,items:[]},
- individual:{title:"Bloco de exercícios individuais",rounds:1,seconds:50,rest:10,items:[]},
+ individual:{title:"Exercício individual",rounds:1,seconds:50,rest:10,items:[]},
  fight:{title:"Sequências de luta individuais",rounds:1,seconds:50,rest:10,items:[]},
  rest:{title:"Descanso / transição",rounds:1,seconds:90,rest:0,items:[{name:"Descanso / transição",detail:"Pausa"}]}
 };
 function manualId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
 function manualLoadLibrary(){try{const x=JSON.parse(localStorage.getItem(MANUAL_LIBRARY_KEY)||"[]");return Array.isArray(x)?x:[]}catch(e){return[]}}
 function manualStoreLibrary(items){try{localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));return true}catch(e){return false}}
-function manualTypeLabel(type){return ({circuit:"Circuito funcional",fightCircuit:"Circuito de luta",individual:"Exercícios individuais",fight:"Sequências de luta",rest:"Descanso / transição"})[type]||"Parte"}
+function manualTypeLabel(type){return ({circuit:"Circuito funcional",fightCircuit:"Circuito de luta",individual:"Exercício individual",fight:"Sequências de luta",rest:"Descanso / transição"})[type]||"Parte"}
 function manualOptions(part){
  if(part.type==="circuit"||part.type==="individual"){
   const list=getExerciseBank().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
