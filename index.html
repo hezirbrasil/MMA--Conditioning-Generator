@@ -932,12 +932,22 @@ function presetPickExercise(){
  presetExerciseCursor++;presetSegmentPickIndex++;presetUsedNames.add(it.name);
  return {...it};
 }
+const presetBlock050Blocks=[
+ [{name:"Deitar, sentar levantar no step",detail:"Cardio e funcional",cat:"cardio"},{name:"Infra alternado",detail:"Core",cat:"core"},{name:"Abdominal bicicleta",detail:"Core",cat:"core"},{name:"Desenvolvimento com polichinelo",detail:"Ombros e cardio",cat:"ombros"}]
+];
+let presetBlock050Order=[];
+let presetBlock050Cursor=0;
+function presetResetBlock050Order(){
+ presetBlock050Order=shuffle(presetBlock050Blocks.map((_,i)=>i));
+ presetBlock050Cursor=0;
+}
 function presetExerciseBlock(label,addFinalRest=false){
- for(let i=0;i<4;i++){
-  const it=presetPickExercise();
+ if(presetBlock050Cursor>=presetBlock050Order.length)presetResetBlock050Order();
+ const items=JSON.parse(JSON.stringify(presetBlock050Blocks[presetBlock050Order[presetBlock050Cursor++]]));
+ items.forEach((it,i)=>{
   manualParts.push(presetPart("individual",label+" · Exercício "+(i+1),{seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:0,selectedExercise:it.name,items:[{...it}]}));
-  if(i<3)manualParts.push(presetPause("Descanso entre exercícios",10));
- }
+  if(i<items.length-1)manualParts.push(presetPause("Descanso entre exercícios",10));
+ });
  manualParts.push(presetPause("Descanso funcional",15));
 }
 const presetCircuitBlocks=[
@@ -972,7 +982,7 @@ function presetFightBlock(label,addPauseAfter=false){
 }
 function loadWorkoutOption(option){
  if(manualParts.length&&!confirm("Aplicar este modelo vai substituir as partes que estão no montador. Quer continuar?"))return;
- manualParts=[];presetResetCircuitOrder();presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetOption=option;presetResetFunctionalPhase(0);
+ manualParts=[];presetResetCircuitOrder();presetResetBlock050Order();presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetOption=option;presetResetFunctionalPhase(0);
  const addSwitch=title=>manualParts.push(presetPause(title,90,"transition"));
  manualParts.push(presetPause("AQUECIMENTO",180));
  if(option===1){
