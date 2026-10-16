@@ -78,7 +78,7 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
   <div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Ex.: Condicionamento misto"></div>
   <div class="builder-field"><label for="manualPartType">Parte que deseja adicionar</label><select id="manualPartType"><option value="circuit">Circuito</option><option value="individual">Exercício individual</option><option value="fight">Combo</option><option value="transition">Troca</option><option value="rest">Descanso</option><option value="activePause">Pausa ativa</option></select></div>
  </div>
- <div class="builder-toolbar"><button type="button" class="primary" id="manualAddPart">＋ Adicionar parte</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div>
+ <div class="builder-toolbar"><button type="button" class="primary" id="manualAddPart">＋ Adicionar parte</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">MODELOS DE AULA — MMA CONDITIONING</strong><button type="button" class="primary" id="loadOption1">Aplicar Opção 1 · Começa no funcional</button><button type="button" class="primary" id="loadOption2">Aplicar Opção 2 · Começa na luta</button></div>
  <div class="builder-play-note">Circuito: repita os exercícios pelo tempo definido. Combo: pratique sequências de luta. Troca: pausa para mudar do funcional para a luta. Descanso: pausa livre.</div>
  <div id="manualParts" class="builder-parts"><div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div></div>
  <div id="manualStatus" class="builder-status" aria-live="polite"></div>
@@ -856,6 +856,81 @@ function manualOptionsMarkup(opts){
   return group.length?'<optgroup label="'+escHtml(bankCategoryLabels[cat]||cat)+'">'+group.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("")+'</optgroup>':"";
  }).join("");
 }
+function presetPart(type,title,extra={}){
+ const defaults=JSON.parse(JSON.stringify(manualPartDefaults[type]||manualPartDefaults.rest));
+ return {id:manualId(),type,...defaults,...extra,title:title||defaults.title,items:extra.items||defaults.items||[]};
+}
+function presetPause(title,seconds,type="rest"){
+ return presetPart(type,title,{seconds,durationMinutes:Math.floor(seconds/60),durationExtraSeconds:seconds%60,items:[{name:title,detail:title}]});
+}
+let presetExerciseCursor=0,presetFightCursor=0;
+function presetExerciseBlock(label,addFinalRest=false){
+ const list=getExerciseBank().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
+ for(let i=0;i<4;i++){
+  const it=list[(presetExerciseCursor++)%list.length];
+  manualParts.push(presetPart("individual",label+" · Exercício "+(i+1),{seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:0,selectedExercise:it.name,items:[{...it}]}));
+  if(i<3)manualParts.push(presetPause("Descanso entre exercícios",10));
+ }
+ if(addFinalRest)manualParts.push(presetPause("Descanso funcional",40));
+}
+function presetCircuit(label,addFinalRest=false){
+ const list=getExerciseBank().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
+ const items=[];
+ for(let i=0;i<3;i++)items.push({...list[(presetExerciseCursor++)%list.length]});
+ manualParts.push(presetPart("circuit",label,{durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items}));
+ if(addFinalRest)manualParts.push(presetPause("Descanso do circuito",40));
+}
+function presetFightBlock(label,addPauseAfter=false){
+ const list=getFightBank(),items=[];
+ for(let i=0;i<4;i++){
+  const name=list[(presetFightCursor++)%list.length];
+  items.push({name,detail:"Sequência de luta",cat:classifyFightCombo(name)});
+ }
+ manualParts.push(presetPart("fight",label,{seconds:55,durationMinutes:0,durationExtraSeconds:55,rest:5,items}));
+ if(addPauseAfter){manualParts.push(presetPause("Pausa ativa",30,"activePause"));manualParts.push(presetPause("Descanso após pausa ativa",10));}
+}
+function loadWorkoutOption(option){
+ if(manualParts.length&&!confirm("Aplicar este modelo vai substituir as partes que estão no montador. Quer continuar?"))return;
+ manualParts=[];presetExerciseCursor=0;presetFightCursor=0;
+ const addSwitch=title=>manualParts.push(presetPause(title,90,"transition"));
+ manualParts.push(presetPause("AQUECIMENTO",180));
+ if(option===1){
+  presetCircuit("Funcional · Circuito 1",true);
+  presetCircuit("Funcional · Circuito 2",true);
+  presetExerciseBlock("Funcional · Exercícios individuais",false);
+  addSwitch("TROCA PARA A LUTA");
+  presetFightBlock("Luta · Bloco 1",true);
+  presetFightBlock("Luta · Bloco 2",true);
+  presetFightBlock("Luta · Bloco 3",false);
+  addSwitch("TROCA PARA O FUNCIONAL");
+  presetExerciseBlock("Funcional · Exercícios individuais",true);
+  presetCircuit("Funcional · Circuito final",false);
+  addSwitch("TROCA PARA A LUTA");
+  presetFightBlock("Luta · Bloco 1",true);
+  presetFightBlock("Luta · Bloco 2",false);
+ }else{
+  presetFightBlock("Luta · Bloco 1",true);
+  presetFightBlock("Luta · Bloco 2",true);
+  presetFightBlock("Luta · Bloco 3",false);
+  addSwitch("TROCA PARA O FUNCIONAL");
+  presetExerciseBlock("Funcional · Bloco 1",true);
+  presetExerciseBlock("Funcional · Bloco 2",true);
+  presetExerciseBlock("Funcional · Bloco 3",false);
+  addSwitch("TROCA PARA A LUTA");
+  presetFightBlock("Luta · Bloco 1",true);
+  presetFightBlock("Luta · Bloco 2",false);
+  addSwitch("TROCA PARA O FUNCIONAL");
+  presetExerciseBlock("Funcional · Bloco 1",true);
+  presetExerciseBlock("Funcional · Bloco 2",false);
+ }
+ manualParts.push(presetPause("FIM",60));
+ document.getElementById("manualWorkoutName").value=option===1?"MMA Conditioning — Opção 1 (Funcional primeiro)":"MMA Conditioning — Opção 2 (Luta primeiro)";
+ manualRenderParts();
+ document.getElementById("manualStatus").textContent="Modelo aplicado! Os exercícios foram preenchidos com itens da sua biblioteca. Você pode trocar qualquer exercício e salvar o treino completo.";
+ document.getElementById("manualBuilder").scrollIntoView({behavior:"smooth",block:"start"});
+}
+document.getElementById("loadOption1").addEventListener("click",()=>loadWorkoutOption(1));
+document.getElementById("loadOption2").addEventListener("click",()=>loadWorkoutOption(2));
 function manualAddPart(type,source){
  const base=JSON.parse(JSON.stringify(manualPartDefaults[type]||manualPartDefaults.circuit));
  const part=source?JSON.parse(JSON.stringify(source)):{id:manualId(),type,...base};
@@ -971,7 +1046,7 @@ function manualOpenPlay(){
  if(!manualParts.length||!manualParts.some(p=>p.items.length)){document.getElementById("manualStatus").textContent="Adicione partes e itens antes de iniciar o Modo Play.";return}
  manualPlayItems=[];
  manualParts.forEach((p,pi)=>{
-  if(p.type==="rest"||p.type==="transition"||p.type==="activePause"){manualPlayItems.push({name:p.type==="transition"?"TROCA PARA LUTA":p.type==="activePause"?"PAUSA ATIVA":"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Troca para luta · ":p.type==="activePause"?"Recuperação ativa · ":"Descanso · ")+p.seconds+" s",partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||(p.type==="activePause"?30:90)});return}
+  if(p.type==="rest"||p.type==="transition"||p.type==="activePause"){const pauseName=p.title||(p.type==="transition"?"TROCA PARA LUTA":p.type==="activePause"?"PAUSA ATIVA":"DESCANSO");manualPlayItems.push({name:pauseName,group:p.title||manualTypeLabel(p.type),detail:pauseName+" · "+manualFormatTime(Number(p.seconds)||(p.type==="activePause"?30:90)),partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||(p.type==="activePause"?30:90)});return}
   const isCircuit=p.type==="circuit"||p.type==="fightCircuit";
   if(isCircuit){
    const duration=Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
@@ -980,7 +1055,7 @@ function manualOpenPlay(){
    const duration=Math.max(0,Number(p.durationMinutes??Math.floor((Number(p.seconds)||50)/60)))*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??((Number(p.seconds)||50)%60))));
    const rest=Math.max(0,Number(p.restMinutes??Math.floor((Number(p.rest)||0)/60)))*60+Math.max(0,Math.min(59,Number(p.restExtraSeconds??((Number(p.rest)||0)%60))));
    p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:"Exercício · "+manualFormatTime(duration),partIndex:pi,isTimedIndividual:true,durationSeconds:duration});if(rest>0)manualPlayItems.push({name:"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:"Descanso · "+manualFormatTime(rest),partIndex:pi,isPause:true,durationSeconds:rest})});
-  }else p.items.forEach(it=>manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+p.seconds+" s",partIndex:pi}));
+  }else p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+manualFormatTime(Number(p.seconds)||55),partIndex:pi,durationSeconds:Number(p.seconds)||55,isTimedIndividual:true});if((p.type==="fight"||p.type==="fightCircuit")&&Number(p.rest)>0&&ii<p.items.length-1)manualPlayItems.push({name:"DESCANSO ENTRE SEQUÊNCIAS",group:p.title||manualTypeLabel(p.type),detail:"Descanso · "+manualFormatTime(Number(p.rest)),partIndex:pi,isPause:true,durationSeconds:Number(p.rest)});});
  });
  manualPlayIndex=0;manualCircuitDeadline=null;manualItemDeadline=null;manualCurrentCircuitPart=null;manualStopTimer();manualRenderPlay();document.getElementById("playOverlay").hidden=false;
 }
