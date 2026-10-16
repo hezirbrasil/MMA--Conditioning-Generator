@@ -589,8 +589,25 @@ function renderPlay(){
 function openPlay(){if(!workoutGroups.length||!workoutGroups.some(g=>g.items.length)){document.getElementById("status").textContent="Gere um treino antes de abrir o Modo Play.";return}if(typeof manualPlayItems!=="undefined")manualPlayItems=[];playIndex=0;renderPlay();document.getElementById("playOverlay").hidden=false}
 document.getElementById("openPlay").addEventListener("click",openPlay);
 document.getElementById("closePlay").addEventListener("click",()=>{document.getElementById("playOverlay").hidden=true;if(typeof manualPlayItems!=="undefined")manualPlayItems=[];if(typeof manualStopTimer==="function")manualStopTimer();manualCurrentCircuitPart=null});
-document.getElementById("playPrev").addEventListener("click",()=>{if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){if(manualPlayIndex>0){const current=manualPlayItems[manualPlayIndex];let target=manualPlayIndex-1;if(current&&current.isTimedCircuit){while(target>0&&manualPlayItems[target].partIndex===current.partIndex)target--;}manualPlayIndex=target;manualRenderPlay()}else if(playIndex>0){playIndex--;renderPlay()}});
-document.getElementById("playNext").addEventListener("click",()=>{if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){if(manualPlayIndex<manualPlayItems.length-1){const current=manualPlayItems[manualPlayIndex];if(current&&current.isTimedCircuit){const next=manualPlayItems.findIndex((x,i)=>i>manualPlayIndex&&x.partIndex>current.partIndex);manualPlayIndex=next>=0?next:manualPlayItems.length-1;}else manualPlayIndex++;manualRenderPlay()} }else if(playIndex<playItems.length-1){playIndex++;renderPlay()}});
+document.getElementById("playPrev").addEventListener("click",()=>{
+ if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){
+  if(manualPlayIndex>0){
+   const current=manualPlayItems[manualPlayIndex];let target=manualPlayIndex-1;
+   if(current&&current.isTimedCircuit){while(target>0&&manualPlayItems[target].partIndex===current.partIndex)target--;}
+   manualPlayIndex=target;manualRenderPlay();
+  }
+ }else if(playIndex>0){playIndex--;renderPlay();}
+});
+document.getElementById("playNext").addEventListener("click",()=>{
+ if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){
+  if(manualPlayIndex<manualPlayItems.length-1){
+   const current=manualPlayItems[manualPlayIndex];
+   if(current&&current.isTimedCircuit){const next=manualPlayItems.findIndex((x,i)=>i>manualPlayIndex&&x.partIndex>current.partIndex);manualPlayIndex=next>=0?next:manualPlayItems.length-1;}
+   else manualPlayIndex++;
+   manualRenderPlay();
+  }
+ }else if(playIndex<playItems.length-1){playIndex++;renderPlay();}
+});
 document.addEventListener("keydown",e=>{if(document.getElementById("playOverlay").hidden)return;if(e.key==="Escape"){document.getElementById("playOverlay").hidden=true;if(typeof manualPlayItems!=="undefined")manualPlayItems=[];}if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){if(e.key==="ArrowRight"&&manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}if(e.key==="ArrowLeft"&&manualPlayIndex>0){manualPlayIndex--;manualRenderPlay()}}else{if(e.key==="ArrowRight"&&playIndex<playItems.length-1){playIndex++;renderPlay()}if(e.key==="ArrowLeft"&&playIndex>0){playIndex--;renderPlay()}}});
 function workoutText(){const title=document.getElementById("resultName").textContent;const sections=[...document.querySelectorAll(".block")].map(b=>b.querySelector(".blockhead").innerText+"\n"+[...b.querySelectorAll(".exercise .ename")].map((e,i)=>(i+1)+". "+e.innerText).join("\n")).join("\n\n");return "MMA CONDITIONING — "+title+"\n\n"+sections}
 document.getElementById("generate").addEventListener("click",createWorkout);
