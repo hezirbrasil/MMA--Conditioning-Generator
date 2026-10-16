@@ -737,14 +737,15 @@ function manualOptions(part){
   const list=getExerciseBank().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
   return list.map(x=>({name:x.name,detail:"Exercício funcional",cat:x.cat}));
  }
- if(part.type==="fight"||part.type==="fightCircuit")return getFightBank().map(name=>({name,detail:"Sequência de luta"}));
+ if(part.type==="fight"||part.type==="fightCircuit")return getFightBank().map(name=>{const first=String(name).split(/\s*(?:\+|→|,|\-|\/|›)\s*/)[0].trim().toLocaleLowerCase("pt-BR");let cat="Outros golpes";if(first.startsWith("jab"))cat="Começam com Jab";else if(first.startsWith("direto"))cat="Começam com Direto";else if(first.startsWith("upper"))cat="Começam com Uppercut";else if(first.startsWith("cruzado"))cat="Começam com Cruzado";else if(first.startsWith("chute"))cat="Começam com Chute";return {name,detail:"Sequência de luta",cat}});
  return [];
 }
 function manualOptionsMarkup(opts){
  if(!opts.some(o=>o.cat))return opts.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("");
- return Object.keys(bankCategoryLabels).map(cat=>{
+ const labels=opts.some(o=>o.detail==="Sequência de luta")?["Começam com Jab","Começam com Direto","Começam com Uppercut","Começam com Cruzado","Começam com Chute","Outros golpes"]:Object.keys(bankCategoryLabels);
+ return labels.map(cat=>{
   const group=opts.filter(o=>o.cat===cat);
-  return group.length?'<optgroup label="'+escHtml(bankCategoryLabels[cat])+'">'+group.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("")+'</optgroup>':"";
+  return group.length?'<optgroup label="'+escHtml(bankCategoryLabels[cat]||cat)+'">'+group.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("")+'</optgroup>':"";
  }).join("");
 }
 function manualAddPart(type,source){
