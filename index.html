@@ -722,9 +722,9 @@ let manualSaveMode="workout";
 let manualSavePartId=null;
 const manualPartDefaults={
  circuit:{title:"Circuito funcional",durationMinutes:10,seconds:50,rest:10,items:[]},
- fightCircuit:{title:"Combo",rounds:1,seconds:50,rest:10,items:[]},
+ fightCircuit:{title:"Combo",rounds:1,seconds:50,rest:0,items:[]},
  individual:{title:"Exercício individual",rounds:1,seconds:50,rest:0,items:[]},
- fight:{title:"Combo",rounds:1,seconds:50,rest:10,items:[]},
+ fight:{title:"Combo",rounds:1,seconds:50,rest:0,items:[]},
   transition:{title:"Troca para luta",rounds:1,seconds:30,rest:0,items:[{name:"TROCA PARA LUTA",detail:"Transição"}]},
  rest:{title:"Descanso",rounds:1,seconds:90,rest:0,items:[{name:"DESCANSO",detail:"Pausa"}]}
 };
@@ -751,6 +751,7 @@ function manualOptionsMarkup(opts){
 function manualAddPart(type,source){
  const base=JSON.parse(JSON.stringify(manualPartDefaults[type]||manualPartDefaults.circuit));
  const part=source?JSON.parse(JSON.stringify(source)):{id:manualId(),type,...base};
+ if(part.type==="fight"||part.type==="fightCircuit")part.rest=0;
  if(!part.id)part.id=manualId();
  manualParts.push(part);manualRenderParts();
  document.getElementById("manualStatus").textContent=manualTypeLabel(part.type)+" adicionada. Configure o tempo e os itens.";
