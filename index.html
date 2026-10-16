@@ -40,7 +40,7 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
  <p class="builder-intro">Comece em branco e combine circuitos, exercícios individuais, sequências de luta e pausas na ordem que quiser. Cada circuito tem sua própria quantidade de voltas. O gerador tradicional continua disponível abaixo.</p>
  <div class="builder-grid">
   <div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Ex.: Condicionamento misto"></div>
-  <div class="builder-field"><label for="manualPartType">Parte que deseja adicionar</label><select id="manualPartType"><option value="circuit">Circuito funcional</option><option value="fightCircuit">Circuito de luta</option><option value="individual">Bloco de exercícios individuais</option><option value="fight">Sequências de luta individuais</option><option value="rest">Descanso / transição</option></select></div>
+  <div class="builder-field"><label for="manualPartType">Parte que deseja adicionar</label><select id="manualPartType"><option value="circuit">Circuito funcional</option><option value="individual">Bloco de exercícios individuais</option><option value="fight">Sequências de luta individuais</option><option value="rest">Descanso / transição</option></select></div>
  </div>
  <div class="builder-toolbar"><button type="button" class="primary" id="manualAddPart">＋ Adicionar parte</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualSaveWorkout">★ Salvar treino completo</button><button type="button" class="secondary" id="manualShowLibrary">♥ Biblioteca</button></div>
  <div class="builder-play-note">Circuitos: os itens são executados na ordem e repetidos pelo número de voltas escolhido. Partes individuais aparecem uma vez. Use as setas para reorganizar as partes.</div>
@@ -729,7 +729,7 @@ function manualOptions(part){
  return [];
 }
 function manualOptionsMarkup(opts){
- if(!opts.some(o=>o.cat))return manualOptionsMarkup(opts);
+ if(!opts.some(o=>o.cat))return opts.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("");
  return Object.keys(bankCategoryLabels).map(cat=>{
   const group=opts.filter(o=>o.cat===cat);
   return group.length?'<optgroup label="'+escHtml(bankCategoryLabels[cat])+'">'+group.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("")+'</optgroup>':"";
