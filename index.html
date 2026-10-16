@@ -1018,7 +1018,8 @@ function manualRenderParts(){
   });
  });
 }
-document.getElementById("manualAddPart").addEventListener("click",()=>manualAddPart(document.getElementById("manualPartType").value));
+const manualAddPartButton=document.getElementById("manualAddPart");
+if(manualAddPartButton)manualAddPartButton.addEventListener("click",()=>manualAddPart(document.getElementById("manualPartType").value));
 document.getElementById("manualParts").addEventListener("change",e=>{
  const fightCategorySelect=e.target.closest("[data-manual-fight-category]");
  if(fightCategorySelect){
