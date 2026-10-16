@@ -804,7 +804,7 @@ let manualPlayIndex=0;
 let manualSaveMode="workout";
 let manualSavePartId=null;
 const manualPartDefaults={
- circuit:{title:"Circuito funcional",durationMinutes:10,seconds:50,rest:10,items:[]},
+ circuit:{title:"Circuito",durationMinutes:10,seconds:50,rest:10,items:[]},
  fightCircuit:{title:"Combo",rounds:1,seconds:50,rest:0,items:[]},
  individual:{title:"Exercício individual",rounds:1,seconds:50,rest:0,items:[]},
  fight:{title:"Combo",rounds:1,seconds:50,rest:0,items:[]},
@@ -815,7 +815,7 @@ const manualPartDefaults={
 function manualId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
 function manualLoadLibrary(){try{const x=JSON.parse(localStorage.getItem(MANUAL_LIBRARY_KEY)||"[]");if(!Array.isArray(x))return[];return x.map(entry=>{const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="Circuito de luta"?"Sequências de luta individuais":(p.title||"Sequências de luta individuais")}:p;if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry})}catch(e){return[]}}
 function manualStoreLibrary(items){try{localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));return true}catch(e){return false}}
-function manualTypeLabel(type){return ({circuit:"Circuito funcional",fightCircuit:"Combo",individual:"Exercício individual",fight:"Combo",transition:"Troca",rest:"Descanso",activePause:"Pausa ativa"})[type]||"Parte"}
+function manualTypeLabel(type){return ({circuit:"Circuito",fightCircuit:"Combo",individual:"Exercício individual",fight:"Combo",transition:"Troca",rest:"Descanso",activePause:"Pausa ativa"})[type]||"Parte"}
 
 const fightCategoryLabels={
  "Começam com Jab":"Jab",
