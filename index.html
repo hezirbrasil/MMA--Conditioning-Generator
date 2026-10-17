@@ -64,6 +64,8 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
 .builder-empty{border-radius:11px;border-color:#5a3a73;background:rgba(100,54,135,.08)}
 .builder-part[aria-current="true"]{border-color:#a56ae8}
 @media(max-width:520px){.builder-part-head{align-items:flex-start;padding:13px 10px 12px 14px}.builder-part-actions{width:100%;margin-top:7px}.builder-part-actions button{padding:7px 9px}.builder-part-body{padding:12px 10px 13px 14px}.builder-item-add{grid-template-columns:minmax(0,1fr)}.builder-item-add button{width:100%}}
+/* O botão Montador foi removido da interface; os recursos continuam acessíveis. */
+#manualBuilderTab{display:none!important}
 </style>
 </head>
 <body>
@@ -955,18 +957,18 @@ function presetPickExercise(){
  return {...it};
 }
 const presetBlock050Blocks=[
- {types:["fullbody","legblast"],items:[{name:"Deitar, sentar, levantar no step",detail:"Cardio e funcional",cat:"cardio"},{name:"Infra alternado",detail:"Core",cat:"core"},{name:"Abdominal bicicleta",detail:"Core",cat:"core"]},
- {types:["fullbody","legblast"],items:[{name:"Stiff unilateral E",detail:"Posterior",cat:"posterior"},{name:"Stiff unilateral D",detail:"Posterior",cat:"posterior"},{name:"Afundo E",detail:"Pernas",cat:"pernas"]},
- {types:["fullbody","legblast"],items:[{name:"Prancha alta | prancha baixo",detail:"Core e estabilidade",cat:"core"},{name:"Prancha tocando o pé",detail:"Core",cat:"core"},{name:"Abdominal + Jab | Direto",detail:"Core e luta",cat:"core"]},
- {types:["fullbody","legblast"],items:[{name:"Búlgaro D",detail:"Pernas",cat:"pernas"},{name:"Búlgaro E",detail:"Pernas",cat:"pernas"},{name:"Joelhada step E",detail:"Cardio e funcional",cat:"cardio"]},
- {types:["fullbody","legblast"],items:[{name:"Agachamento + touch down",detail:"Pernas e funcional",cat:"pernas"},{name:"Deslocamento lateral + touch down",detail:"Cardio e funcional",cat:"cardio"},{name:"Prancha + toque alternado dos pés",detail:"Core",cat:"core"]},
- {types:["fullbody","legblast"],items:[{name:"Agachamento sumo",detail:"Pernas",cat:"pernas"},{name:"Abdominal supra",detail:"Core",cat:"core"},{name:"Abdominal infra",detail:"Core",cat:"core"]},
- {types:["fullbody","legblast"],items:[{name:"Agachamento + troca de base",detail:"Pernas e funcional",cat:"pernas"},{name:"Prancha + toque alternado dos pés",detail:"Core",cat:"core"},{name:"Afundo alternado",detail:"Pernas",cat:"pernas"]},
- {types:["fullbody"],items:[{name:"Agachamento com salto",detail:"Pernas e potência",cat:"pernas"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Supino",detail:"Peito",cat:"peito"]},
- {types:["fullbody","legblast"],items:[{name:"Afundo + salto",detail:"Pernas e potência",cat:"pernas"},{name:"Abdominal infra alternado",detail:"Core",cat:"core"},{name:"Agachamento + remada alta",detail:"Pernas e ombros",cat:"pernas"]},
- {types:["fullbody","legblast"],items:[{name:"Abdominal + Jab | Direto",detail:"Core e luta",cat:"core"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal passando a perna pelo halter",detail:"Core",cat:"core"]},
- {types:["fullbody","legblast"],items:[{name:"Sprint",detail:"Cardio e potência",cat:"cardio"},{name:"Corrida lateral com touch down",detail:"Cardio e agilidade",cat:"cardio"},{name:"Joelhada no step alternada",detail:"Cardio e funcional",cat:"cardio"]},
- {types:["fullbody"],items:[{name:"Elevação lateral + frontal",detail:"Ombros",cat:"ombros"},{name:"Abdominal remador",detail:"Core",cat:"core"},{name:"Agachamento + remada alta",detail:"Pernas e ombros",cat:"pernas"]},
+ {types:["fullbody","legblast"],items:[{name:"Deitar, sentar, levantar no step",detail:"Cardio e funcional",cat:"cardio"},{name:"Infra alternado",detail:"Core",cat:"core"},{name:"Abdominal bicicleta",detail:"Core",cat:"core"}]},
+ {types:["fullbody","legblast"],items:[{name:"Stiff unilateral E",detail:"Posterior",cat:"posterior"},{name:"Stiff unilateral D",detail:"Posterior",cat:"posterior"},{name:"Afundo E",detail:"Pernas",cat:"pernas"}]},
+ {types:["fullbody","legblast"],items:[{name:"Prancha alta | prancha baixo",detail:"Core e estabilidade",cat:"core"},{name:"Prancha tocando o pé",detail:"Core",cat:"core"},{name:"Abdominal + Jab | Direto",detail:"Core e luta",cat:"core"}]},
+ {types:["fullbody","legblast"],items:[{name:"Búlgaro D",detail:"Pernas",cat:"pernas"},{name:"Búlgaro E",detail:"Pernas",cat:"pernas"},{name:"Joelhada step E",detail:"Cardio e funcional",cat:"cardio"}]},
+ {types:["fullbody","legblast"],items:[{name:"Agachamento + touch down",detail:"Pernas e funcional",cat:"pernas"},{name:"Deslocamento lateral + touch down",detail:"Cardio e funcional",cat:"cardio"},{name:"Prancha + toque alternado dos pés",detail:"Core",cat:"core"}]},
+ {types:["fullbody","legblast"],items:[{name:"Agachamento sumo",detail:"Pernas",cat:"pernas"},{name:"Abdominal supra",detail:"Core",cat:"core"},{name:"Abdominal infra",detail:"Core",cat:"core"}]},
+ {types:["fullbody","legblast"],items:[{name:"Agachamento + troca de base",detail:"Pernas e funcional",cat:"pernas"},{name:"Prancha + toque alternado dos pés",detail:"Core",cat:"core"},{name:"Afundo alternado",detail:"Pernas",cat:"pernas"}]},
+ {types:["fullbody"],items:[{name:"Agachamento com salto",detail:"Pernas e potência",cat:"pernas"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Supino",detail:"Peito",cat:"peito"}]},
+ {types:["fullbody","legblast"],items:[{name:"Afundo + salto",detail:"Pernas e potência",cat:"pernas"},{name:"Abdominal infra alternado",detail:"Core",cat:"core"},{name:"Agachamento + remada alta",detail:"Pernas e ombros",cat:"pernas"}]},
+ {types:["fullbody","legblast"],items:[{name:"Abdominal + Jab | Direto",detail:"Core e luta",cat:"core"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal passando a perna pelo halter",detail:"Core",cat:"core"}]},
+ {types:["fullbody","legblast"],items:[{name:"Sprint",detail:"Cardio e potência",cat:"cardio"},{name:"Corrida lateral com touch down",detail:"Cardio e agilidade",cat:"cardio"},{name:"Joelhada no step alternada",detail:"Cardio e funcional",cat:"cardio"}]},
+ {types:["fullbody"],items:[{name:"Elevação lateral + frontal",detail:"Ombros",cat:"ombros"},{name:"Abdominal remador",detail:"Core",cat:"core"},{name:"Agachamento + remada alta",detail:"Pernas e ombros",cat:"pernas"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento + desenvolvimento",detail:"Pernas e ombros",cat:"pernas"},{name:"Avanço + elevação lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Abdominal bicicleta",detail:"Core",cat:"core"}]}
 ];
 let presetBlock050Order=[];
@@ -999,11 +1001,11 @@ const presetCircuitBlocks=[
  {types:["fullbody"],items:[{name:"Supino pegada fechada",detail:"Peito e tríceps",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps francês com halter",detail:"Tríceps",cat:"tríceps"}]},
  {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Elevação frontal + lateral",detail:"Ombros",cat:"ombros"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento sumo",detail:"Pernas",cat:"pernas"},{name:"Agachamento neutro",detail:"Pernas",cat:"pernas"},{name:"Agachamento livre",detail:"Pernas",cat:"pernas"}]},
- {types:["fullbody","legblast"],items:[{name:"Abdominal oblíquo E",detail:"Core",cat:"core"},{name:"Prancha 3 apoios E",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal oblíquo D",detail:"Core",cat:"core"]},
- {types:["fullbody","legblast"],items:[{name:"Agachamento com rotação",detail:"Pernas e mobilidade",cat:"pernas"},{name:"Afundo com troca de base",detail:"Pernas e potência",cat:"pernas"},{name:"Agachamento com pico de contração e salto",detail:"Pernas e potência",cat:"pernas"]},
- {types:["fullbody","legblast"],items:[{name:"Superman",detail:"Core e cadeia posterior",cat:"core"},{name:"Prancha alternada",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal remador unilateral",detail:"Core",cat:"core"]},
- {types:["fullbody"],items:[{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Remada unilateral E",detail:"Costas",cat:"costas"},{name:"Remada unilateral D",detail:"Costas",cat:"costas"]},
- {types:["legblast"],items:[{name:"Agachamento goblet",detail:"Pernas",cat:"pernas"},{name:"Agachamento lateral",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"]},
+ {types:["fullbody","legblast"],items:[{name:"Abdominal oblíquo E",detail:"Core",cat:"core"},{name:"Prancha 3 apoios E",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal oblíquo D",detail:"Core",cat:"core"}]},
+ {types:["fullbody","legblast"],items:[{name:"Agachamento com rotação",detail:"Pernas e mobilidade",cat:"pernas"},{name:"Afundo com troca de base",detail:"Pernas e potência",cat:"pernas"},{name:"Agachamento com pico de contração e salto",detail:"Pernas e potência",cat:"pernas"}]},
+ {types:["fullbody","legblast"],items:[{name:"Superman",detail:"Core e cadeia posterior",cat:"core"},{name:"Prancha alternada",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal remador unilateral",detail:"Core",cat:"core"}]},
+ {types:["fullbody"],items:[{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Remada unilateral E",detail:"Costas",cat:"costas"},{name:"Remada unilateral D",detail:"Costas",cat:"costas"}]},
+ {types:["legblast"],items:[{name:"Agachamento goblet",detail:"Pernas",cat:"pernas"},{name:"Agachamento lateral",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"}]},
  {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Elevação frontal + lateral",detail:"Ombros",cat:"ombros"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"}]}
 ];
 let presetCircuitOrder=[];
