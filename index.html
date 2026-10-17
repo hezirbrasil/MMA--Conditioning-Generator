@@ -980,11 +980,25 @@ function presetResetBlock050Order(){
 function presetExerciseBlock(label,addFinalRest=false){
  if(presetBlock050Cursor>=presetBlock050Order.length)presetResetBlock050Order();
  if(!presetBlock050Order.length)return;
- const items=JSON.parse(JSON.stringify(presetBlock050Blocks[presetBlock050Order[presetBlock050Cursor++]].items));
- items.forEach((it,i)=>{
-  manualParts.push(presetPart("individual",label+" · Exercício "+(i+1),{seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:0,selectedExercise:it.name,items:[{...it}]}));
-  if(i<items.length-1)manualParts.push(presetPause("Descanso entre exercícios",10));
- });
+ const source=JSON.parse(JSON.stringify(presetBlock050Blocks[presetBlock050Order[presetBlock050Cursor++]].items));
+ const items=[...source];
+ // Cada bloco de exercícios individuais precisa conter exatamente quatro exercícios.
+ const bankItems=getExerciseBankSeparateSides().filter(x=>Array.isArray(x.types)&&x.types.includes(presetSelectedType));
+ const usedNames=new Set(items.map(x=>String(x.name).toLocaleLowerCase("pt-BR")));
+ const represented=new Set(items.map(x=>x.cat));
+ let candidates=shuffle(bankItems.filter(x=>!usedNames.has(String(x.name).toLocaleLowerCase("pt-BR"))));
+ candidates.sort((a,b)=>Number(represented.has(a.cat))-Number(represented.has(b.cat)));
+ let fourth=candidates[0];
+ if(!fourth){
+  const fallback=shuffle(bankItems.filter(x=>!usedNames.has(String(x.name).toLocaleLowerCase("pt-BR"))));
+  fourth=fallback[0];
+ }
+ if(fourth)items.push({name:fourth.name,detail:"Exercício funcional",cat:fourth.cat});
+ if(items.length!==4){
+  document.getElementById("manualStatus").textContent="Não foi possível montar um bloco com quatro exercícios únicos. Confira o banco de exercícios.";
+  return;
+ }
+ manualParts.push(presetPart("individual",label,{seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items}));
  manualParts.push(presetPause("Descanso funcional",15));
 }
 const presetCircuitBlocks=[
@@ -1296,7 +1310,7 @@ function manualOpenPlay(){
   }else if(p.type==="individual"){
    const duration=Math.max(0,Number(p.durationMinutes??Math.floor((Number(p.seconds)||50)/60)))*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??((Number(p.seconds)||50)%60))));
    const rest=Math.max(0,Number(p.restMinutes??Math.floor((Number(p.rest)||0)/60)))*60+Math.max(0,Math.min(59,Number(p.restExtraSeconds??((Number(p.rest)||0)%60))));
-   p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:"Exercício · "+manualFormatTime(duration),partIndex:pi,itemIndex:ii,isTimedIndividual:true,durationSeconds:duration});if(rest>0)manualPlayItems.push({name:"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:"Descanso · "+manualFormatTime(rest),partIndex:pi,isPause:true,durationSeconds:rest})});
+   p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:"Exercício · "+manualFormatTime(duration),partIndex:pi,itemIndex:ii,isTimedIndividual:true,durationSeconds:duration});if(rest>0&&ii<p.items.length-1)manualPlayItems.push({name:"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:"Descanso · "+manualFormatTime(rest),partIndex:pi,isPause:true,durationSeconds:rest})});
   }else p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+manualFormatTime(Number(p.seconds)||55),partIndex:pi,durationSeconds:Number(p.seconds)||55,isTimedIndividual:true});if((p.type==="fight"||p.type==="fightCircuit")&&Number(p.rest)>0&&ii<p.items.length-1)manualPlayItems.push({name:"DESCANSO ENTRE SEQUÊNCIAS",group:p.title||manualTypeLabel(p.type),detail:"Descanso · "+manualFormatTime(Number(p.rest)),partIndex:pi,isPause:true,durationSeconds:Number(p.rest)});});
  });
  manualPlayIndex=0;manualCircuitDeadline=null;manualItemDeadline=null;manualCurrentCircuitPart=null;manualStopTimer();manualRenderPlay();document.getElementById("playOverlay").hidden=false;
