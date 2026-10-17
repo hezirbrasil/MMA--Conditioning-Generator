@@ -920,6 +920,35 @@ function presetPart(type,title,extra={}){
  const defaults=JSON.parse(JSON.stringify(manualPartDefaults[type]||manualPartDefaults.rest));
  return {id:manualId(),type,...defaults,...extra,title:title||defaults.title,items:extra.items||defaults.items||[],collapsed:true};
 }
+function presetCompleteItems(sourceItems,targetCount){
+ const separate=getExerciseBankSeparateSides();
+ const available=getExerciseBank().filter(x=>Array.isArray(x.types)&&x.types.includes(presetSelectedType));
+ const separateNames=new Set(separate.map(x=>x.name));
+ const normalized=[],seen=new Set();
+ (sourceItems||[]).forEach(raw=>{
+  const item={...raw},match=String(item.name||"").match(/^(.*) ([ED])$/);
+  if(match){
+   const base=match[1],other=base+" "+(match[2]==="E"?"D":"E");
+   if(separateNames.has(base+" E")&&separateNames.has(base+" D")){
+    item.name=base+" (E/D)";
+    item.detail=(item.detail||"Exercício funcional")+" · executar os dois lados";
+   }
+  }
+  const key=String(item.name||"").toLocaleLowerCase("pt-BR");
+  if(key&&!seen.has(key)){seen.add(key);normalized.push(item)}
+ });
+ const represented=new Set(normalized.map(x=>x.cat));
+ let candidates=shuffle(available.filter(x=>!seen.has(String(x.name).toLocaleLowerCase("pt-BR"))));
+ candidates.sort((a,b)=>Number(represented.has(a.cat))-Number(represented.has(b.cat)));
+ for(const item of candidates){
+  if(normalized.length>=targetCount)break;
+  const key=String(item.name).toLocaleLowerCase("pt-BR");
+  if(seen.has(key))continue;
+  normalized.push({...item,detail:item.detail||"Exercício funcional"});
+  seen.add(key);represented.add(item.cat);
+ }
+ return normalized.slice(0,targetCount);
+}
 function presetPause(title,seconds,type="rest"){
  return presetPart(type,title,{seconds,durationMinutes:Math.floor(seconds/60),durationExtraSeconds:seconds%60,items:[{name:title,detail:title}]});
 }
@@ -981,19 +1010,8 @@ function presetExerciseBlock(label,addFinalRest=false){
  if(presetBlock050Cursor>=presetBlock050Order.length)presetResetBlock050Order();
  if(!presetBlock050Order.length)return;
  const source=JSON.parse(JSON.stringify(presetBlock050Blocks[presetBlock050Order[presetBlock050Cursor++]].items));
- const items=[...source];
- // Cada bloco de exercícios individuais precisa conter exatamente quatro exercícios.
- const bankItems=getExerciseBankSeparateSides().filter(x=>Array.isArray(x.types)&&x.types.includes(presetSelectedType));
- const usedNames=new Set(items.map(x=>String(x.name).toLocaleLowerCase("pt-BR")));
- const represented=new Set(items.map(x=>x.cat));
- let candidates=shuffle(bankItems.filter(x=>!usedNames.has(String(x.name).toLocaleLowerCase("pt-BR"))));
- candidates.sort((a,b)=>Number(represented.has(a.cat))-Number(represented.has(b.cat)));
- let fourth=candidates[0];
- if(!fourth){
-  const fallback=shuffle(bankItems.filter(x=>!usedNames.has(String(x.name).toLocaleLowerCase("pt-BR"))));
-  fourth=fallback[0];
- }
- if(fourth)items.push({name:fourth.name,detail:"Exercício funcional",cat:fourth.cat});
+ // Unilaterais são um único item (E/D), nunca um lado isolado; o bloco tem quatro itens.
+ const items=presetCompleteItems(source,4);
  if(items.length!==4){
   document.getElementById("manualStatus").textContent="Não foi possível montar um bloco com quatro exercícios únicos. Confira o banco de exercícios.";
   return;
@@ -1031,7 +1049,9 @@ function presetResetCircuitOrder(){
 function presetCircuit(label,addFinalRest=false){
  if(presetCircuitCursor>=presetCircuitOrder.length)presetResetCircuitOrder();
  const circuitIndex=presetCircuitOrder[presetCircuitCursor++];
- const items=JSON.parse(JSON.stringify(presetCircuitBlocks[circuitIndex].items));
+ const source=JSON.parse(JSON.stringify(presetCircuitBlocks[circuitIndex].items));
+ // Circuitos continuam com três exercícios; pares E/D contam como um exercício bilateral.
+ const items=presetCompleteItems(source,3);
  manualParts.push(presetPart("circuit",label,{durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items}));
  manualParts.push(presetPause("Descanso do circuito",40));
 }
