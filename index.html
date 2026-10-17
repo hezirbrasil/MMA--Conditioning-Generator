@@ -921,19 +921,17 @@ function presetPart(type,title,extra={}){
  return {id:manualId(),type,...defaults,...extra,title:title||defaults.title,items:extra.items||defaults.items||[],collapsed:true};
 }
 function presetCompleteItems(sourceItems,targetCount){
- const separate=getExerciseBankSeparateSides();
- const available=getExerciseBank().filter(x=>Array.isArray(x.types)&&x.types.includes(presetSelectedType));
- const separateNames=new Set(separate.map(x=>x.name));
- const normalized=[],seen=new Set();
- (sourceItems||[]).forEach(raw=>{
+ const normalizeItem=raw=>{
   const item={...raw},match=String(item.name||"").match(/^(.*) ([ED])$/);
   if(match){
-   const base=match[1],other=base+" "+(match[2]==="E"?"D":"E");
-   if(separateNames.has(base+" E")&&separateNames.has(base+" D")){
-    item.name=base+" (E/D)";
-    item.detail=(item.detail||"Exercício funcional")+" · executar os dois lados";
-   }
+   item.name=match[1]+" (E/D)";
+   item.detail=(item.detail||"Exercício funcional").replace(/ · executar os dois lados$/,"")+" · executar os dois lados";
   }
+  return item;
+ };
+ const available=getExerciseBank().filter(x=>Array.isArray(x.types)&&x.types.includes(presetSelectedType)).map(normalizeItem);
+ const normalized=[],seen=new Set();
+ (sourceItems||[]).map(normalizeItem).forEach(item=>{
   const key=String(item.name||"").toLocaleLowerCase("pt-BR");
   if(key&&!seen.has(key)){seen.add(key);normalized.push(item)}
  });
