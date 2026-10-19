@@ -1253,7 +1253,7 @@ document.getElementById("manualPreviewContent").addEventListener("change",e=>{
  const catSelect=e.target.closest("[data-preview-category]");
  if(catSelect){
   const pi=Number(catSelect.dataset.previewCategory),ii=Number(catSelect.dataset.i),p=manualParts[pi];
-  const target=document.querySelector('[data-preview-exercise][data-preview-category="'+pi+'"][data-i="'+ii+'"]');
+  const target=document.querySelector('[data-preview-exercise="'+pi+'"][data-i="'+ii+'"]');
   if(!p||!target)return;
   const options=manualOptions(p).filter(o=>o.cat===catSelect.value&&!p.items.some((it,index)=>index!==ii&&it.name===o.name));
   target.innerHTML='<option value="">Escolha o exercício…</option>'+options.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("");
