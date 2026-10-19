@@ -957,18 +957,24 @@ function presetCompleteItems(sourceItems,targetCount){
   }
   return item;
  };
- const available=getExerciseBank().filter(x=>Array.isArray(x.types)&&x.types.includes(presetSelectedType)).map(normalizeItem);
+ const allExercises=getExerciseBank().map(normalizeItem);
+ const selectedExercises=allExercises.filter(x=>Array.isArray(x.types)&&x.types.includes(presetSelectedType));
  const normalized=[],seen=new Set();
  (sourceItems||[]).map(normalizeItem).forEach(item=>{
   const key=String(item.name||"").toLocaleLowerCase("pt-BR");
   if(key&&!seen.has(key)){seen.add(key);normalized.push(item)}
  });
  const represented=new Set(normalized.map(x=>x.cat));
- let candidates=shuffle(available.filter(x=>!seen.has(String(x.name).toLocaleLowerCase("pt-BR"))));
+ // Normaliza E/D também nos candidatos para nunca contar um lado como exercício separado.
+ let candidates=shuffle(selectedExercises.filter(x=>!seen.has(String(x.name||"").toLocaleLowerCase("pt-BR"))));
+ if(normalized.length+candidates.length<targetCount){
+  const fallback=shuffle(allExercises.filter(x=>!seen.has(String(x.name||"").toLocaleLowerCase("pt-BR"))&&!candidates.some(c=>String(c.name||"").toLocaleLowerCase("pt-BR")===String(x.name||"").toLocaleLowerCase("pt-BR"))));
+  candidates.push(...fallback);
+ }
  candidates.sort((a,b)=>Number(represented.has(a.cat))-Number(represented.has(b.cat)));
  for(const item of candidates){
   if(normalized.length>=targetCount)break;
-  const key=String(item.name).toLocaleLowerCase("pt-BR");
+  const key=String(item.name||"").toLocaleLowerCase("pt-BR");
   if(seen.has(key))continue;
   normalized.push({...item,detail:item.detail||"Exercício funcional"});
   seen.add(key);represented.add(item.cat);
