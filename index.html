@@ -870,7 +870,35 @@ function manualLoadLibrary(){
   const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="Circuito de luta"?"Sequências de luta individuais":(p.title||"Sequências de luta individuais")}:p;
   const starterIds=new Set(["starter-circuit-superior","starter-circuit-inferior-core","starter-circuit-funcional"]);
   const items=x.filter(entry=>!starterIds.has(entry?.id)).map(entry=>{if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry});
-  if(items.length!==x.length)localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
+  // Bloco reutilizável pré-carregado: Búlgaro + Joelhada Step, esquerda e direita.
+  const starterBlockId="starter-bulgaro-joelhada-step";
+  if(!items.some(entry=>entry?.id===starterBlockId)){
+   items.push({
+    id:starterBlockId,
+    kind:"part",
+    name:"Búlgaro + Joelhada Step (E/D)",
+    part:{
+     id:"starter-part-bulgaro-joelhada-step",
+     type:"individual",
+     title:"Búlgaro + Joelhada Step",
+     rounds:1,
+     seconds:50,
+     durationMinutes:0,
+     durationExtraSeconds:50,
+     rest:10,
+     restMinutes:0,
+     restExtraSeconds:10,
+     items:[
+      {name:"Búlgaro E",detail:"Pernas · esquerda"},
+      {name:"Joelhada step E",detail:"Cardio e funcional · esquerda"},
+      {name:"Búlgaro D",detail:"Pernas · direita"},
+      {name:"Joelhada step D",detail:"Cardio e funcional · direita"}
+     ]
+    },
+    savedAt:new Date().toISOString()
+   });
+  }
+  if(items.length!==x.length||!x.some(entry=>entry?.id===starterBlockId))localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
   return items;
  }catch(e){return[]}
 }
