@@ -868,8 +868,16 @@ function manualLoadLibrary(){
   const x=JSON.parse(raw||"[]");
   if(!Array.isArray(x))return[];
   const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="Circuito de luta"?"Sequências de luta individuais":(p.title||"Sequências de luta individuais")}:p;
-  const starterIds=new Set(["starter-circuit-superior","starter-circuit-inferior-core","starter-circuit-funcional"]);
-  const items=x.filter(entry=>!starterIds.has(entry?.id)).map(entry=>{if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry});
+  // Preserve todas as partes salvas, inclusive circuitos; normaliza apenas formatos antigos.
+  const items=x.map(entry=>{if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry});
+  // Circuitos reutilizáveis padrão: aparecem na troca de bloco mesmo em um navegador novo.
+  const starterCircuits=[
+   {id:"starter-circuit-superior",name:"Circuito Superior",part:{type:"circuit",title:"Circuito Superior",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Supino pegada fechada",detail:"Peito e tríceps",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps francês com halter",detail:"Tríceps",cat:"tríceps"}]}},
+   {id:"starter-circuit-inferior-core",name:"Circuito Inferior + Core",part:{type:"circuit",title:"Circuito Inferior + Core",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Agachamento sumo",detail:"Pernas",cat:"pernas"},{name:"Abdominal oblíquo E",detail:"Core · esquerda",cat:"core"},{name:"Abdominal oblíquo D",detail:"Core · direita",cat:"core"}]}},
+   {id:"starter-circuit-funcional",name:"Circuito Funcional",part:{type:"circuit",title:"Circuito Funcional",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Hop out Step",detail:"Cardio e funcional",cat:"cardio"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Sprawl + Salto",detail:"Cardio e funcional",cat:"cardio"}]}}
+  ];
+  let addedStarterCircuits=false;
+  starterCircuits.forEach(entry=>{if(!items.some(existing=>existing?.id===entry.id)){items.push({...entry,kind:"part",part:{...entry.part,id:"starter-part-"+entry.id.replace("starter-circuit-",""),items:entry.part.items.map(item=>({...item}))},savedAt:"2026-10-20T00:00:00.000Z"});addedStarterCircuits=true;}});
   // Bloco reutilizável pré-carregado: Búlgaro + Joelhada Step, esquerda e direita.
   const starterBlockId="starter-bulgaro-joelhada-step";
   if(!items.some(entry=>entry?.id===starterBlockId)){
@@ -898,7 +906,7 @@ function manualLoadLibrary(){
     savedAt:new Date().toISOString()
    });
   }
-  if(items.length!==x.length||!x.some(entry=>entry?.id===starterBlockId))localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
+  if(addedStarterCircuits||items.length!==x.length||!x.some(entry=>entry?.id===starterBlockId))localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
   return items;
  }catch(e){return[]}
 }
