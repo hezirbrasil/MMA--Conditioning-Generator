@@ -1627,18 +1627,20 @@ document.getElementById("manualConfirmSave").addEventListener("click",()=>{
  document.getElementById("manualStatus").textContent=(kind==="part"?"Parte reutilizável":"Treino completo")+" salvo na biblioteca.";
  manualRenderLibrary();
 });
-const manualBlockCategories=["Abdômen","Pernas (Leg Blast)","Superiores","Full Body","Cardio + Funcional"];
+const manualBlockCategories=["Abdômen","Pernas (Leg Blast)","Superiores","Full Body","Cardio + Funcional","Luta"];
+function manualLibraryCategory(entry){return entry.category||(entry.kind==="part"&&["fight","fightCircuit"].includes(entry.part?.type)?"Luta":"");}
 let manualLibraryFilter="Todos";
 function manualRenderLibrary(){
  const host=document.getElementById("manualLibraryList"),items=manualLoadLibrary();
  const parts=items.filter(x=>x.kind==="part");
- const visible=items.slice().reverse().filter(x=>x.kind!=="part"||manualLibraryFilter==="Todos"||(x.category||"Sem categoria")===manualLibraryFilter);
+ const visible=items.slice().reverse().filter(x=>x.kind!=="part"||manualLibraryFilter==="Todos"||(manualLibraryCategory(x)||"Sem categoria")===manualLibraryFilter);
  const filterUi='<div class="builder-field" style="margin:10px 0"><label for="manualLibraryFilter">Filtrar blocos por categoria</label><select id="manualLibraryFilter"><option value="Todos"'+(manualLibraryFilter==="Todos"?" selected":"")+'>Todas as categorias</option><option value="Sem categoria"'+(manualLibraryFilter==="Sem categoria"?" selected":"")+'>Sem categoria</option>'+manualBlockCategories.map(cat=>'<option value="'+escHtml(cat)+'"'+(manualLibraryFilter===cat?" selected":"")+'>'+escHtml(cat)+'</option>').join("")+'</select></div>';
  if(!items.length){host.innerHTML='<div class="builder-empty">Ainda não há partes ou treinos salvos.</div>';return}
  host.innerHTML=filterUi+visible.map(x=>{
-  const categoryUi=x.kind==="part"?'<label class="library-category-label">Categoria <select data-library-category data-id="'+escHtml(x.id)+'"><option value="">Sem categoria</option>'+manualBlockCategories.map(cat=>'<option value="'+escHtml(cat)+'"'+(x.category===cat?" selected":"")+'>'+escHtml(cat)+'</option>').join("")+'</select></label>':"";
-  const positionUi=x.kind==="part"?'<label class="library-position-label">Posição no treino <select data-library-position data-id="'+escHtml(x.id)+'">'+Array.from({length:manualParts.length+1},(_,i)=>'<option value="'+(i+1)+'"'+(i===manualParts.length?" selected":"")+'>'+(i+1)+(i===0?" · início":i===manualParts.length?" · final":"")+'</option>').join("")+'</select></label>':"";
-  return '<div class="builder-library-entry"><div><strong>'+escHtml(x.name)+'</strong><small>'+(x.kind==="part"?"Bloco reutilizável · "+(x.category||"Sem categoria"):"Treino completo")+' · '+new Date(x.savedAt).toLocaleDateString("pt-BR")+'</small>'+categoryUi+positionUi+'</div><div class="builder-part-actions">'+(x.kind==="part"?'<button type="button" class="secondary" data-library-action="insert" data-id="'+escHtml(x.id)+'">＋ Inserir no treino</button>':'<button type="button" class="secondary" data-library-action="load" data-id="'+escHtml(x.id)+'">Carregar treino</button>')+'<button type="button" class="secondary remove" data-library-action="delete" data-id="'+escHtml(x.id)+'">Excluir</button></div></div>';
+  const currentCategory=manualLibraryCategory(x);
+  const categoryUi=x.kind==="part"?'<label class="library-category-label">Categoria <select data-library-category data-id="'+escHtml(x.id)+'"><option value="">Sem categoria</option>'+manualBlockCategories.map(cat=>'<option value="'+escHtml(cat)+'"'+(currentCategory===cat?" selected":"")+'>'+escHtml(cat)+'</option>').join("")+'</select></label>':"";
+  const positionUi=x.kind==="part"?'<label class="library-position-label">Bloco do treino <select data-library-position data-id="'+escHtml(x.id)+'">'+Array.from({length:5},(_,i)=>'<option value="'+(i+1)+'"'+(i===Math.min(4,manualParts.length)?" selected":"")+'>'+"Bloco "+(i+1)+'</option>').join("")+'</select></label>':"";
+  return '<div class="builder-library-entry"><div><strong>'+escHtml(x.name)+'</strong><small>'+(x.kind==="part"?"Bloco reutilizável · "+(currentCategory||"Sem categoria"):"Treino completo")+' · '+new Date(x.savedAt).toLocaleDateString("pt-BR")+'</small>'+categoryUi+positionUi+'</div><div class="builder-part-actions">'+(x.kind==="part"?'<button type="button" class="secondary" data-library-action="insert" data-id="'+escHtml(x.id)+'">＋ Inserir no treino</button>':'<button type="button" class="secondary" data-library-action="load" data-id="'+escHtml(x.id)+'">Carregar treino</button>')+'<button type="button" class="secondary remove" data-library-action="delete" data-id="'+escHtml(x.id)+'">Excluir</button></div></div>';
  }).join("");
  const filter=document.getElementById("manualLibraryFilter");
  if(filter)filter.addEventListener("change",()=>{manualLibraryFilter=filter.value;manualRenderLibrary()});
