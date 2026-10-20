@@ -1367,7 +1367,7 @@ document.getElementById("manualParts").addEventListener("change",e=>{
  }
 });
 document.getElementById("manualParts").addEventListener("click",e=>{
- const b=e.target.closest("button[data-manual-action]");if(!b)return;
+ const b=e.target.closest("button[data-manual-action],button[data-manual-swap-apply]");if(!b)return;
  const pi=Number(b.dataset.p),p=manualParts[pi];if(!p)return;
  const action=b.dataset.manualAction;
  if(b.dataset.manualSwapApply){
