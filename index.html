@@ -1075,9 +1075,25 @@ function presetExerciseBlock(label,addFinalRest=false){
  if(!presetBlock050Order.length)return;
  const source=JSON.parse(JSON.stringify(presetBlock050Blocks[presetBlock050Order[presetBlock050Cursor++]].items));
  // Unilaterais são um único item (E/D), nunca um lado isolado; o bloco tem quatro itens.
- const items=presetCompleteItems(source,4);
+ let items=presetCompleteItems(source,4);
+ // Última validação: nenhum bloco individual é inserido com menos de quatro exercícios.
+ if(items.length<4){
+  const bank=getExerciseBank().map(raw=>{
+   const item={...raw},match=String(item.name||"").match(/^(.*) ([ED])$/);
+   if(match){item.name=match[1]+" (E/D)";item.detail=(item.detail||"Exercício funcional")+" · executar os dois lados";}
+   return item;
+  });
+  const seen=new Set(items.map(item=>String(item.name||"").toLocaleLowerCase("pt-BR")));
+  for(const item of shuffle(bank)){
+   const key=String(item.name||"").toLocaleLowerCase("pt-BR");
+   if(!key||seen.has(key))continue;
+   items.push({...item,detail:item.detail||"Exercício funcional"});
+   seen.add(key);
+   if(items.length===4)break;
+  }
+ }
  if(items.length!==4){
-  document.getElementById("manualStatus").textContent="Não foi possível montar um bloco com quatro exercícios únicos. Confira o banco de exercícios.";
+  document.getElementById("manualStatus").textContent="Não foi possível completar quatro exercícios únicos. O bloco não foi adicionado.";
   return;
  }
  manualParts.push(presetPart("individual",label,{seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items}));
