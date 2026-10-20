@@ -1613,7 +1613,7 @@ function manualRenderPlay(){
  if(isCircuitDisplay){const names=manualPlayItems.filter(x=>x.isTimedCircuit&&x.partIndex===it.partIndex);circuitItems.innerHTML=names.map((item,i)=>'<button type="button" class="play-circuit-item" data-play-circuit-item="'+i+'"><span>'+(i+1)+'</span><div>'+escHtml(item.name)+'</div></button>').join("");}
  const roundPartTypes=["circuit","individual","fight","fightCircuit"];
  const roundNumber=manualParts.slice(0,it.partIndex+1).filter(p=>roundPartTypes.includes(p.type)).length;
- const roundLabel=roundPartTypes.includes(manualParts[it.partIndex]?.type)?manualTypeLabel(manualParts[it.partIndex].type)+" – Round "+roundNumber:it.group;
+ const roundLabel=it.isPause?(it.name||"REST"):(roundPartTypes.includes(manualParts[it.partIndex]?.type)?manualTypeLabel(manualParts[it.partIndex].type)+" – Round "+roundNumber:it.group);
  document.getElementById("playGroup").textContent=roundLabel;
  document.getElementById("playName").textContent=it.name;
  const upcoming=document.getElementById("playUpcoming"),upcomingName=document.getElementById("playUpcomingName");
