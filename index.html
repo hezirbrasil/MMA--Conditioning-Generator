@@ -91,22 +91,22 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
  <div class="eyebrow purple">MODELOS DE AULA</div>
  <h2 style="margin:8px 0 6px;font-size:21px">Escolha o modelo</h2>
  <p class="builder-intro">Primeiro escolha o tipo de treino e depois o modelo de aula. O gerador respeita as categorias do Fullbody ou do Leg Blast; você pode editar os exercícios antes de começar.</p><div class="builder-field" style="max-width:420px;margin:14px 0"><label for="presetWorkoutType">TIPO DE TREINO</label><select id="presetWorkoutType"><option value="fullbody">Fullbody — corpo todo</option><option value="legblast">Leg Blast — pernas e abdômen</option></select></div>
- <div class="builder-grid" hidden aria-hidden="true"><div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Nome do treino"></div><div class="builder-field"><label for="manualPartType">Parte</label><select id="manualPartType"><option value="circuit">Circuito</option></select></div></div>
+ <div class="builder-grid" hidden aria-hidden="true"><div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Nome do treino"></div><div class="builder-field"><label for="manualPartType">Parte</label><select id="manualPartType"><option value="circuit">WORKOUT</option></select></div></div>
  <div class="builder-toolbar manual-tabs" role="tablist" aria-label="Áreas do montador"><button type="button" class="secondary" id="manualBuilderTab" role="tab" aria-selected="true">✎ Montador</button><button type="button" class="secondary" id="manualPreviewButton">👁 Visualizar exercícios</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button></div>
  <section id="manualPreview" class="manual-preview" hidden><div class="manual-preview-head"><div><div class="eyebrow purple">VISUALIZAÇÃO LIMPA</div><h3 style="margin:5px 0 0">Exercícios montados</h3><p class="builder-intro" style="margin:6px 0 0">Roteiro limpo e numerado para acompanhar os exercícios em outro cronômetro.</p></div><button type="button" class="primary" id="manualPreviewBack">← Voltar à edição</button></div><div id="manualPreviewContent"></div></section><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">1. TIPO DE TREINO  ·  2. MODELO DE AULA</strong><button type="button" class="primary" id="loadOption1">Aplicar Opção 1 · Starts with WORKOUT</button><button type="button" class="primary" id="loadOption2">Aplicar Opção 2 · Starts with FIGHT</button></div>
  <div class="builder-play-note">Option 1 starts with WORKOUT and includes circuits. Option 2 starts with FIGHT and uses individual WORKOUT exercises. As trocas duram 1min30s.</div>
  <div id="manualParts" class="builder-parts"><div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div></div>
  <div id="manualStatus" class="builder-status" aria-live="polite"></div>
- <div id="manualLibrary" class="builder-library" hidden><h3>Biblioteca</h3><p class="builder-intro">Comece escolhendo o tipo de bloco. Depois filtre por grupo muscular. Os treinos completos ficam disponíveis na opção “Todos os tipos”.</p><div class="builder-toolbar" style="margin:12px 0"><button type="button" class="primary" id="manualLibraryExercises">Biblioteca de blocos de exercícios</button><button type="button" class="secondary" id="manualLibraryFight">Biblioteca de luta</button></div><details class="library-save-tools"><summary>Salvar ou organizar itens</summary><div class="builder-grid"><div class="builder-field"><label for="manualLibraryName">Nome para salvar</label><input id="manualLibraryName" maxlength="80" type="text" placeholder="Nome da parte ou treino"></div><div class="builder-field"><label for="manualLibraryKind">Salvar como</label><select id="manualLibraryKind"><option value="part">Parte reutilizável</option><option value="workout">Treino completo</option></select></div></div><div class="builder-toolbar"><button type="button" class="primary" id="manualConfirmSave">Salvar na biblioteca</button><button type="button" class="secondary" id="manualCloseLibrary">Fechar biblioteca</button></div><div id="manualLibraryList" style="margin-top:14px"></div></div></details></div>
+ <div id="manualLibrary" class="builder-library" hidden><h3>Biblioteca</h3><p class="builder-intro">Comece escolhendo o tipo de bloco. Depois filtre por grupo muscular. Os treinos completos ficam disponíveis na opção “Todos os tipos”.</p><div class="builder-toolbar" style="margin:12px 0"><button type="button" class="primary" id="manualLibraryExercises">Biblioteca de blocos de exercícios</button><button type="button" class="secondary" id="manualLibraryFight">Biblioteca de FIGHT</button></div><details class="library-save-tools"><summary>Salvar ou organizar itens</summary><div class="builder-grid"><div class="builder-field"><label for="manualLibraryName">Nome para salvar</label><input id="manualLibraryName" maxlength="80" type="text" placeholder="Nome da parte ou treino"></div><div class="builder-field"><label for="manualLibraryKind">Salvar como</label><select id="manualLibraryKind"><option value="part">Parte reutilizável</option><option value="workout">Treino completo</option></select></div></div><div class="builder-toolbar"><button type="button" class="primary" id="manualConfirmSave">Salvar na biblioteca</button><button type="button" class="secondary" id="manualCloseLibrary">Fechar biblioteca</button></div><div id="manualLibraryList" style="margin-top:14px"></div></div></details></div>
 </section>
 
 <section id="result" class="panel" hidden><div class="resulthead"><h2>SEU TREINO GERADO</h2><div class="buttons" style="margin:0"><button class="primary" id="openPlay">▶ Modo Play</button><button class="secondary" id="again">↻ Gerar outro</button><button class="secondary" id="saveWorkoutButton">★ Salvar treino</button><button class="secondary" id="openSavedButton">♥ Treinos salvos</button><button class="secondary" id="copy">Copiar treino</button><button class="secondary" id="print">Imprimir / PDF</button></div></div><div class="title-row"><div><div class="eyebrow purple">MMA CONDITIONING</div><h2 id="resultName">FULL BODY</h2><div id="meta" class="tip" style="margin:0"></div></div><div class="stamp">MC</div></div><div id="savedWorkoutsPanel" class="fight-edit-panel" hidden><h3>Treinos e blocos salvos</h3><p>Seus favoritos ficam salvos neste navegador para consultar e carregar novamente quando quiser.</p><div class="fight-edit-fields"><label>Nome para salvar<input id="savedWorkoutName" type="text" maxlength="80" placeholder="Ex.: Full Body favorito"></label><label>Salvar como<select id="savedItemType"><option value="workout">Treino completo</option><option value="block">Bloco selecionado</option></select></label></div><div class="fight-edit-fields" style="margin-top:10px"><label id="savedBlockLabel" hidden>Bloco<select id="savedBlockSelect"><option value="0">Bloco 1 — WORKOUT</option><option value="1">Bloco 2 — FIGHT</option><option value="2">Bloco 3 — WORKOUT</option><option value="3">Bloco 4 — FIGHT</option></select></label></div><div class="fight-edit-actions"><button type="button" id="confirmSaveItem" class="primary">Salvar favorito</button><button type="button" id="closeSavedPanel" class="secondary">Fechar</button></div><div id="savedItemsStatus" class="formstatus" aria-live="polite"></div><h3 style="margin-top:18px">Minha biblioteca</h3><div id="savedItemsList"></div></div><div id="fightEditPanel" class="fight-edit-panel" hidden><h3>Editar um golpe da sequência</h3><p>Escolha qual golpe deseja mudar e selecione o substituto. Os demais golpes serão mantidos na mesma ordem.</p><div class="fight-edit-fields"><label>Golpe que deseja alterar<select id="fightEditPosition"></select></label><label>Substituir por<select id="fightEditReplacement"></select></label></div><div class="fight-edit-actions"><button type="button" id="applyFightEdit" class="primary">Salvar alteração</button><button type="button" id="cancelFightEdit" class="secondary">Cancelar</button></div><div id="fightEditStatus" class="formstatus" aria-live="polite"></div></div><div id="blocks"></div><div class="foot"><span>DISCIPLINA • INTENSIDADE • EVOLUÇÃO</span><span>TREINO PERSONALIZÁVEL • 4 BLOCOS</span></div><div id="status" class="status" aria-live="polite"></div></section>
 
-<section class="panel" id="addExercisePanel"><div class="eyebrow purple">PERSONALIZE SEU BANCO</div><h2 style="margin:8px 0 6px;font-size:18px">＋ Adicionar exercício</h2><p class="tip" style="margin:0 0 16px">Cadastre novos exercícios para aparecerem nas próximas gerações de treino neste navegador.</p><form id="addExerciseForm"><div class="controlrow"><div class="field"><label for="newExerciseName">Nome do exercício</label><input id="newExerciseName" type="text" maxlength="90" placeholder="Ex.: Agachamento com elástico" required></div><div class="field"><label for="newExerciseCategory">Categoria</label><select id="newExerciseCategory" required><option value="peito">Peito</option><option value="costas">Costas</option><option value="ombros">Ombros</option><option value="bíceps">Bíceps</option><option value="tríceps">Tríceps</option><option value="pernas">Pernas</option><option value="posterior">Posterior</option><option value="composto">Composto</option><option value="core">Core e abdominais</option><option value="cardio">Cardio e funcional</option></select></div></div><label class="checkrow" style="margin-top:14px"><input id="newExercisePair" type="checkbox"> Exercício unilateral: cadastrar os dois lados (E e D)</label><div class="buttons"><button type="submit" class="primary">＋ Adicionar ao banco</button></div><div id="addExerciseStatus" class="formstatus" aria-live="polite"></div></form></section>
-<section class="panel" id="exerciseBankPanel"><div class="eyebrow purple">BANCO DE EXERCÍCIOS</div><h2 style="margin:8px 0 6px;font-size:18px">Ver exercícios cadastrados</h2><p class="tip" style="margin:0">Consulte os exercícios originais e os que você adicionou neste navegador.</p><div class="bank-toolbar"><div class="field"><label for="bankSearch">Buscar exercício</label><input type="text" id="bankSearch" placeholder="Digite o nome do exercício"></div><div class="field"><label for="bankCategoryFilter">Filtrar categoria</label><select id="bankCategoryFilter"><option value="all">Todas as categorias</option><option value="peito">Peito</option><option value="costas">Costas</option><option value="ombros">Ombros</option><option value="bíceps">Bíceps</option><option value="tríceps">Tríceps</option><option value="pernas">Pernas</option><option value="posterior">Posterior</option><option value="composto">Composto</option><option value="core">Core e abdominais</option><option value="cardio">Cardio e funcional</option></select></div></div><div id="bankSummary" class="bank-summary" aria-live="polite"></div><div id="bankList"></div></section>
+<section class="panel" id="addExercisePanel"><div class="eyebrow purple">PERSONALIZE SEU BANCO</div><h2 style="margin:8px 0 6px;font-size:18px">＋ Adicionar exercício</h2><p class="tip" style="margin:0 0 16px">Cadastre novos exercícios para aparecerem nas próximas gerações de treino neste navegador.</p><form id="addExerciseForm"><div class="controlrow"><div class="field"><label for="newExerciseName">Nome do exercício</label><input id="newExerciseName" type="text" maxlength="90" placeholder="Ex.: Agachamento com elástico" required></div><div class="field"><label for="newExerciseCategory">Categoria</label><select id="newExerciseCategory" required><option value="peito">Peito</option><option value="costas">Costas</option><option value="ombros">Ombros</option><option value="bíceps">Bíceps</option><option value="tríceps">Tríceps</option><option value="pernas">Pernas</option><option value="posterior">Posterior</option><option value="composto">Composto</option><option value="core">Core e abdominais</option><option value="cardio">Cardio e WORKOUT</option></select></div></div><label class="checkrow" style="margin-top:14px"><input id="newExercisePair" type="checkbox"> Exercício unilateral: cadastrar os dois lados (E e D)</label><div class="buttons"><button type="submit" class="primary">＋ Adicionar ao banco</button></div><div id="addExerciseStatus" class="formstatus" aria-live="polite"></div></form></section>
+<section class="panel" id="exerciseBankPanel"><div class="eyebrow purple">BANCO DE EXERCÍCIOS</div><h2 style="margin:8px 0 6px;font-size:18px">Ver exercícios cadastrados</h2><p class="tip" style="margin:0">Consulte os exercícios originais e os que você adicionou neste navegador.</p><div class="bank-toolbar"><div class="field"><label for="bankSearch">Buscar exercício</label><input type="text" id="bankSearch" placeholder="Digite o nome do exercício"></div><div class="field"><label for="bankCategoryFilter">Filtrar categoria</label><select id="bankCategoryFilter"><option value="all">Todas as categorias</option><option value="peito">Peito</option><option value="costas">Costas</option><option value="ombros">Ombros</option><option value="bíceps">Bíceps</option><option value="tríceps">Tríceps</option><option value="pernas">Pernas</option><option value="posterior">Posterior</option><option value="composto">Composto</option><option value="core">Core e abdominais</option><option value="cardio">Cardio e WORKOUT</option></select></div></div><div id="bankSummary" class="bank-summary" aria-live="polite"></div><div id="bankList"></div></section>
 
 <section class="panel" id="fightBuilderPanel"><div class="eyebrow purple">CRIE SUAS COMBINAÇÕES</div><h2 style="margin:8px 0 6px;font-size:18px">＋ Montar sequência de golpes</h2><p class="tip" style="margin:0">Escolha um golpe ou movimento por vez para montar sua combinação na ordem desejada. Salve para reutilizar nos próximos treinos.</p><div class="sequence-builder"><div class="field"><label for="techniqueSelect">Golpe ou movimento</label><select id="techniqueSelect"><option value="Jab">Jab</option><option value="Direto">Direto</option><option value="Uppercut F">Uppercut F</option><option value="Uppercut T">Uppercut T</option><option value="Cruzado F">Cruzado F</option><option value="Cruzado T">Cruzado T</option><option value="Chute baixo F">Chute baixo F</option><option value="Chute baixo T">Chute baixo T</option><option value="Chute médio F">Chute médio F</option><option value="Chute médio T">Chute médio T</option><option value="Chute alto F">Chute alto F</option><option value="Chute alto T">Chute alto T</option><option value="Chute frontal F">Chute frontal F</option><option value="Chute frontal T">Chute frontal T</option><option value="Joelhada frontal">Joelhada frontal</option><option value="Esquiva">Esquiva</option><option value="Recuo">Recuo</option></select></div><button type="button" id="addTechnique" class="secondary">＋ Adicionar golpe</button></div><div id="sequencePreview" class="sequence-preview"><span class="bank-empty">Sua sequência aparecerá aqui.</span></div><div class="buttons"><button type="button" id="undoTechnique" class="secondary">↶ Remover último</button><button type="button" id="clearSequence" class="secondary">Limpar sequência</button><button type="button" id="saveSequence" class="primary">Salvar sequência</button></div><div id="sequenceStatus" class="formstatus" aria-live="polite"></div><div style="margin-top:22px"><h3 style="font-size:14px;margin-bottom:8px">Suas sequências personalizadas</h3><div id="customFightBank"></div></div></section>
-<section id="playOverlay" class="play-overlay" hidden role="dialog" aria-modal="true" aria-label="Modo Play do treino"><div class="play-top"><div class="play-brand">WORKOUT ROUND TIMER · MODO PLAY</div><button type="button" id="closePlay" class="play-close" aria-label="Sair do Modo Play" title="Sair">✕</button></div><div class="play-content"><div id="playGroup" class="play-kicker">BLOCO 1 — FUNCIONAL</div><div id="playCircuitItems" class="play-circuit-items" hidden></div><h1 id="playName" class="play-name">EXERCÍCIO</h1><div id="playUpcoming" class="play-upcoming" hidden><span>PRÓXIMO EXERCÍCIO</span><strong id="playUpcomingName"></strong></div><div id="playUpcomingCircuit" class="play-upcoming-circuit" hidden><span>PRÓXIMO CIRCUITO · 3 EXERCÍCIOS</span><ol id="playUpcomingCircuitList"></ol></div><div id="playFightPreview" class="play-fight-preview" hidden><span>PRÓXIMOS GOLPES / COMBINAÇÕES</span><ol id="playFightPreviewList"></ol></div><div id="playType" class="play-type">WORKOUT</div><div id="playTimerRing" class="timer-ring" hidden aria-label="Tempo restante"><svg viewBox="0 0 100 100" role="img" aria-label="Progresso do cronômetro"><circle class="timer-track" cx="50" cy="50" r="45"></circle><circle id="playTimerProgress" class="timer-progress" cx="50" cy="50" r="45"></circle></svg><div id="playTimerText" class="timer-ring-value">00:00</div></div><div id="playCount" class="play-count">1 / 40</div></div><div class="play-controls play-controls-minimal"><button type="button" id="playPrev" class="play-icon-control" aria-label="Voltar" title="Voltar">←</button><button type="button" id="playPause" class="play-icon-control" aria-label="Pausar cronômetro" title="Pausar">Ⅱ</button><button type="button" id="playNext" class="play-next play-icon-control" aria-label="Avançar" title="Avançar">→</button></div></section>
+<section id="playOverlay" class="play-overlay" hidden role="dialog" aria-modal="true" aria-label="Modo Play do treino"><div class="play-top"><div class="play-brand">WORKOUT ROUND TIMER · MODO PLAY</div><button type="button" id="closePlay" class="play-close" aria-label="Sair do Modo Play" title="Sair">✕</button></div><div class="play-content"><div id="playGroup" class="play-kicker">WORKOUT</div><div id="playCircuitItems" class="play-circuit-items" hidden></div><h1 id="playName" class="play-name">EXERCÍCIO</h1><div id="playUpcoming" class="play-upcoming" hidden><span>PRÓXIMO EXERCÍCIO</span><strong id="playUpcomingName"></strong></div><div id="playUpcomingCircuit" class="play-upcoming-circuit" hidden><span>PRÓXIMO CIRCUITO · 3 EXERCÍCIOS</span><ol id="playUpcomingCircuitList"></ol></div><div id="playFightPreview" class="play-fight-preview" hidden><span>PRÓXIMOS GOLPES / COMBINAÇÕES</span><ol id="playFightPreviewList"></ol></div><div id="playType" class="play-type">WORKOUT</div><div id="playTimerRing" class="timer-ring" hidden aria-label="Tempo restante"><svg viewBox="0 0 100 100" role="img" aria-label="Progresso do cronômetro"><circle class="timer-track" cx="50" cy="50" r="45"></circle><circle id="playTimerProgress" class="timer-progress" cx="50" cy="50" r="45"></circle></svg><div id="playTimerText" class="timer-ring-value">00:00</div></div><div id="playCount" class="play-count">1 / 40</div></div><div class="play-controls play-controls-minimal"><button type="button" id="playPrev" class="play-icon-control" aria-label="Voltar" title="Voltar">←</button><button type="button" id="playPause" class="play-icon-control" aria-label="Pausar cronômetro" title="Pausar">Ⅱ</button><button type="button" id="playNext" class="play-next play-icon-control" aria-label="Avançar" title="Avançar">→</button></div></section>
 </main><footer><span>© WORKOUT ROUND TIMER</span><span>FEITO PARA QUEM TREINA DE VERDADE.</span></footer>
 <script>
 const bank = [
@@ -470,7 +470,7 @@ function renderExerciseBank(){
   const all=getExerciseBankSeparateSides(),filtered=all.filter(x=>(category==="all"||x.cat===category)&&x.name.toLocaleLowerCase("pt-BR").includes(query));
  document.getElementById("bankSummary").textContent=filtered.length+" de "+all.length+" exercícios exibidos.";
  const groups=Object.keys(bankCategoryLabels).map(cat=>({cat,label:bankCategoryLabels[cat],items:filtered.filter(x=>x.cat===cat)})).filter(g=>g.items.length);
- document.getElementById("bankList").innerHTML=groups.length?groups.map(g=>'<details class="bank-category" '+(query||category!=="all"?'open':'')+'><summary>'+escHtml(g.label)+'<span>'+g.items.length+' EXERCÍCIOS</span></summary><ul class="bank-list">'+g.items.map(x=>'<li><span class="bank-item-name">'+escHtml(x.name)+(x.custom?' <span style="color:#c5a4f5;font-size:10px">· ADICIONADO</span>':'')+'</span><span class="bank-item-actions"><button type="button" class="secondary" data-bank-manual-name="'+escHtml(x.name)+'" data-bank-manual-mode="individual">＋ Avulso</button><button type="button" class="secondary" data-bank-manual-name="'+escHtml(x.name)+'" data-bank-manual-mode="circuit">＋ Circuito</button><button type="button" class="secondary" data-bank-name="'+escHtml(x.name)+'" data-bank-target="0">＋ Bloco 1</button><button type="button" class="secondary" data-bank-name="'+escHtml(x.name)+'" data-bank-target="2">＋ Bloco 3</button></span></li>').join("")+'</ul></details>').join(""):'<div class="bank-empty">Nenhum exercício encontrado com esses filtros.</div>';
+ document.getElementById("bankList").innerHTML=groups.length?groups.map(g=>'<details class="bank-category" '+(query||category!=="all"?'open':'')+'><summary>'+escHtml(g.label)+'<span>'+g.items.length+' EXERCÍCIOS</span></summary><ul class="bank-list">'+g.items.map(x=>'<li><span class="bank-item-name">'+escHtml(x.name)+(x.custom?' <span style="color:#c5a4f5;font-size:10px">· ADICIONADO</span>':'')+'</span><span class="bank-item-actions"><button type="button" class="secondary" data-bank-manual-name="'+escHtml(x.name)+'" data-bank-manual-mode="individual">＋ Avulso</button><button type="button" class="secondary" data-bank-manual-name="'+escHtml(x.name)+'" data-bank-manual-mode="circuit">＋ WORKOUT</button><button type="button" class="secondary" data-bank-name="'+escHtml(x.name)+'" data-bank-target="0">＋ Bloco 1</button><button type="button" class="secondary" data-bank-name="'+escHtml(x.name)+'" data-bank-target="2">＋ Bloco 3</button></span></li>').join("")+'</ul></details>').join(""):'<div class="bank-empty">Nenhum exercício encontrado com esses filtros.</div>';
 }
 document.getElementById("bankSearch").addEventListener("input",renderExerciseBank);
 document.getElementById("bankCategoryFilter").addEventListener("change",renderExerciseBank);
@@ -520,7 +520,7 @@ function renderWorkout(){
  const total=workoutGroups.reduce((n,g)=>n+g.items.length,0);
  const functional=workoutGroups[0].items.length+workoutGroups[2].items.length;
  const fightCount=workoutGroups[1].items.length+workoutGroups[3].items.length;
- document.getElementById("meta").textContent=total+" itens • "+functional+" funcional + "+fightCount+" luta";
+ document.getElementById("meta").textContent=total+" itens • "+functional+" WORKOUT + "+fightCount+" FIGHT";
  document.getElementById("blocks").innerHTML=workoutGroups.map((g,gi)=>'<section class="block"><div class="blockhead">'+escHtml(g.title)+'<span>'+g.items.length+(groupIsFunctional(gi)?" EXERCÍCIOS":" SEQUÊNCIAS")+'</span></div>'+g.items.map((it,i)=>'<div class="exercise" draggable="true" data-drag-group="'+gi+'" data-drag-index="'+i+'" ondragstart="window.workoutDragStart(event,'+gi+','+i+')" ondragover="window.workoutDragOver(event)" ondrop="window.workoutDrop(event,'+gi+','+i+')" ondragend="window.workoutDragEnd(event)"><div class="num">'+String(i+1).padStart(2,"0")+'</div><div class="ename">'+escHtml(it.name)+'</div><div class="item-actions"><button type="button" class="secondary move" aria-label="Mover para cima" onclick="window.handleWorkoutAction(event,'+gi+','+i+',2)">↑</button><button type="button" class="secondary move" aria-label="Mover para baixo" onclick="window.handleWorkoutAction(event,'+gi+','+i+',3)">↓</button><button type="button" class="secondary" onclick="window.openReplacePicker(event,'+gi+','+i+')">↻ Trocar</button>'+(groupIsFunctional(gi)?'':'<button type="button" class="secondary" onclick="window.editSingleFightMove(event,'+gi+','+i+')">✎ Editar golpe</button>')+'<button type="button" class="secondary remove" onclick="window.handleWorkoutAction(event,'+gi+','+i+',1)">✕ Excluir</button></div></div>').join("")+'</section>').join("");
  document.getElementById("result").hidden=false;
  if(!document.getElementById("playOverlay").hidden)renderPlay();
@@ -564,7 +564,7 @@ function getBlockAddOptions(gi){
  const used=new Set(workoutGroups.flatMap(g=>g.items.map(x=>x.name)));
  const options=getFightBank().filter(x=>!used.has(x));
  if(!options.length)return '<option value="">Nenhuma sequência disponível</option>';
- return '<option value="">Escolha uma sequência de luta…</option>'+options.map(x=>'<option value="'+escHtml(x)+'">'+escHtml(x)+'</option>').join("");
+ return '<option value="">Escolha uma sequência de FIGHT…</option>'+options.map(x=>'<option value="'+escHtml(x)+'">'+escHtml(x)+'</option>').join("");
 }
 window.addSpecificToBlock=function(event,gi){
  event.preventDefault();
@@ -582,13 +582,13 @@ window.addSpecificToBlock=function(event,gi){
  }else{
   const name=select.value,used=new Set(workoutGroups.flatMap(g=>g.items.map(x=>x.name)));
   if(used.has(name)){status.textContent="Essa sequência já está no treino. Escolha outra.";return}
-  if(!getFightBank().includes(name)){status.textContent="Sequência de luta inválida.";return}
+  if(!getFightBank().includes(name)){status.textContent="Sequência de FIGHT inválida.";return}
   group.items.push({name,detail:"Sequência de golpes"});
-  status.textContent="Sequência de luta adicionada ao bloco.";
+  status.textContent="Sequência de FIGHT adicionada ao bloco.";
  }
  renderWorkout();saveWorkout();
  const updated=document.getElementById("blockAddStatus"+gi);
- if(updated)updated.textContent=functional?(select.value.includes("|||")?"Par E/D adicionado ao bloco, esquerdo seguido do direito.":"Exercício adicionado ao bloco."):"Sequência de luta adicionada ao bloco.";
+ if(updated)updated.textContent=functional?(select.value.includes("|||")?"Par E/D adicionado ao bloco, esquerdo seguido do direito.":"Exercício adicionado ao bloco."):"Sequência de FIGHT adicionada ao bloco.";
 };
 function createWorkout(){
  const type=document.getElementById("type").value; currentLabel=type==="fullbody"?"Full Body":"Leg Blast";
@@ -608,7 +608,7 @@ function createWorkout(){
  const pairInsert=Math.min(2,combos.length);
  combos.splice(pairInsert,0,...progressionPair);
  workoutGroups=[
- {title:"BLOCO 1 — FUNCIONAL",items:first.map(x=>({name:x.name,detail:"WORKOUT"}))},
+ {title:"WORKOUT",items:first.map(x=>({name:x.name,detail:"WORKOUT"}))},
  {title:"BLOCO 2 — LUTA",items:combos.slice(0,12).map(x=>({name:x,detail:"Sequência de golpes"}))},
  {title:"BLOCO 3 — FUNCIONAL",items:second.map(x=>({name:x.name,detail:"WORKOUT"}))},
  {title:"BLOCO 4 — LUTA",items:combos.slice(12,20).map(x=>({name:x,detail:"Sequência de golpes"}))}
@@ -768,7 +768,7 @@ window.openReplacePicker=function(event,gi,ii){
   options=shuffle(exerciseUnits(currentPool,used)).filter(unit=>unit.length===indexes.length).map(unit=>({value:unit.map(x=>x.name).join("|||"),label:unit.length===2?unit[0].name.replace(/ E$/,"")+" (E + D)":unit[0].name,category:unit[0].cat||"Outros"}));
  }else{
   const used=new Set(workoutGroups.flatMap((g,gidx)=>g.items.filter((x,i)=>!(gidx===gi&&i===ii)).map(x=>x.name)));
-  options=shuffle(getFightBank().filter(x=>!used.has(x)&&x!==item.name)).map(x=>({value:x,label:x,category:/chute|joelhada/i.test(x)?"Chutes e joelhadas":/esquiva|recuo|bloqueio/i.test(x)?"Defesa e movimentação":/polichinelo|touch down|sprawl|agachamento|escalador/i.test(x)?"Luta + funcional":"Combinações de mãos"}));
+  options=shuffle(getFightBank().filter(x=>!used.has(x)&&x!==item.name)).map(x=>({value:x,label:x,category:/chute|joelhada/i.test(x)?"Chutes e joelhadas":/esquiva|recuo|bloqueio/i.test(x)?"Defesa e movimentação":/polichinelo|touch down|sprawl|agachamento|escalador/i.test(x)?"FIGHT + WORKOUT":"Combinações de mãos"}));
  }
  const row=event.currentTarget.closest(".exercise");
  const panel=document.createElement("div");panel.className="replace-picker";panel.style.cssText="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px;margin:0 0 10px 42px;background:#211a31;border:1px solid #7650a8;border-radius:10px";
@@ -810,15 +810,15 @@ window.handleWorkoutAction=function(event,gi,ii,action){
    const usedNames=new Set(workoutGroups.flatMap((g,index)=>g.items.filter((x,i)=>!(index===gi&&targetIndexes.includes(i))).map(x=>x.name)));
    const units=shuffle(exerciseUnits(currentPool,usedNames)).filter(unit=>unit.length===targetIndexes.length);
    const chosen=units[0];
-   if(!chosen){document.getElementById("status").textContent=targetIndexes.length===2?"Não encontrei outro par E/D disponível para substituir esse exercício.":"Não encontrei outro exercício funcional disponível sem repetir um da sessão.";return}
+   if(!chosen){document.getElementById("status").textContent=targetIndexes.length===2?"Não encontrei outro par E/D disponível para substituir esse exercício.":"Não encontrei outro exercício WORKOUT disponível sem repetir um da sessão.";return}
    targetIndexes.forEach((idx,j)=>group.items[idx]={name:chosen[j].name,detail:"WORKOUT"});
    document.getElementById("status").textContent=targetIndexes.length===2?"Par substituído, mantendo E seguido de D.":"Exercício substituído.";
   }else{
    const used=new Set(workoutGroups.flatMap((g,index)=>g.items.filter((x,i)=>!(index===gi&&i===ii)).map(x=>x.name)));
    const alternatives=shuffle(getFightBank().filter(x=>!used.has(x)&&x!==item.name));
-   if(!alternatives.length){document.getElementById("status").textContent="Não há outra sequência de luta disponível sem repetir uma da sessão.";return}
+   if(!alternatives.length){document.getElementById("status").textContent="Não há outra sequência de FIGHT disponível sem repetir uma da sessão.";return}
    group.items[ii]={name:alternatives[0],detail:"Sequência de golpes"};
-   document.getElementById("status").textContent="Sequência de luta substituída.";
+   document.getElementById("status").textContent="Sequência de FIGHT substituída.";
   }
   renderWorkout();saveWorkout();
  }
@@ -845,7 +845,7 @@ document.getElementById("openSavedButton").addEventListener("click",()=>{
 document.getElementById("savedItemType").addEventListener("change",()=>{
  const isBlock=document.getElementById("savedItemType").value==="block";
  document.getElementById("savedBlockLabel").hidden=!isBlock;
- document.getElementById("savedWorkoutName").placeholder=isBlock?"Ex.: Bloco de luta favorito":"Ex.: Full Body favorito";
+ document.getElementById("savedWorkoutName").placeholder=isBlock?"Ex.: Bloco de FIGHT favorito":"Ex.: Full Body favorito";
 });
 document.getElementById("closeSavedPanel").addEventListener("click",()=>{document.getElementById("savedWorkoutsPanel").hidden=true});
 document.getElementById("confirmSaveItem").addEventListener("click",()=>{
@@ -885,7 +885,7 @@ let manualPlayIndex=0;
 let manualSaveMode="workout";
 let manualSavePartId=null;
 const manualPartDefaults={
- circuit:{title:"Circuito",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items:[]},
+ circuit:{title:"WORKOUT",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items:[]},
  fightCircuit:{title:"Combo",rounds:1,seconds:50,rest:0,items:[]},
  individual:{title:"Exercício individual",rounds:1,seconds:50,rest:0,items:[]},
  fight:{title:"Combo",rounds:1,seconds:50,rest:0,items:[]},
@@ -899,14 +899,14 @@ function manualLoadLibrary(){
   const raw=localStorage.getItem(MANUAL_LIBRARY_KEY);
   const x=JSON.parse(raw||"[]");
   if(!Array.isArray(x))return[];
-  const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="Circuito de luta"?"Sequências de luta individuais":(p.title||"Sequências de luta individuais")}:p;
+  const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="WORKOUT de FIGHT"?"Sequências de FIGHT individuais":(p.title||"Sequências de FIGHT individuais")}:p;
   // Preserve todas as partes salvas, inclusive circuitos; normaliza apenas formatos antigos.
   const items=x.map(entry=>{if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry});
-  // Circuitos reutilizáveis padrão: aparecem na troca de bloco mesmo em um navegador novo.
+  // WORKOUTs reutilizáveis padrão: aparecem na troca de bloco mesmo em um navegador novo.
   const starterCircuits=[
-   {id:"starter-circuit-superior",name:"Circuito Superior",part:{type:"circuit",title:"Circuito Superior",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Supino pegada fechada",detail:"Peito e tríceps",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps francês com halter",detail:"Tríceps",cat:"tríceps"}]}},
-   {id:"starter-circuit-inferior-core",name:"Circuito Inferior + Core",part:{type:"circuit",title:"Circuito Inferior + Core",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Agachamento sumo",detail:"Pernas",cat:"pernas"},{name:"Abdominal oblíquo E",detail:"Core · esquerda",cat:"core"},{name:"Abdominal oblíquo D",detail:"Core · direita",cat:"core"}]}},
-   {id:"starter-circuit-funcional",name:"Circuito Funcional",part:{type:"circuit",title:"Circuito Funcional",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Hop out Step",detail:"Cardio e funcional",cat:"cardio"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Sprawl + Salto",detail:"Cardio e funcional",cat:"cardio"}]}}
+   {id:"starter-circuit-superior",name:"WORKOUT Superior",part:{type:"circuit",title:"WORKOUT Superior",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Supino pegada fechada",detail:"Peito e tríceps",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps francês com halter",detail:"Tríceps",cat:"tríceps"}]}},
+   {id:"starter-circuit-inferior-core",name:"WORKOUT Inferior + Core",part:{type:"circuit",title:"WORKOUT Inferior + Core",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Agachamento sumo",detail:"Pernas",cat:"pernas"},{name:"Abdominal oblíquo E",detail:"Core · esquerda",cat:"core"},{name:"Abdominal oblíquo D",detail:"Core · direita",cat:"core"}]}},
+   {id:"starter-circuit-WORKOUT",name:"WORKOUT WORKOUT",part:{type:"circuit",title:"WORKOUT WORKOUT",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Hop out Step",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Sprawl + Salto",detail:"Cardio e WORKOUT",cat:"cardio"}]}}
   ];
   let addedStarterCircuits=false;
   starterCircuits.forEach(entry=>{if(!items.some(existing=>existing?.id===entry.id)){items.push({...entry,kind:"part",part:{...entry.part,id:"starter-part-"+entry.id.replace("starter-circuit-",""),items:entry.part.items.map(item=>({...item}))},savedAt:"2026-10-20T00:00:00.000Z"});addedStarterCircuits=true;}});
@@ -920,8 +920,8 @@ function manualLoadLibrary(){
     const shortNames=names.slice(0,2).join(" + ");
     items.push({
      id,kind:"part",
-     name:"Circuito "+String(index+1).padStart(2,"0")+" · "+shortNames,
-     part:{id:"starter-part-preset-circuit-"+(index+1),type:"circuit",title:"Circuito "+String(index+1).padStart(2,"0"),durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:(circuit.items||[]).map(item=>({...item}))},
+     name:"WORKOUT "+String(index+1).padStart(2,"0")+" · "+shortNames,
+     part:{id:"starter-part-preset-circuit-"+(index+1),type:"circuit",title:"WORKOUT "+String(index+1).padStart(2,"0"),durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:(circuit.items||[]).map(item=>({...item}))},
      savedAt:"2026-10-20T00:00:00.000Z"
     });
     addedStarterCircuits=true;
@@ -947,9 +947,9 @@ function manualLoadLibrary(){
      restExtraSeconds:10,
      items:[
       {name:"Búlgaro E",detail:"Pernas · esquerda"},
-      {name:"Joelhada step E",detail:"Cardio e funcional · esquerda"},
+      {name:"Joelhada step E",detail:"Cardio e WORKOUT · esquerda"},
       {name:"Búlgaro D",detail:"Pernas · direita"},
-      {name:"Joelhada step D",detail:"Cardio e funcional · direita"}
+      {name:"Joelhada step D",detail:"Cardio e WORKOUT · direita"}
      ]
     },
     savedAt:new Date().toISOString()
@@ -967,7 +967,7 @@ function manualLoadLibrary(){
  }catch(e){return[]}
 }
 function manualStoreLibrary(items){try{localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));return true}catch(e){return false}}
-function manualTypeLabel(type){return ({circuit:"Circuito",fightCircuit:"Combo",individual:"Exercício individual",fight:"Combo",transition:"Troca",rest:"Rest",activePause:"Pausa ativa"})[type]||"Parte"}
+function manualTypeLabel(type){return ({circuit:"WORKOUT",fightCircuit:"FIGHT",individual:"WORKOUT",fight:"FIGHT",transition:"TRANSITION",rest:"REST",activePause:"ACTIVE REST"})[type]||"WORKOUT"}
 
 const fightCategoryLabels={
  "Começam com Jab":"Jab",
@@ -1009,14 +1009,14 @@ function manualOptions(part){
  }
  if(part.type==="fight"||part.type==="fightCircuit"){
   const order=Object.keys(fightCategoryLabels);
-  return getFightBank().map((name,index)=>({name,detail:"Sequência de luta",cat:classifyFightCombo(name),index,moves:String(name).split(/\s*\+\s*/).length}))
+  return getFightBank().map((name,index)=>({name,detail:"Sequência de FIGHT",cat:classifyFightCombo(name),index,moves:String(name).split(/\s*\+\s*/).length}))
    .sort((a,b)=>order.indexOf(a.cat)-order.indexOf(b.cat)||a.moves-b.moves||a.index-b.index);
  }
  return [];
 }
 function manualOptionsMarkup(opts){
  if(!opts.some(o=>o.cat))return opts.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("");
- const labels=opts.some(o=>o.detail==="Sequência de luta")?Object.keys(fightCategoryLabels):Object.keys(bankCategoryLabels);
+ const labels=opts.some(o=>o.detail==="Sequência de FIGHT")?Object.keys(fightCategoryLabels):Object.keys(bankCategoryLabels);
  return labels.map(cat=>{
   const group=opts.filter(o=>o.cat===cat);
   return group.length?'<optgroup label="'+escHtml(bankCategoryLabels[cat]||cat)+'">'+group.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("")+'</optgroup>':"";
@@ -1096,17 +1096,17 @@ function presetPickExercise(){
  return {...it};
 }
 const presetBlock050Blocks=[
- {types:["fullbody","legblast"],items:[{name:"Deitar, sentar, levantar no step",detail:"Cardio e funcional",cat:"cardio"},{name:"Infra alternado",detail:"Core",cat:"core"},{name:"Abdominal bicicleta",detail:"Core",cat:"core"}]},
+ {types:["fullbody","legblast"],items:[{name:"Deitar, sentar, levantar no step",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Infra alternado",detail:"Core",cat:"core"},{name:"Abdominal bicicleta",detail:"Core",cat:"core"}]},
  {types:["fullbody","legblast"],items:[{name:"Stiff unilateral E",detail:"Posterior",cat:"posterior"},{name:"Stiff unilateral D",detail:"Posterior",cat:"posterior"},{name:"Afundo E",detail:"Pernas",cat:"pernas"}]},
- {types:["fullbody","legblast"],items:[{name:"Prancha alta | prancha baixo",detail:"Core e estabilidade",cat:"core"},{name:"Prancha tocando o pé",detail:"Core",cat:"core"},{name:"Abdominal + Jab | Direto",detail:"Core e luta",cat:"core"}]},
- {types:["fullbody","legblast"],items:[{name:"Búlgaro D",detail:"Pernas",cat:"pernas"},{name:"Búlgaro E",detail:"Pernas",cat:"pernas"},{name:"Joelhada step E",detail:"Cardio e funcional",cat:"cardio"}]},
- {types:["fullbody","legblast"],items:[{name:"Agachamento + touch down",detail:"Pernas e funcional",cat:"pernas"},{name:"Deslocamento lateral + touch down",detail:"Cardio e funcional",cat:"cardio"},{name:"Prancha + toque alternado dos pés",detail:"Core",cat:"core"}]},
+ {types:["fullbody","legblast"],items:[{name:"Prancha alta | prancha baixo",detail:"Core e estabilidade",cat:"core"},{name:"Prancha tocando o pé",detail:"Core",cat:"core"},{name:"Abdominal + Jab | Direto",detail:"Core e FIGHT",cat:"core"}]},
+ {types:["fullbody","legblast"],items:[{name:"Búlgaro D",detail:"Pernas",cat:"pernas"},{name:"Búlgaro E",detail:"Pernas",cat:"pernas"},{name:"Joelhada step E",detail:"Cardio e WORKOUT",cat:"cardio"}]},
+ {types:["fullbody","legblast"],items:[{name:"Agachamento + touch down",detail:"Pernas e WORKOUT",cat:"pernas"},{name:"Deslocamento lateral + touch down",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Prancha + toque alternado dos pés",detail:"Core",cat:"core"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento sumo",detail:"Pernas",cat:"pernas"},{name:"Abdominal supra",detail:"Core",cat:"core"},{name:"Abdominal infra",detail:"Core",cat:"core"}]},
- {types:["fullbody","legblast"],items:[{name:"Agachamento + troca de base",detail:"Pernas e funcional",cat:"pernas"},{name:"Prancha + toque alternado dos pés",detail:"Core",cat:"core"},{name:"Afundo alternado",detail:"Pernas",cat:"pernas"}]},
+ {types:["fullbody","legblast"],items:[{name:"Agachamento + troca de base",detail:"Pernas e WORKOUT",cat:"pernas"},{name:"Prancha + toque alternado dos pés",detail:"Core",cat:"core"},{name:"Afundo alternado",detail:"Pernas",cat:"pernas"}]},
  {types:["fullbody"],items:[{name:"Agachamento com salto",detail:"Pernas e potência",cat:"pernas"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Supino",detail:"Peito",cat:"peito"}]},
  {types:["fullbody","legblast"],items:[{name:"Afundo + salto",detail:"Pernas e potência",cat:"pernas"},{name:"Abdominal infra alternado",detail:"Core",cat:"core"},{name:"Agachamento + remada alta",detail:"Pernas e ombros",cat:"pernas"}]},
- {types:["fullbody","legblast"],items:[{name:"Abdominal + Jab | Direto",detail:"Core e luta",cat:"core"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal passando a perna pelo halter",detail:"Core",cat:"core"}]},
- {types:["fullbody","legblast"],items:[{name:"Sprint",detail:"Cardio e potência",cat:"cardio"},{name:"Corrida lateral com touch down",detail:"Cardio e agilidade",cat:"cardio"},{name:"Joelhada no step alternada",detail:"Cardio e funcional",cat:"cardio"}]},
+ {types:["fullbody","legblast"],items:[{name:"Abdominal + Jab | Direto",detail:"Core e FIGHT",cat:"core"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal passando a perna pelo halter",detail:"Core",cat:"core"}]},
+ {types:["fullbody","legblast"],items:[{name:"Sprint",detail:"Cardio e potência",cat:"cardio"},{name:"Corrida lateral com touch down",detail:"Cardio e agilidade",cat:"cardio"},{name:"Joelhada no step alternada",detail:"Cardio e WORKOUT",cat:"cardio"}]},
  {types:["fullbody"],items:[{name:"Elevação lateral + frontal",detail:"Ombros",cat:"ombros"},{name:"Abdominal remador",detail:"Core",cat:"core"},{name:"Agachamento + remada alta",detail:"Pernas e ombros",cat:"pernas"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento + desenvolvimento",detail:"Pernas e ombros",cat:"pernas"},{name:"Avanço + elevação lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Abdominal bicicleta",detail:"Core",cat:"core"}]}
 ];
@@ -1143,17 +1143,17 @@ function presetExerciseBlock(label,addFinalRest=false){
   return;
  }
  manualParts.push(presetPart("individual",label,{seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items}));
- manualParts.push(presetPause("Rest funcional",40));
+ manualParts.push(presetPause("Rest WORKOUT",40));
 }
 const presetCircuitBlocks=[
  {types:["fullbody"],items:[{name:"Agachamento + desenvolvimento",detail:"Pernas e ombros",cat:"pernas"},{name:"Supino",detail:"Peito",cat:"peito"},{name:"Abdominal remador",detail:"Core",cat:"core"}]},
  {types:["fullbody"],items:[{name:"Remada aberta",detail:"Costas",cat:"costas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Infra alternado",detail:"Core",cat:"core"}]},
  {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada aberta",detail:"Costas",cat:"costas"},{name:"Desenvolvimento",detail:"Ombros",cat:"ombros"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}]},
- {types:["fullbody","legblast"],items:[{name:"Terra com desenvolvimento",detail:"Funcional",cat:"composto"},{name:"Agachamento com panturrilha",detail:"Pernas",cat:"pernas"},{name:"Joelhada no step",detail:"Cardio e funcional",cat:"cardio"}]},
+ {types:["fullbody","legblast"],items:[{name:"Terra com desenvolvimento",detail:"WORKOUT",cat:"composto"},{name:"Agachamento com panturrilha",detail:"Pernas",cat:"pernas"},{name:"Joelhada no step",detail:"Cardio e WORKOUT",cat:"cardio"}]},
  {types:["fullbody"],items:[{name:"Remada aberta",detail:"Costas",cat:"costas"},{name:"Pull-down",detail:"Costas",cat:"costas"},{name:"Bíceps",detail:"Bíceps",cat:"bíceps"}]},
  {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps francês",detail:"Tríceps",cat:"tríceps"}]},
- {types:["fullbody","legblast"],items:[{name:"Hop out Step",detail:"Cardio e funcional",cat:"cardio"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Sprawl + Salto",detail:"Cardio e funcional",cat:"cardio"}]},
+ {types:["fullbody","legblast"],items:[{name:"Hop out Step",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Sprawl + Salto",detail:"Cardio e WORKOUT",cat:"cardio"}]},
  {types:["fullbody"],items:[{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Crucifixo invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Elevação lateral + frontal",detail:"Ombros",cat:"ombros"}]},
  {types:["fullbody","legblast"],items:[{name:"Terra",detail:"Posterior",cat:"posterior"},{name:"Afundo com troca de base",detail:"Pernas",cat:"pernas"},{name:"Agachamento lateral",detail:"Pernas",cat:"pernas"}]},
  {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Elevação frontal + lateral",detail:"Ombros",cat:"ombros"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"}]},
@@ -1174,7 +1174,7 @@ function presetCircuit(label,addFinalRest=false){
  if(presetCircuitCursor>=presetCircuitOrder.length)presetResetCircuitOrder();
  const circuitIndex=presetCircuitOrder[presetCircuitCursor++];
  const source=JSON.parse(JSON.stringify(presetCircuitBlocks[circuitIndex].items));
- // Circuitos continuam com três exercícios; pares E/D contam como um exercício bilateral.
+ // WORKOUTs continuam com três exercícios; pares E/D contam como um exercício bilateral.
  const items=presetCompleteItems(source,3);
  manualParts.push(presetPart("circuit",label,{durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items}));
  manualParts.push(presetPause("Rest do circuito",40));
@@ -1186,7 +1186,7 @@ function presetFightBlock(label,addPauseAfter=false){
  for(let i=0;i<4;i++){
   const name=available.length?available[i%available.length]:"Jab + Direto";
   presetUsedFightNames.add(name);presetFightCursor++;
-  items.push({name,detail:"Sequência de luta",cat:classifyFightCombo(name)});
+  items.push({name,detail:"Sequência de FIGHT",cat:classifyFightCombo(name)});
  }
  manualParts.push(presetPart("fight",label,{seconds:55,durationMinutes:0,durationExtraSeconds:55,rest:5,items}));
  if(addPauseAfter){manualParts.push(presetPause("Pausa ativa",30,"activePause"));}
@@ -1197,41 +1197,41 @@ function loadWorkoutOption(option){
  const addSwitch=title=>manualParts.push(presetPause(title,90,"transition"));
  manualParts.push(presetPause("AQUECIMENTO",180));
  if(option===1){
-  presetCircuit("Funcional · Circuito 1",true);
-  presetCircuit("Funcional · Circuito 2",true);
-  presetExerciseBlock("Funcional · Exercícios individuais",false);
+  presetCircuit("WORKOUT · WORKOUT 1",true);
+  presetCircuit("WORKOUT · WORKOUT 2",true);
+  presetExerciseBlock("WORKOUT · Exercícios individuais",false);
   addSwitch("TROCA PARA A LUTA");
-  presetFightBlock("Luta · Bloco 1",true);
-  presetFightBlock("Luta · Bloco 2",true);
-  presetFightBlock("Luta · Bloco 3",false);
+  presetFightBlock("FIGHT · Bloco 1",true);
+  presetFightBlock("FIGHT · Bloco 2",true);
+  presetFightBlock("FIGHT · Bloco 3",false);
   addSwitch("TROCA PARA O FUNCIONAL");
   presetResetFunctionalPhase(1);
-  presetExerciseBlock("Funcional · Exercícios individuais",true);
-  // Estrutura fixa da Opção 1: dois circuitos no início e exatamente um circuito no final funcional.
-  presetCircuit("Funcional · Circuito final (único circuito final)",false);
+  presetExerciseBlock("WORKOUT · Exercícios individuais",true);
+  // Estrutura fixa da Opção 1: dois circuitos no início e exatamente um circuito no final WORKOUT.
+  presetCircuit("WORKOUT · WORKOUT final (único circuito final)",false);
   addSwitch("TROCA PARA A LUTA");
-  presetFightBlock("Luta · Bloco 1",true);
-  presetFightBlock("Luta · Bloco 2",false);
+  presetFightBlock("FIGHT · Bloco 1",true);
+  presetFightBlock("FIGHT · Bloco 2",false);
  }else{
-  presetFightBlock("Luta · Bloco 1",true);
-  presetFightBlock("Luta · Bloco 2",true);
-  presetFightBlock("Luta · Bloco 3",false);
+  presetFightBlock("FIGHT · Bloco 1",true);
+  presetFightBlock("FIGHT · Bloco 2",true);
+  presetFightBlock("FIGHT · Bloco 3",false);
   addSwitch("TROCA PARA O FUNCIONAL");
-  presetExerciseBlock("Funcional · Bloco 1",true);
-  presetExerciseBlock("Funcional · Bloco 2",true);
-  presetExerciseBlock("Funcional · Bloco 3",false);
+  presetExerciseBlock("WORKOUT · Bloco 1",true);
+  presetExerciseBlock("WORKOUT · Bloco 2",true);
+  presetExerciseBlock("WORKOUT · Bloco 3",false);
   addSwitch("TROCA PARA A LUTA");
-  presetFightBlock("Luta · Bloco 1",true);
-  presetFightBlock("Luta · Bloco 2",false);
+  presetFightBlock("FIGHT · Bloco 1",true);
+  presetFightBlock("FIGHT · Bloco 2",false);
   addSwitch("TROCA PARA O FUNCIONAL");
   presetResetFunctionalPhase(1);
-  presetExerciseBlock("Funcional · Bloco 1",true);
-  presetExerciseBlock("Funcional · Bloco 2",false);
+  presetExerciseBlock("WORKOUT · Bloco 1",true);
+  presetExerciseBlock("WORKOUT · Bloco 2",false);
  }
  if(option===1){
   const circuitParts=manualParts.filter(p=>p.type==="circuit");
   const circuitTitles=circuitParts.map(p=>p.title||"");
-  const structureValid=circuitTitles.length===3&&circuitTitles[0].includes("Circuito 1")&&circuitTitles[1].includes("Circuito 2")&&circuitTitles[2].includes("Circuito final");
+  const structureValid=circuitTitles.length===3&&circuitTitles[0].includes("WORKOUT 1")&&circuitTitles[1].includes("WORKOUT 2")&&circuitTitles[2].includes("WORKOUT final");
   if(!structureValid){
    document.getElementById("manualStatus").textContent="Erro na estrutura: a Opção 1 exige 2 circuitos no início e 1 no final. A geração foi interrompida para preservar seu modelo.";
    manualParts=[];
@@ -1249,7 +1249,7 @@ function loadWorkoutOption(option){
  const remainingSeconds=Math.max(0,targetSeconds-estimatedSeconds);
  const roundedRemainingSeconds=Math.ceil(remainingSeconds/5)*5;
  manualParts.push(presetPause("FIM",roundedRemainingSeconds));
- document.getElementById("manualWorkoutName").value=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" — "+(option===1?"Opção 1 (Funcional primeiro)":"Opção 2 (Luta primeiro)");
+ document.getElementById("manualWorkoutName").value=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" — "+(option===1?"Opção 1 (WORKOUT primeiro)":"Opção 2 (FIGHT primeiro)");
  manualRenderParts();
  document.getElementById("manualStatus").textContent=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" aplicado com "+(option===1?"Opção 1":"Opção 2")+". Você pode trocar qualquer exercício e salvar o treino completo.";
  document.getElementById("manualBuilder").scrollIntoView({behavior:"smooth",block:"start"});
@@ -1312,7 +1312,7 @@ function manualRenderParts(){
   const savedCircuits=savedParts.filter(entry=>entry.part.type==="circuit");
   const individualOptions=manualOptions({type:"individual"});
   const individualSelects=[0,1,2,3].map(n=>'<div class="builder-field"><label>Exercício individual '+(n+1)+'</label><select data-manual-four-exercise data-p="'+pi+'" data-slot="'+n+'"><option value="">Escolha o exercício…</option>'+individualOptions.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("")+'</select></div>').join("");
-  const swapPartUi='<div class="builder-part-swap" hidden><label>Como deseja substituir este bloco?</label><select data-manual-swap-mode data-p="'+pi+'"><option value="">Escolha o tipo de substituição…</option><option value="circuit">Por um circuito</option><option value="individuals">Por quatro exercícios individuais</option></select><div data-manual-swap-circuit-panel hidden><label>Escolha o grupo muscular</label><select data-manual-circuit-category data-p="'+pi+'"><option value="">Todas as categorias</option>'+["Abdômen","Pernas (Leg Blast)","Superiores","Full Body","Cardio + Funcional"].map(cat=>'<option value="'+escHtml(cat)+'">'+escHtml(cat)+'</option>').join("")+'</select><label>Escolha o circuito</label><select data-manual-replace-part data-p="'+pi+'"><option value="">Escolha um circuito…</option>'+savedCircuits.map(entry=>'<option value="'+escHtml(entry.id)+'">'+escHtml(entry.name)+' · '+(entry.category||manualLibraryCategory(entry)||manualGuessCircuitCategory(entry.part)) +' · '+entry.part.items.length+' exercício(s): '+entry.part.items.map(item=>item.name).join(" + ") +'</option>').join("")+'</select><button type="button" class="primary" data-manual-swap-apply="circuit" data-p="'+pi+'">Aplicar circuito</button></div><div data-manual-swap-individual-panel hidden>'+individualSelects+'<button type="button" class="primary" data-manual-swap-apply="individuals" data-p="'+pi+'">Aplicar quatro exercícios</button></div><small>Somente este bloco será substituído; o restante do treino será mantido.</small></div>';
+  const swapPartUi='<div class="builder-part-swap" hidden><label>Como deseja substituir este bloco?</label><select data-manual-swap-mode data-p="'+pi+'"><option value="">Escolha o tipo de substituição…</option><option value="circuit">Por um circuito</option><option value="individuals">Por quatro exercícios individuais</option></select><div data-manual-swap-circuit-panel hidden><label>Escolha o grupo muscular</label><select data-manual-circuit-category data-p="'+pi+'"><option value="">Todas as categorias</option>'+["Abdômen","Pernas (Leg Blast)","Superiores","Full Body","Cardio + WORKOUT"].map(cat=>'<option value="'+escHtml(cat)+'">'+escHtml(cat)+'</option>').join("")+'</select><label>Escolha o circuito</label><select data-manual-replace-part data-p="'+pi+'"><option value="">Escolha um circuito…</option>'+savedCircuits.map(entry=>'<option value="'+escHtml(entry.id)+'">'+escHtml(entry.name)+' · '+(entry.category||manualLibraryCategory(entry)||manualGuessCircuitCategory(entry.part)) +' · '+entry.part.items.length+' exercício(s): '+entry.part.items.map(item=>item.name).join(" + ") +'</option>').join("")+'</select><button type="button" class="primary" data-manual-swap-apply="circuit" data-p="'+pi+'">Aplicar circuito</button></div><div data-manual-swap-individual-panel hidden>'+individualSelects+'<button type="button" class="primary" data-manual-swap-apply="individuals" data-p="'+pi+'">Aplicar quatro exercícios</button></div><small>Somente este bloco será substituído; o restante do treino será mantido.</small></div>';
   return '<article class="builder-part'+(p.collapsed?' is-collapsed':'')+'"><div class="builder-part-head"><div><strong>'+escHtml(p.title||manualTypeLabel(p.type))+'</strong><small>'+manualTypeLabel(p.type)+' · '+p.items.length+' item(ns)'+(isCircuit?' · '+String(Math.max(0,Number(p.durationMinutes)||0)).padStart(2,"0")+':'+String(Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0))).padStart(2,"0"):'')+'</small></div><div class="builder-part-actions"><button type="button" class="secondary" data-manual-action="up" data-p="'+pi+'" aria-label="Mover parte para cima">↑</button><button type="button" class="secondary" data-manual-action="down" data-p="'+pi+'" aria-label="Mover parte para baixo">↓</button><button type="button" class="secondary builder-part-collapse" data-manual-action="toggle-collapse" data-p="'+pi+'" >'+(isCircuit?(p.collapsed?'＋ Editar circuito':'− Minimizar edição'):(p.collapsed?'＋ Expandir':'− Minimizar'))+'</button><button type="button" class="secondary" data-manual-action="swap-part" data-p="'+pi+'">⇄ Trocar bloco</button><button type="button" class="secondary" data-manual-action="save-part" data-p="'+pi+'">★ Salvar parte</button><button type="button" class="secondary remove" data-manual-action="delete-part" data-p="'+pi+'">✕ Excluir</button></div></div>'+swapPartUi+'<div class="builder-part-body"'+(p.collapsed?' hidden':'')+'>'+settings+(p.type==="individual"?'': '<div class="builder-item-list">'+(itemRows||'<div class="builder-empty">Nenhum item adicionado nesta parte.</div>')+'</div>'+addUi)+'</div></article>';
  }).join("");
  if(!document.getElementById("manualPreview").hidden)manualRenderPreview();
@@ -1449,8 +1449,8 @@ document.getElementById("manualParts").addEventListener("change",e=>{
   const circuitSelect=panel?.querySelector("[data-manual-replace-part]");
   const savedCircuits=manualLoadLibrary().filter(entry=>entry.kind==="part"&&entry.part?.type==="circuit");
   const group=categorySelect.value;
-  const normalizedGroup=group==="Cardio + Funcional"?"Cardio":group;
-  const matching=savedCircuits.filter(entry=>!group||((entry.category||manualLibraryCategory(entry)||manualGuessCircuitCategory(entry.part))===normalizedGroup||(group==="Cardio + Funcional"&&/hop out|escalador|sprawl|sprint|burpee|polichinelo/i.test((entry.part.items||[]).map(item=>item.name).join(" ")))));
+  const normalizedGroup=group==="Cardio + WORKOUT"?"Cardio":group;
+  const matching=savedCircuits.filter(entry=>!group||((entry.category||manualLibraryCategory(entry)||manualGuessCircuitCategory(entry.part))===normalizedGroup||(group==="Cardio + WORKOUT"&&/hop out|escalador|sprawl|sprint|burpee|polichinelo/i.test((entry.part.items||[]).map(item=>item.name).join(" ")))));
   if(circuitSelect)circuitSelect.innerHTML='<option value="">Escolha um circuito…</option>'+matching.map(entry=>{const names=(entry.part.items||[]).map(item=>item.name).filter(Boolean);return '<option value="'+escHtml(entry.id)+'">'+escHtml(names.join(" + ")) +'</option>';}).join("");
   return;
  }
@@ -1561,7 +1561,7 @@ function manualOpenPlay(){
   const isCircuit=p.type==="circuit"||p.type==="fightCircuit";
   if(isCircuit){
    const duration=Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
-   p.items.forEach((it,ii)=>manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:"Circuito · "+manualFormatTime(duration),partIndex:pi,isTimedCircuit:true,circuitDuration:ii===0?duration:null}));
+   p.items.forEach((it,ii)=>manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:"WORKOUT · "+manualFormatTime(duration),partIndex:pi,isTimedCircuit:true,circuitDuration:ii===0?duration:null}));
   }else if(p.type==="individual"){
    const duration=Math.max(0,Number(p.durationMinutes??Math.floor((Number(p.seconds)||50)/60)))*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??((Number(p.seconds)||50)%60))));
    const rest=Math.max(0,Number(p.restMinutes??Math.floor((Number(p.rest)||0)/60)))*60+Math.max(0,Math.min(59,Number(p.restExtraSeconds??((Number(p.rest)||0)%60))));
@@ -1644,7 +1644,7 @@ function manualRenderPlay(){
    if(remaining<=0){
     const next=manualPlayItems.findIndex((x,i)=>i>manualPlayIndex&&x.partIndex>it.partIndex);
     manualStopTimer();manualCurrentCircuitPart=null;
-    if(next>=0){manualPlayIndex=next;manualRenderPlay()}else{document.getElementById("playName").textContent="TEMPO ESGOTADO";document.getElementById("playType").textContent="Circuito concluído";document.getElementById("playCount").textContent="FIM DO CIRCUITO";document.getElementById("playNext").disabled=true}
+    if(next>=0){manualPlayIndex=next;manualRenderPlay()}else{document.getElementById("playName").textContent="TEMPO ESGOTADO";document.getElementById("playType").textContent="WORKOUT COMPLETE";document.getElementById("playCount").textContent="FIM DO CIRCUITO";document.getElementById("playNext").disabled=true}
     return;
    }
    document.getElementById("playType").textContent="Tempo restante no circuito · "+manualFormatTime(remaining);manualSetTimerRing(remaining,Number(it.circuitDuration)||600,true);
@@ -1739,14 +1739,14 @@ function manualLibraryCategory(entry){
  if(entry.category)return entry.category;
  if(entry.kind!=="part"||!entry.part)return "";
  const part=entry.part;
- if(["fight","fightCircuit"].includes(part.type))return "Luta";
+ if(["fight","fightCircuit"].includes(part.type))return "FIGHT";
  const items=part.items||[];
  const cats=items.map(item=>String(item.cat||"").toLowerCase());
  const names=items.map(item=>String(item.name||"").toLowerCase());
  const lower=cats.some(cat=>["pernas","legs","posterior"].includes(cat))||names.some(name=>/agachamento|afundo|búlgaro|stiff|extensora|flexora|panturrilha|joelhada step/.test(name));
  const core=cats.some(cat=>["core","abdomen","abdômen"].includes(cat))||names.some(name=>name.includes("abdominal"));
  const upper=cats.some(cat=>["peito","costas","ombro","ombros","bíceps","biceps","tríceps","triceps","superiores"].includes(cat))||names.some(name=>/supino|crucifixo|remada|pull.?down|desenvolvimento|elevação|bíceps|biceps|tríceps|triceps|flexão/.test(name));
- const cardio=cats.some(cat=>["cardio","funcional"].includes(cat))||names.some(name=>/sprawl|escalador|sprint|burpee|hop out/.test(name));
+ const cardio=cats.some(cat=>["cardio","WORKOUT"].includes(cat))||names.some(name=>/sprawl|escalador|sprint|burpee|hop out/.test(name));
  if(upper&&(lower||core||cardio))return "Full Body";
  if(lower&&core)return "Inferiores + Core";
  if(lower)return "Inferiores";
@@ -1764,7 +1764,7 @@ function manualRenderLibrary(){
  const host=document.getElementById("manualLibraryList"),items=manualLoadLibrary();
  const parts=items.filter(x=>x.kind==="part");
  const visible=items.slice().reverse().filter(x=>{const isFight=x.kind==="part"&&["fight","fightCircuit"].includes(x.part?.type);if(manualLibraryMode==="fight")return x.kind==="part"&&isFight;if(x.kind==="part"&&isFight)return false;if(manualLibraryTypeFilter==="Todos")return false;if(x.kind==="workout")return manualLibraryTypeFilter==="workout";return x.kind==="part"&&((manualLibraryTypeFilter==="circuit"&&x.part?.type==="circuit")||(manualLibraryTypeFilter==="individual"&&x.part?.type==="individual"))&&(manualLibraryFilter==="Todos"||(manualLibraryCategory(x)||"Sem categoria")===manualLibraryFilter)});
- const filterUi=manualLibraryMode==="fight"?'<div class="builder-play-note">Biblioteca exclusiva para sequências e blocos de luta.</div>':'<div class="library-start"><h4>O que você quer consultar?</h4><p>Escolha uma opção para mostrar somente os blocos desse tipo.</p><div class="library-type-choices"><button type="button" class="'+(manualLibraryTypeFilter==="circuit"?"primary":"secondary")+'" data-library-type="circuit">Circuitos <small>3 exercícios</small></button><button type="button" class="'+(manualLibraryTypeFilter==="individual"?"primary":"secondary")+'" data-library-type="individual">Exercícios individuais <small>4 exercícios</small></button><button type="button" class="'+(manualLibraryTypeFilter==="workout"?"primary":"secondary")+'" data-library-type="workout">Treinos completos</button></div>'+(manualLibraryTypeFilter==="Todos"?'':'<div class="builder-field" style="margin:14px 0"><label for="manualLibraryFilter">Filtrar por grupo muscular</label><select id="manualLibraryFilter"><option value="Todos"'+(manualLibraryFilter==="Todos"?' selected':'')+'>Todos os grupos</option><option value="Sem categoria"'+(manualLibraryFilter==="Sem categoria"?' selected':'')+'>Sem categoria</option>'+manualBlockCategories.map(cat=>'<option value="'+escHtml(cat)+'"'+(manualLibraryFilter===cat?' selected':'')+'>'+escHtml(cat)+'</option>').join("")+'</select></div>')+'</div>';
+ const filterUi=manualLibraryMode==="fight"?'<div class="builder-play-note">Biblioteca exclusiva para sequências e blocos de FIGHT.</div>':'<div class="library-start"><h4>O que você quer consultar?</h4><p>Escolha uma opção para mostrar somente os blocos desse tipo.</p><div class="library-type-choices"><button type="button" class="'+(manualLibraryTypeFilter==="circuit"?"primary":"secondary")+'" data-library-type="circuit">WORKOUTs <small>3 exercícios</small></button><button type="button" class="'+(manualLibraryTypeFilter==="individual"?"primary":"secondary")+'" data-library-type="individual">Exercícios individuais <small>4 exercícios</small></button><button type="button" class="'+(manualLibraryTypeFilter==="workout"?"primary":"secondary")+'" data-library-type="workout">Treinos completos</button></div>'+(manualLibraryTypeFilter==="Todos"?'':'<div class="builder-field" style="margin:14px 0"><label for="manualLibraryFilter">Filtrar por grupo muscular</label><select id="manualLibraryFilter"><option value="Todos"'+(manualLibraryFilter==="Todos"?' selected':'')+'>Todos os grupos</option><option value="Sem categoria"'+(manualLibraryFilter==="Sem categoria"?' selected':'')+'>Sem categoria</option>'+manualBlockCategories.map(cat=>'<option value="'+escHtml(cat)+'"'+(manualLibraryFilter===cat?' selected':'')+'>'+escHtml(cat)+'</option>').join("")+'</select></div>')+'</div>';
  const exTab=document.getElementById("manualLibraryExercises"),fightTab=document.getElementById("manualLibraryFight");
  if(exTab){exTab.className=manualLibraryMode==="exercises"?"primary":"secondary";exTab.onclick=()=>{manualLibraryMode="exercises";manualLibraryFilter="Todos";manualLibraryTypeFilter="Todos";manualRenderLibrary()}}
  if(fightTab){fightTab.className=manualLibraryMode==="fight"?"primary":"secondary";fightTab.onclick=()=>{manualLibraryMode="fight";manualRenderLibrary()}}
@@ -1774,7 +1774,7 @@ function manualRenderLibrary(){
   const currentCategory=manualLibraryCategory(x);
   const categoryUi=x.kind==="part"&&manualLibraryMode==="exercises"?'<label class="library-category-label">Categoria <select data-library-category data-id="'+escHtml(x.id)+'"><option value="">Sem categoria</option>'+manualBlockCategories.map(cat=>'<option value="'+escHtml(cat)+'"'+(currentCategory===cat?" selected":"")+'>'+escHtml(cat)+'</option>').join("")+'</select></label>':"";
   const positionUi=x.kind==="part"&&manualLibraryMode==="exercises"?'<label class="library-position-label">Bloco do treino <select data-library-position data-id="'+escHtml(x.id)+'">'+Array.from({length:5},(_,i)=>'<option value="'+(i+1)+'"'+(i===Math.min(4,manualParts.length)?" selected":"")+'>'+"Bloco "+(i+1)+'</option>').join("")+'</select></label>':"";
-  return '<div class="builder-library-entry"><div><strong>'+escHtml(x.name)+'</strong><small>'+(x.kind==="part"?(["fight","fightCircuit"].includes(x.part?.type)?"Luta":"Bloco de exercícios")+" · "+(currentCategory||"Sem categoria"):"Treino completo")+' · '+new Date(x.savedAt).toLocaleDateString("pt-BR")+'</small>'+categoryUi+positionUi+'</div><div class="builder-part-actions">'+(x.kind==="part"?'<button type="button" class="secondary" data-library-action="insert" data-id="'+escHtml(x.id)+'">＋ Inserir no treino</button>':'<button type="button" class="secondary" data-library-action="load" data-id="'+escHtml(x.id)+'">Carregar treino</button>')+'<button type="button" class="secondary remove" data-library-action="delete" data-id="'+escHtml(x.id)+'">Excluir</button></div></div>';
+  return '<div class="builder-library-entry"><div><strong>'+escHtml(x.name)+'</strong><small>'+(x.kind==="part"?(["fight","fightCircuit"].includes(x.part?.type)?"FIGHT":"Bloco de exercícios")+" · "+(currentCategory||"Sem categoria"):"Treino completo")+' · '+new Date(x.savedAt).toLocaleDateString("pt-BR")+'</small>'+categoryUi+positionUi+'</div><div class="builder-part-actions">'+(x.kind==="part"?'<button type="button" class="secondary" data-library-action="insert" data-id="'+escHtml(x.id)+'">＋ Inserir no treino</button>':'<button type="button" class="secondary" data-library-action="load" data-id="'+escHtml(x.id)+'">Carregar treino</button>')+'<button type="button" class="secondary remove" data-library-action="delete" data-id="'+escHtml(x.id)+'">Excluir</button></div></div>';
  }).join(""):'<div class="builder-empty">Nenhum item encontrado nessa seleção.</div>');
  host.querySelectorAll("[data-library-type]").forEach(button=>button.addEventListener("click",()=>{manualLibraryTypeFilter=button.dataset.libraryType;manualLibraryFilter="Todos";manualRenderLibrary()}));
  const filter=document.getElementById("manualLibraryFilter");
