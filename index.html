@@ -1763,8 +1763,10 @@ document.getElementById("manualConfirmSave").addEventListener("click",()=>{
  }
  const library=manualLoadLibrary();library.push(entry);
  if(!manualStoreLibrary(library)){document.getElementById("manualStatus").textContent="Não foi possível salvar no navegador.";return}
- document.getElementById("manualStatus").textContent=(kind==="part"?"Parte reutilizável":"Treino completo")+" salvo na biblioteca.";
+ document.getElementById("manualStatus").textContent="Treino completo salvo na biblioteca.";
+ manualLibraryMode="exercises";manualLibraryTypeFilter="workout";manualLibraryFilter="Todos";
  manualRenderLibrary();
+ document.getElementById("manualLibraryList").scrollIntoView({behavior:"smooth",block:"center"});
 });
 const manualBlockCategories=["Superiores","Inferiores","Full Body","Inferiores + Core","Cardio"];
 function manualLibraryCategory(entry){
