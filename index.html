@@ -1234,7 +1234,10 @@ function manualRenderParts(){
   const settings='<div class="builder-grid" style="margin-bottom:12px">'+titleField+(isIndividual?'<div class="builder-field"><label>Tempo — minutos</label><input type="number" min="0" max="180" step="1" inputmode="numeric" data-manual-prop="durationMinutes" data-p="'+pi+'" value="'+Math.floor(Math.max(0,Number(p.durationMinutes??Math.floor((Number(p.seconds)||50)/60))))+'"></div><div class="builder-field"><label>Tempo — segundos</label><input type="number" min="0" max="59" step="1" inputmode="numeric" data-manual-prop="durationExtraSeconds" data-p="'+pi+'" value="'+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??((Number(p.seconds)||50)%60))) )+'"></div><div class="builder-field"><label>Exercício</label><select data-manual-individual-select="'+pi+'"><option value="">Escolha o exercício…</option>'+opts.map(o=>'<option value="'+escHtml(o.name)+'"'+((p.selectedExercise||p.items[0]?.name)===o.name?' selected':'')+'>'+escHtml(bankCategoryLabels[o.cat]||o.cat||"EXERCÍCIO")+' · '+escHtml(o.name)+'</option>').join("")+'</select></div>':isCircuit?'<div class="builder-field"><label>Timer do circuito — minutos</label><input type="number" min="0" max="180" step="1" inputmode="numeric" data-manual-prop="durationMinutes" data-p="'+pi+'" value="'+Math.max(0,Number(p.durationMinutes??3))+'"></div><div class="builder-field"><label>Timer do circuito — segundos</label><input type="number" min="0" max="59" step="1" inputmode="numeric" data-manual-prop="durationExtraSeconds" data-p="'+pi+'" value="'+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0))+'"></div>':!isRest?'<div class="builder-field"><label>Tempo por item — minutos</label><input type="number" min="0" max="180" step="1" inputmode="numeric" data-manual-prop="durationMinutes" data-p="'+pi+'" value="'+Math.floor(Math.max(0,Number(p.durationMinutes??Math.floor((Number(p.seconds)||50)/60))))+'"></div><div class="builder-field"><label>Tempo por item — segundos</label><input type="number" min="0" max="59" step="1" inputmode="numeric" data-manual-prop="durationExtraSeconds" data-p="'+pi+'" value="'+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??((Number(p.seconds)||50)%60))) )+'"></div>':'<div class="builder-field"><label>Duração — minutos</label><input type="number" min="0" max="180" step="1" inputmode="numeric" data-manual-prop="durationMinutes" data-p="'+pi+'" value="'+Math.floor(Math.max(0,Number(p.durationMinutes??Math.floor((Number(p.seconds)||90)/60))))+'"></div><div class="builder-field"><label>Duração — segundos</label><input type="number" min="0" max="59" step="1" inputmode="numeric" data-manual-prop="durationExtraSeconds" data-p="'+pi+'" value="'+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??((Number(p.seconds)||90)%60))) )+'"></div>')+'</div>'
   const addUi=isRest||p.type==="individual"?"": ((p.type==="fight"||p.type==="fightCircuit")?'<div class="builder-field" style="margin-bottom:9px"><label>1. Escolha a classe de golpe</label><select data-manual-fight-category="'+pi+'">'+fightCats.map(cat=>'<option value="'+escHtml(cat)+'"'+(cat===selectedFightCat?' selected':'')+'>'+escHtml(fightCategoryLabels[cat]||cat)+'</option>').join("")+'</select></div>':p.type==="circuit"?'<div class="builder-field" style="margin-bottom:9px"><label>1. Escolha o grupamento muscular</label><select data-manual-exercise-category="'+pi+'">'+exerciseCats.map(cat=>'<option value="'+escHtml(cat)+'"'+(cat===selectedExerciseCat?' selected':'')+'>'+escHtml(bankCategoryLabels[cat]||cat)+'</option>').join("")+'</select></div>':'')+'<div class="builder-item-add"><select data-manual-select="'+pi+'"><option value="">'+(availableOpts.length?((p.type==="fight"||p.type==="fightCircuit")?"2. Escolha a sequência…":p.type==="circuit"?"2. Escolha o exercício…":"Escolha um exercício para adicionar…"):"Não há mais itens disponíveis neste grupamento")+"</option>"+manualOptionsMarkup(availableOpts)+'</select><button type="button" class="primary" data-manual-action="add-item" data-p="'+pi+'" '+(availableOpts.length?"":"disabled")+">＋ Adicionar "+((p.type==="fight"||p.type==="fightCircuit")?"sequência":"exercício")+'</button></div>';
   const savedParts=manualLoadLibrary().filter(entry=>entry&&entry.kind==="part"&&entry.part&&Array.isArray(entry.part.items)&&entry.part.items.length);
-  const swapPartUi='<div class="builder-part-swap" hidden><label>Substituir este bloco por um bloco salvo</label><select data-manual-replace-part data-p="'+pi+'"><option value="">Escolha um bloco salvo…</option>'+savedParts.map(entry=>'<option value="'+escHtml(entry.id)+'">'+escHtml(entry.name)+' · '+entry.part.items.length+' exercício(s)</option>').join("")+'</select><small>O bloco atual será substituído por inteiro.</small></div>';
+  const savedCircuits=savedParts.filter(entry=>entry.part.type==="circuit");
+  const individualOptions=manualOptions({type:"individual"});
+  const individualSelects=[0,1,2,3].map(n=>'<label>Exercício individual '+(n+1)+'</label><select data-manual-four-exercise data-p="'+pi+'" data-slot="'+n+'"><option value="">Escolha o exercício…</option>'+manualOptionsMarkup(individualOptions)+'</select>').join("");
+  const swapPartUi='<div class="builder-part-swap" hidden><label>Como deseja substituir este bloco?</label><select data-manual-swap-mode data-p="'+pi+'"><option value="">Escolha o tipo de substituição…</option><option value="circuit">Por um circuito</option><option value="individuals">Por quatro exercícios individuais</option></select><div data-manual-swap-circuit-panel hidden><label>Escolha o circuito</label><select data-manual-replace-part data-p="'+pi+'"><option value="">Escolha um circuito…</option>'+savedCircuits.map(entry=>'<option value="'+escHtml(entry.id)+'">'+escHtml(entry.name)+' · '+entry.part.items.length+' exercício(s)</option>').join("")+'</select><button type="button" class="primary" data-manual-swap-apply="circuit" data-p="'+pi+'">Aplicar circuito</button></div><div data-manual-swap-individual-panel hidden>'+individualSelects+'<button type="button" class="primary" data-manual-swap-apply="individuals" data-p="'+pi+'">Aplicar quatro exercícios</button></div><small>Somente este bloco será substituído; o restante do treino será mantido.</small></div>';
   return '<article class="builder-part'+(p.collapsed?' is-collapsed':'')+'"><div class="builder-part-head"><div><strong>'+escHtml(p.title||manualTypeLabel(p.type))+'</strong><small>'+manualTypeLabel(p.type)+' · '+p.items.length+' item(ns)'+(isCircuit?' · '+String(Math.max(0,Number(p.durationMinutes)||0)).padStart(2,"0")+':'+String(Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0))).padStart(2,"0"):'')+'</small></div><div class="builder-part-actions"><button type="button" class="secondary" data-manual-action="up" data-p="'+pi+'" aria-label="Mover parte para cima">↑</button><button type="button" class="secondary" data-manual-action="down" data-p="'+pi+'" aria-label="Mover parte para baixo">↓</button><button type="button" class="secondary builder-part-collapse" data-manual-action="toggle-collapse" data-p="'+pi+'" >'+(isCircuit?(p.collapsed?'＋ Editar circuito':'− Minimizar edição'):(p.collapsed?'＋ Expandir':'− Minimizar'))+'</button><button type="button" class="secondary" data-manual-action="swap-part" data-p="'+pi+'">⇄ Trocar bloco</button><button type="button" class="secondary" data-manual-action="save-part" data-p="'+pi+'">★ Salvar parte</button><button type="button" class="secondary remove" data-manual-action="delete-part" data-p="'+pi+'">✕ Excluir</button></div></div>'+swapPartUi+'<div class="builder-part-body"'+(p.collapsed?' hidden':'')+'>'+settings+(p.type==="individual"?'': '<div class="builder-item-list">'+(itemRows||'<div class="builder-empty">Nenhum item adicionado nesta parte.</div>')+'</div>'+addUi)+'</div></article>';
  }).join("");
  if(!document.getElementById("manualPreview").hidden)manualRenderPreview();
@@ -1353,18 +1356,43 @@ p.items=[chosen];
  if(meta&&p.type==="circuit")meta.textContent=manualTypeLabel(p.type)+" · "+p.items.length+" item(ns) · "+String(Math.max(0,Number(p.durationMinutes)||0)).padStart(2,"0")+":"+String(Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0))).padStart(2,"0");
 });
 document.getElementById("manualParts").addEventListener("change",e=>{
- const select=e.target.closest("select[data-manual-replace-part]");if(!select||!select.value)return;
- const pi=Number(select.dataset.p),current=manualParts[pi];if(!current)return;
- const entry=manualLoadLibrary().find(x=>x&&x.id===select.value&&x.kind==="part"&&x.part);
- if(!entry){document.getElementById("manualStatus").textContent="Não encontrei esse bloco salvo.";return;}
- const replacement=JSON.parse(JSON.stringify(entry.part));replacement.id=current.id||manualId();replacement.collapsed=false;
- manualParts[pi]=replacement;manualRenderParts();
- document.getElementById("manualStatus").textContent="Bloco substituído por: "+entry.name+". O restante do treino foi mantido.";
+ const modeSelect=e.target.closest("select[data-manual-swap-mode]");
+ if(modeSelect){
+  const card=modeSelect.closest(".builder-part-swap");
+  const circuitPanel=card?.querySelector("[data-manual-swap-circuit-panel]");
+  const individualPanel=card?.querySelector("[data-manual-swap-individual-panel]");
+  if(circuitPanel)circuitPanel.hidden=modeSelect.value!=="circuit";
+  if(individualPanel)individualPanel.hidden=modeSelect.value!=="individuals";
+  return;
+ }
 });
 document.getElementById("manualParts").addEventListener("click",e=>{
  const b=e.target.closest("button[data-manual-action]");if(!b)return;
  const pi=Number(b.dataset.p),p=manualParts[pi];if(!p)return;
  const action=b.dataset.manualAction;
+ if(b.dataset.manualSwapApply){
+  const mode=b.dataset.manualSwapApply,pi=Number(b.dataset.p),current=manualParts[pi];
+  if(!current)return;
+  let replacement;
+  if(mode==="circuit"){
+   const select=b.closest("[data-manual-swap-circuit-panel]")?.querySelector("[data-manual-replace-part]");
+   const entry=manualLoadLibrary().find(x=>x&&x.id===select?.value&&x.kind==="part"&&x.part&&x.part.type==="circuit");
+   if(!entry){document.getElementById("manualStatus").textContent="Escolha um circuito antes de aplicar.";return;}
+   replacement=JSON.parse(JSON.stringify(entry.part));
+   document.getElementById("manualStatus").textContent="Bloco substituído por: "+entry.name+".";
+  }else{
+   const selects=[...b.closest("[data-manual-swap-individual-panel]").querySelectorAll("[data-manual-four-exercise]")];
+   const names=selects.map(s=>s.value);
+   if(names.length!==4||names.some(name=>!name)){document.getElementById("manualStatus").textContent="Escolha os quatro exercícios individuais.";return;}
+   if(new Set(names).size!==4){document.getElementById("manualStatus").textContent="Escolha quatro exercícios diferentes, sem repetir.";return;}
+   const options=manualOptions({type:"individual"});
+   const items=names.map(name=>options.find(o=>o.name===name)).filter(Boolean);
+   if(items.length!==4){document.getElementById("manualStatus").textContent="Não foi possível localizar um dos exercícios escolhidos.";return;}
+   replacement={...JSON.parse(JSON.stringify(manualPartDefaults.individual)),type:"individual",title:"Quatro exercícios individuais",rounds:1,seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items,collapsed:false};
+   document.getElementById("manualStatus").textContent="Bloco substituído por quatro exercícios individuais.";
+  }
+  replacement.id=current.id||manualId();replacement.collapsed=false;manualParts[pi]=replacement;manualRenderParts();return;
+ }
  if(action==="swap-part"){
   const panel=b.closest(".builder-part")?.querySelector(".builder-part-swap");
   if(panel){panel.hidden=!panel.hidden;if(!panel.hidden)panel.querySelector("select")?.focus();}
