@@ -634,19 +634,25 @@ document.getElementById("playPrev").addEventListener("click",()=>{
 });
 document.getElementById("playNext").addEventListener("click",()=>{
  if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){
-  if(manualPlayIndex<manualPlayItems.length-1){
-   const current=manualPlayItems[manualPlayIndex];
-   manualStopTimer();
+  if(manualPlayIndex>=manualPlayItems.length-1)return;
+  const current=manualPlayItems[manualPlayIndex];
+  let nextIndex=manualPlayIndex+1;
+  if(current&&current.isTimedCircuit){
+   const nextPartIndex=manualPlayItems.findIndex((x,i)=>i>manualPlayIndex&&x.partIndex>current.partIndex);
+   if(nextPartIndex>=0)nextIndex=nextPartIndex;
+  }
+  const next=manualPlayItems[nextIndex];
+  manualStopTimer();
+  if(current?.isTimedCircuit&&next?.isTimedCircuit&&current.partIndex===next.partIndex){
+   // Mantém o prazo do circuito; avançar não reinicia o cronômetro.
+  }else{
    manualCircuitDeadline=null;
    manualItemDeadline=null;
-   if(current&&current.isTimedCircuit){
-    const next=manualPlayItems.findIndex((x,i)=>i>manualPlayIndex&&x.partIndex>current.partIndex);
-    manualPlayIndex=next>=0?next:manualPlayItems.length-1;
-   }else manualPlayIndex++;
    manualCurrentCircuitPart=null;
-   manualLastBeepSecond=null;
-   manualRenderPlay();
   }
+  manualPlayIndex=nextIndex;
+  manualLastBeepSecond=null;
+  manualRenderPlay();
  }else if(playIndex<playItems.length-1){playIndex++;renderPlay();}
 });
 document.addEventListener("keydown",e=>{if(document.getElementById("playOverlay").hidden)return;if(e.key==="Escape"){document.getElementById("playOverlay").hidden=true;if(typeof manualPlayItems!=="undefined")manualPlayItems=[];}if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){if(e.key==="ArrowRight"&&manualPlayIndex<manualPlayItems.length-1){manualPlayIndex++;manualRenderPlay()}if(e.key==="ArrowLeft"&&manualPlayIndex>0){manualPlayIndex--;manualRenderPlay()}}else{if(e.key==="ArrowRight"&&playIndex<playItems.length-1){playIndex++;renderPlay()}if(e.key==="ArrowLeft"&&playIndex>0){playIndex--;renderPlay()}}});
