@@ -91,20 +91,20 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
  <p class="builder-intro">Primeiro escolha o tipo de treino e depois o modelo de aula. O gerador respeita as categorias do Fullbody ou do Leg Blast; você pode editar os exercícios antes de começar.</p><div class="builder-field" style="max-width:420px;margin:14px 0"><label for="presetWorkoutType">TIPO DE TREINO</label><select id="presetWorkoutType"><option value="fullbody">Fullbody — corpo todo</option><option value="legblast">Leg Blast — pernas e abdômen</option></select></div>
  <div class="builder-grid" hidden aria-hidden="true"><div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Nome do treino"></div><div class="builder-field"><label for="manualPartType">Parte</label><select id="manualPartType"><option value="circuit">Circuito</option></select></div></div>
  <div class="builder-toolbar manual-tabs" role="tablist" aria-label="Áreas do montador"><button type="button" class="secondary" id="manualBuilderTab" role="tab" aria-selected="true">✎ Montador</button><button type="button" class="secondary" id="manualPreviewButton">👁 Visualizar exercícios</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button></div>
- <section id="manualPreview" class="manual-preview" hidden><div class="manual-preview-head"><div><div class="eyebrow purple">VISUALIZAÇÃO LIMPA</div><h3 style="margin:5px 0 0">Exercícios montados</h3><p class="builder-intro" style="margin:6px 0 0">Roteiro limpo e numerado para acompanhar os exercícios em outro cronômetro.</p></div><button type="button" class="primary" id="manualPreviewBack">← Voltar à edição</button></div><div id="manualPreviewContent"></div></section><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">1. TIPO DE TREINO  ·  2. MODELO DE AULA</strong><button type="button" class="primary" id="loadOption1">Aplicar Opção 1 · Começa no funcional</button><button type="button" class="primary" id="loadOption2">Aplicar Opção 2 · Começa na luta</button></div>
- <div class="builder-play-note">Opção 1 começa pelo funcional e inclui circuitos. Opção 2 começa pela luta e usa exercícios funcionais individuais. As trocas duram 1min30s.</div>
+ <section id="manualPreview" class="manual-preview" hidden><div class="manual-preview-head"><div><div class="eyebrow purple">VISUALIZAÇÃO LIMPA</div><h3 style="margin:5px 0 0">Exercícios montados</h3><p class="builder-intro" style="margin:6px 0 0">Roteiro limpo e numerado para acompanhar os exercícios em outro cronômetro.</p></div><button type="button" class="primary" id="manualPreviewBack">← Voltar à edição</button></div><div id="manualPreviewContent"></div></section><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">1. TIPO DE TREINO  ·  2. MODELO DE AULA</strong><button type="button" class="primary" id="loadOption1">Aplicar Opção 1 · Starts with WORKOUT</button><button type="button" class="primary" id="loadOption2">Aplicar Opção 2 · Starts with FIGHT</button></div>
+ <div class="builder-play-note">Option 1 starts with WORKOUT and includes circuits. Option 2 starts with FIGHT and uses individual WORKOUT exercises. As trocas duram 1min30s.</div>
  <div id="manualParts" class="builder-parts"><div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div></div>
  <div id="manualStatus" class="builder-status" aria-live="polite"></div>
  <div id="manualLibrary" class="builder-library" hidden><h3>Biblioteca</h3><p class="builder-intro">Comece escolhendo o tipo de bloco. Depois filtre por grupo muscular. Os treinos completos ficam disponíveis na opção “Todos os tipos”.</p><div class="builder-toolbar" style="margin:12px 0"><button type="button" class="primary" id="manualLibraryExercises">Biblioteca de blocos de exercícios</button><button type="button" class="secondary" id="manualLibraryFight">Biblioteca de luta</button></div><details class="library-save-tools"><summary>Salvar ou organizar itens</summary><div class="builder-grid"><div class="builder-field"><label for="manualLibraryName">Nome para salvar</label><input id="manualLibraryName" maxlength="80" type="text" placeholder="Nome da parte ou treino"></div><div class="builder-field"><label for="manualLibraryKind">Salvar como</label><select id="manualLibraryKind"><option value="part">Parte reutilizável</option><option value="workout">Treino completo</option></select></div></div><div class="builder-toolbar"><button type="button" class="primary" id="manualConfirmSave">Salvar na biblioteca</button><button type="button" class="secondary" id="manualCloseLibrary">Fechar biblioteca</button></div><div id="manualLibraryList" style="margin-top:14px"></div></div></details></div>
 </section>
 
-<section id="result" class="panel" hidden><div class="resulthead"><h2>SEU TREINO GERADO</h2><div class="buttons" style="margin:0"><button class="primary" id="openPlay">▶ Modo Play</button><button class="secondary" id="again">↻ Gerar outro</button><button class="secondary" id="saveWorkoutButton">★ Salvar treino</button><button class="secondary" id="openSavedButton">♥ Treinos salvos</button><button class="secondary" id="copy">Copiar treino</button><button class="secondary" id="print">Imprimir / PDF</button></div></div><div class="title-row"><div><div class="eyebrow purple">MMA CONDITIONING</div><h2 id="resultName">FULL BODY</h2><div id="meta" class="tip" style="margin:0"></div></div><div class="stamp">MC</div></div><div id="savedWorkoutsPanel" class="fight-edit-panel" hidden><h3>Treinos e blocos salvos</h3><p>Seus favoritos ficam salvos neste navegador para consultar e carregar novamente quando quiser.</p><div class="fight-edit-fields"><label>Nome para salvar<input id="savedWorkoutName" type="text" maxlength="80" placeholder="Ex.: Full Body favorito"></label><label>Salvar como<select id="savedItemType"><option value="workout">Treino completo</option><option value="block">Bloco selecionado</option></select></label></div><div class="fight-edit-fields" style="margin-top:10px"><label id="savedBlockLabel" hidden>Bloco<select id="savedBlockSelect"><option value="0">Bloco 1 — Funcional</option><option value="1">Bloco 2 — Luta</option><option value="2">Bloco 3 — Funcional</option><option value="3">Bloco 4 — Luta</option></select></label></div><div class="fight-edit-actions"><button type="button" id="confirmSaveItem" class="primary">Salvar favorito</button><button type="button" id="closeSavedPanel" class="secondary">Fechar</button></div><div id="savedItemsStatus" class="formstatus" aria-live="polite"></div><h3 style="margin-top:18px">Minha biblioteca</h3><div id="savedItemsList"></div></div><div id="fightEditPanel" class="fight-edit-panel" hidden><h3>Editar um golpe da sequência</h3><p>Escolha qual golpe deseja mudar e selecione o substituto. Os demais golpes serão mantidos na mesma ordem.</p><div class="fight-edit-fields"><label>Golpe que deseja alterar<select id="fightEditPosition"></select></label><label>Substituir por<select id="fightEditReplacement"></select></label></div><div class="fight-edit-actions"><button type="button" id="applyFightEdit" class="primary">Salvar alteração</button><button type="button" id="cancelFightEdit" class="secondary">Cancelar</button></div><div id="fightEditStatus" class="formstatus" aria-live="polite"></div></div><div id="blocks"></div><div class="foot"><span>DISCIPLINA • INTENSIDADE • EVOLUÇÃO</span><span>TREINO PERSONALIZÁVEL • 4 BLOCOS</span></div><div id="status" class="status" aria-live="polite"></div></section>
+<section id="result" class="panel" hidden><div class="resulthead"><h2>SEU TREINO GERADO</h2><div class="buttons" style="margin:0"><button class="primary" id="openPlay">▶ Modo Play</button><button class="secondary" id="again">↻ Gerar outro</button><button class="secondary" id="saveWorkoutButton">★ Salvar treino</button><button class="secondary" id="openSavedButton">♥ Treinos salvos</button><button class="secondary" id="copy">Copiar treino</button><button class="secondary" id="print">Imprimir / PDF</button></div></div><div class="title-row"><div><div class="eyebrow purple">MMA CONDITIONING</div><h2 id="resultName">FULL BODY</h2><div id="meta" class="tip" style="margin:0"></div></div><div class="stamp">MC</div></div><div id="savedWorkoutsPanel" class="fight-edit-panel" hidden><h3>Treinos e blocos salvos</h3><p>Seus favoritos ficam salvos neste navegador para consultar e carregar novamente quando quiser.</p><div class="fight-edit-fields"><label>Nome para salvar<input id="savedWorkoutName" type="text" maxlength="80" placeholder="Ex.: Full Body favorito"></label><label>Salvar como<select id="savedItemType"><option value="workout">Treino completo</option><option value="block">Bloco selecionado</option></select></label></div><div class="fight-edit-fields" style="margin-top:10px"><label id="savedBlockLabel" hidden>Bloco<select id="savedBlockSelect"><option value="0">Bloco 1 — WORKOUT</option><option value="1">Bloco 2 — FIGHT</option><option value="2">Bloco 3 — WORKOUT</option><option value="3">Bloco 4 — FIGHT</option></select></label></div><div class="fight-edit-actions"><button type="button" id="confirmSaveItem" class="primary">Salvar favorito</button><button type="button" id="closeSavedPanel" class="secondary">Fechar</button></div><div id="savedItemsStatus" class="formstatus" aria-live="polite"></div><h3 style="margin-top:18px">Minha biblioteca</h3><div id="savedItemsList"></div></div><div id="fightEditPanel" class="fight-edit-panel" hidden><h3>Editar um golpe da sequência</h3><p>Escolha qual golpe deseja mudar e selecione o substituto. Os demais golpes serão mantidos na mesma ordem.</p><div class="fight-edit-fields"><label>Golpe que deseja alterar<select id="fightEditPosition"></select></label><label>Substituir por<select id="fightEditReplacement"></select></label></div><div class="fight-edit-actions"><button type="button" id="applyFightEdit" class="primary">Salvar alteração</button><button type="button" id="cancelFightEdit" class="secondary">Cancelar</button></div><div id="fightEditStatus" class="formstatus" aria-live="polite"></div></div><div id="blocks"></div><div class="foot"><span>DISCIPLINA • INTENSIDADE • EVOLUÇÃO</span><span>TREINO PERSONALIZÁVEL • 4 BLOCOS</span></div><div id="status" class="status" aria-live="polite"></div></section>
 
 <section class="panel" id="addExercisePanel"><div class="eyebrow purple">PERSONALIZE SEU BANCO</div><h2 style="margin:8px 0 6px;font-size:18px">＋ Adicionar exercício</h2><p class="tip" style="margin:0 0 16px">Cadastre novos exercícios para aparecerem nas próximas gerações de treino neste navegador.</p><form id="addExerciseForm"><div class="controlrow"><div class="field"><label for="newExerciseName">Nome do exercício</label><input id="newExerciseName" type="text" maxlength="90" placeholder="Ex.: Agachamento com elástico" required></div><div class="field"><label for="newExerciseCategory">Categoria</label><select id="newExerciseCategory" required><option value="peito">Peito</option><option value="costas">Costas</option><option value="ombros">Ombros</option><option value="bíceps">Bíceps</option><option value="tríceps">Tríceps</option><option value="pernas">Pernas</option><option value="posterior">Posterior</option><option value="composto">Composto</option><option value="core">Core e abdominais</option><option value="cardio">Cardio e funcional</option></select></div></div><label class="checkrow" style="margin-top:14px"><input id="newExercisePair" type="checkbox"> Exercício unilateral: cadastrar os dois lados (E e D)</label><div class="buttons"><button type="submit" class="primary">＋ Adicionar ao banco</button></div><div id="addExerciseStatus" class="formstatus" aria-live="polite"></div></form></section>
 <section class="panel" id="exerciseBankPanel"><div class="eyebrow purple">BANCO DE EXERCÍCIOS</div><h2 style="margin:8px 0 6px;font-size:18px">Ver exercícios cadastrados</h2><p class="tip" style="margin:0">Consulte os exercícios originais e os que você adicionou neste navegador.</p><div class="bank-toolbar"><div class="field"><label for="bankSearch">Buscar exercício</label><input type="text" id="bankSearch" placeholder="Digite o nome do exercício"></div><div class="field"><label for="bankCategoryFilter">Filtrar categoria</label><select id="bankCategoryFilter"><option value="all">Todas as categorias</option><option value="peito">Peito</option><option value="costas">Costas</option><option value="ombros">Ombros</option><option value="bíceps">Bíceps</option><option value="tríceps">Tríceps</option><option value="pernas">Pernas</option><option value="posterior">Posterior</option><option value="composto">Composto</option><option value="core">Core e abdominais</option><option value="cardio">Cardio e funcional</option></select></div></div><div id="bankSummary" class="bank-summary" aria-live="polite"></div><div id="bankList"></div></section>
 
 <section class="panel" id="fightBuilderPanel"><div class="eyebrow purple">CRIE SUAS COMBINAÇÕES</div><h2 style="margin:8px 0 6px;font-size:18px">＋ Montar sequência de golpes</h2><p class="tip" style="margin:0">Escolha um golpe ou movimento por vez para montar sua combinação na ordem desejada. Salve para reutilizar nos próximos treinos.</p><div class="sequence-builder"><div class="field"><label for="techniqueSelect">Golpe ou movimento</label><select id="techniqueSelect"><option value="Jab">Jab</option><option value="Direto">Direto</option><option value="Uppercut F">Uppercut F</option><option value="Uppercut T">Uppercut T</option><option value="Cruzado F">Cruzado F</option><option value="Cruzado T">Cruzado T</option><option value="Chute baixo F">Chute baixo F</option><option value="Chute baixo T">Chute baixo T</option><option value="Chute médio F">Chute médio F</option><option value="Chute médio T">Chute médio T</option><option value="Chute alto F">Chute alto F</option><option value="Chute alto T">Chute alto T</option><option value="Chute frontal F">Chute frontal F</option><option value="Chute frontal T">Chute frontal T</option><option value="Joelhada frontal">Joelhada frontal</option><option value="Esquiva">Esquiva</option><option value="Recuo">Recuo</option></select></div><button type="button" id="addTechnique" class="secondary">＋ Adicionar golpe</button></div><div id="sequencePreview" class="sequence-preview"><span class="bank-empty">Sua sequência aparecerá aqui.</span></div><div class="buttons"><button type="button" id="undoTechnique" class="secondary">↶ Remover último</button><button type="button" id="clearSequence" class="secondary">Limpar sequência</button><button type="button" id="saveSequence" class="primary">Salvar sequência</button></div><div id="sequenceStatus" class="formstatus" aria-live="polite"></div><div style="margin-top:22px"><h3 style="font-size:14px;margin-bottom:8px">Suas sequências personalizadas</h3><div id="customFightBank"></div></div></section>
-<section id="playOverlay" class="play-overlay" hidden role="dialog" aria-modal="true" aria-label="Modo Play do treino"><div class="play-top"><div class="play-brand">WORKOUT ROUND TIMER · MODO PLAY</div><button type="button" id="closePlay" class="play-close" aria-label="Sair do Modo Play" title="Sair">✕</button></div><div class="play-content"><div id="playGroup" class="play-kicker">BLOCO 1 — FUNCIONAL</div><div id="playCircuitItems" class="play-circuit-items" hidden></div><h1 id="playName" class="play-name">EXERCÍCIO</h1><div id="playUpcoming" class="play-upcoming" hidden><span>PRÓXIMO EXERCÍCIO</span><strong id="playUpcomingName"></strong></div><div id="playUpcomingCircuit" class="play-upcoming-circuit" hidden><span>PRÓXIMO CIRCUITO · 3 EXERCÍCIOS</span><ol id="playUpcomingCircuitList"></ol></div><div id="playFightPreview" class="play-fight-preview" hidden><span>PRÓXIMOS GOLPES / COMBINAÇÕES</span><ol id="playFightPreviewList"></ol></div><div id="playType" class="play-type">Exercício funcional</div><div id="playTimerRing" class="timer-ring" hidden aria-label="Tempo restante"><svg viewBox="0 0 100 100" role="img" aria-label="Progresso do cronômetro"><circle class="timer-track" cx="50" cy="50" r="45"></circle><circle id="playTimerProgress" class="timer-progress" cx="50" cy="50" r="45"></circle></svg><div id="playTimerText" class="timer-ring-value">00:00</div></div><div id="playCount" class="play-count">1 / 40</div></div><div class="play-controls play-controls-minimal"><button type="button" id="playPrev" class="play-icon-control" aria-label="Voltar" title="Voltar">←</button><button type="button" id="playPause" class="play-icon-control" aria-label="Pausar cronômetro" title="Pausar">Ⅱ</button><button type="button" id="playNext" class="play-next play-icon-control" aria-label="Avançar" title="Avançar">→</button></div></section>
+<section id="playOverlay" class="play-overlay" hidden role="dialog" aria-modal="true" aria-label="Modo Play do treino"><div class="play-top"><div class="play-brand">WORKOUT ROUND TIMER · MODO PLAY</div><button type="button" id="closePlay" class="play-close" aria-label="Sair do Modo Play" title="Sair">✕</button></div><div class="play-content"><div id="playGroup" class="play-kicker">BLOCO 1 — FUNCIONAL</div><div id="playCircuitItems" class="play-circuit-items" hidden></div><h1 id="playName" class="play-name">EXERCÍCIO</h1><div id="playUpcoming" class="play-upcoming" hidden><span>PRÓXIMO EXERCÍCIO</span><strong id="playUpcomingName"></strong></div><div id="playUpcomingCircuit" class="play-upcoming-circuit" hidden><span>PRÓXIMO CIRCUITO · 3 EXERCÍCIOS</span><ol id="playUpcomingCircuitList"></ol></div><div id="playFightPreview" class="play-fight-preview" hidden><span>PRÓXIMOS GOLPES / COMBINAÇÕES</span><ol id="playFightPreviewList"></ol></div><div id="playType" class="play-type">WORKOUT</div><div id="playTimerRing" class="timer-ring" hidden aria-label="Tempo restante"><svg viewBox="0 0 100 100" role="img" aria-label="Progresso do cronômetro"><circle class="timer-track" cx="50" cy="50" r="45"></circle><circle id="playTimerProgress" class="timer-progress" cx="50" cy="50" r="45"></circle></svg><div id="playTimerText" class="timer-ring-value">00:00</div></div><div id="playCount" class="play-count">1 / 40</div></div><div class="play-controls play-controls-minimal"><button type="button" id="playPrev" class="play-icon-control" aria-label="Voltar" title="Voltar">←</button><button type="button" id="playPause" class="play-icon-control" aria-label="Pausar cronômetro" title="Pausar">Ⅱ</button><button type="button" id="playNext" class="play-next play-icon-control" aria-label="Avançar" title="Avançar">→</button></div></section>
 </main><footer><span>© WORKOUT ROUND TIMER</span><span>FEITO PARA QUEM TREINA DE VERDADE.</span></footer>
 <script>
 const bank = [
@@ -489,7 +489,7 @@ function addBankExerciseToManualBuilder(name,mode){
   document.getElementById("manualParts").scrollIntoView({behavior:"smooth",block:"start"});
   return;
  }
- part.items.push({name:exercise.name,detail:exercise.detail||"Exercício funcional"});
+ part.items.push({name:exercise.name,detail:exercise.detail||"WORKOUT"});
  manualRenderParts();
  const msg=mode==="circuit"?"Adicionado ao circuito: "+exercise.name+".":"Adicionado como exercício avulso: "+exercise.name+".";
  document.getElementById("manualStatus").textContent=msg;
@@ -544,7 +544,7 @@ window.addBankExerciseToBlock=function(event,name,gi){
  const used=new Set(workoutGroups.flatMap(g=>g.items.map(x=>x.name)));
  if(unit.some(x=>used.has(x.name))){status.textContent="Esse exercício, ou um dos lados do par, já está no treino.";return}
  const group=workoutGroups[gi];
- unit.forEach(x=>group.items.push({name:x.name,detail:"Exercício funcional"}));
+ unit.forEach(x=>group.items.push({name:x.name,detail:"WORKOUT"}));
  renderWorkout();
  const msg=unit.length===2?"Par E/D adicionado ao BLOCO "+(gi+1)+", esquerdo seguido do direito.":"Exercício adicionado ao BLOCO "+(gi+1)+".";
  document.getElementById("status").textContent=msg;
@@ -575,7 +575,7 @@ window.addSpecificToBlock=function(event,gi){
   if(names.some(n=>used.has(n))){status.textContent="Esse exercício já está no treino. Escolha outro para evitar repetição.";return}
   const unit=names.map(name=>currentPool.find(x=>x.name===name)).filter(Boolean);
   if(unit.length!==names.length){status.textContent="Não encontrei esse exercício no banco atual.";return}
-  unit.forEach(x=>group.items.push({name:x.name,detail:"Exercício funcional"}));
+  unit.forEach(x=>group.items.push({name:x.name,detail:"WORKOUT"}));
   status.textContent=unit.length===2?"Par E/D adicionado ao bloco, esquerdo seguido do direito.":"Exercício adicionado ao bloco.";
  }else{
   const name=select.value,used=new Set(workoutGroups.flatMap(g=>g.items.map(x=>x.name)));
@@ -606,9 +606,9 @@ function createWorkout(){
  const pairInsert=Math.min(2,combos.length);
  combos.splice(pairInsert,0,...progressionPair);
  workoutGroups=[
- {title:"BLOCO 1 — FUNCIONAL",items:first.map(x=>({name:x.name,detail:"Exercício funcional"}))},
+ {title:"BLOCO 1 — FUNCIONAL",items:first.map(x=>({name:x.name,detail:"WORKOUT"}))},
  {title:"BLOCO 2 — LUTA",items:combos.slice(0,12).map(x=>({name:x,detail:"Sequência de golpes"}))},
- {title:"BLOCO 3 — FUNCIONAL",items:second.map(x=>({name:x.name,detail:"Exercício funcional"}))},
+ {title:"BLOCO 3 — FUNCIONAL",items:second.map(x=>({name:x.name,detail:"WORKOUT"}))},
  {title:"BLOCO 4 — LUTA",items:combos.slice(12,20).map(x=>({name:x,detail:"Sequência de golpes"}))}
  ];
  document.getElementById("resultName").textContent=currentLabel.toUpperCase();
@@ -778,7 +778,7 @@ window.openReplacePicker=function(event,gi,ii){
  const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent="2. Escolha o item…";select.appendChild(placeholder);
  categorySelect.onchange=function(){select.innerHTML="";const first=document.createElement("option");first.value="";first.textContent="2. Escolha o item…";select.appendChild(first);options.filter(o=>o.category===categorySelect.value).forEach(o=>{const op=document.createElement("option");op.value=o.value;op.textContent=o.label;select.appendChild(op)});select.disabled=!categorySelect.value;};
  const apply=document.createElement("button");apply.type="button";apply.className="primary";apply.textContent="Substituir";
- apply.onclick=function(){if(!select.value){select.focus();return;}const names=select.value.split("|||");indexes.forEach((idx,j)=>group.items[idx]={name:names[j],detail:functional?"Exercício funcional":"Sequência de golpes"});panel.remove();renderWorkout();document.getElementById("status").textContent="Substituição realizada com a opção escolhida.";};
+ apply.onclick=function(){if(!select.value){select.focus();return;}const names=select.value.split("|||");indexes.forEach((idx,j)=>group.items[idx]={name:names[j],detail:functional?"WORKOUT":"Sequência de golpes"});panel.remove();renderWorkout();document.getElementById("status").textContent="Substituição realizada com a opção escolhida.";};
  const cancel=document.createElement("button");cancel.type="button";cancel.className="secondary";cancel.textContent="Cancelar";cancel.onclick=()=>panel.remove();
  panel.append(categorySelect,select,apply,cancel);row.insertAdjacentElement("afterend",panel);categorySelect.focus();
 };
@@ -809,7 +809,7 @@ window.handleWorkoutAction=function(event,gi,ii,action){
    const units=shuffle(exerciseUnits(currentPool,usedNames)).filter(unit=>unit.length===targetIndexes.length);
    const chosen=units[0];
    if(!chosen){document.getElementById("status").textContent=targetIndexes.length===2?"Não encontrei outro par E/D disponível para substituir esse exercício.":"Não encontrei outro exercício funcional disponível sem repetir um da sessão.";return}
-   targetIndexes.forEach((idx,j)=>group.items[idx]={name:chosen[j].name,detail:"Exercício funcional"});
+   targetIndexes.forEach((idx,j)=>group.items[idx]={name:chosen[j].name,detail:"WORKOUT"});
    document.getElementById("status").textContent=targetIndexes.length===2?"Par substituído, mantendo E seguido de D.":"Exercício substituído.";
   }else{
    const used=new Set(workoutGroups.flatMap((g,index)=>g.items.filter((x,i)=>!(index===gi&&i===ii)).map(x=>x.name)));
@@ -887,8 +887,8 @@ const manualPartDefaults={
  fightCircuit:{title:"Combo",rounds:1,seconds:50,rest:0,items:[]},
  individual:{title:"Exercício individual",rounds:1,seconds:50,rest:0,items:[]},
  fight:{title:"Combo",rounds:1,seconds:50,rest:0,items:[]},
-  transition:{title:"Troca para luta",rounds:1,seconds:30,rest:0,items:[{name:"TROCA PARA LUTA",detail:"Transição"}]},
- rest:{title:"Descanso",rounds:1,seconds:90,rest:0,items:[{name:"DESCANSO",detail:"Pausa"}]},
+  transition:{title:"Switch to FIGHT",rounds:1,seconds:30,rest:0,items:[{name:"SWITCH TO FIGHT",detail:"Transição"}]},
+ rest:{title:"Rest",rounds:1,seconds:90,rest:0,items:[{name:"REST",detail:"Pausa"}]},
   activePause:{title:"Pausa ativa",rounds:1,seconds:30,rest:0,items:[{name:"PAUSA ATIVA",detail:"Recuperação ativa"}]}
 };
 function manualId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
@@ -965,7 +965,7 @@ function manualLoadLibrary(){
  }catch(e){return[]}
 }
 function manualStoreLibrary(items){try{localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));return true}catch(e){return false}}
-function manualTypeLabel(type){return ({circuit:"Circuito",fightCircuit:"Combo",individual:"Exercício individual",fight:"Combo",transition:"Troca",rest:"Descanso",activePause:"Pausa ativa"})[type]||"Parte"}
+function manualTypeLabel(type){return ({circuit:"Circuito",fightCircuit:"Combo",individual:"Exercício individual",fight:"Combo",transition:"Troca",rest:"Rest",activePause:"Pausa ativa"})[type]||"Parte"}
 
 const fightCategoryLabels={
  "Começam com Jab":"Jab",
@@ -1003,7 +1003,7 @@ function manualRepeatedExerciseNames(candidateItems,replacePartIndex){
 function manualOptions(part){
  if(part.type==="circuit"||part.type==="individual"){
    const list=getExerciseBank().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
-  return list.map(x=>({name:x.name,detail:"Exercício funcional",cat:x.cat}));
+  return list.map(x=>({name:x.name,detail:"WORKOUT",cat:x.cat}));
  }
  if(part.type==="fight"||part.type==="fightCircuit"){
   const order=Object.keys(fightCategoryLabels);
@@ -1029,7 +1029,7 @@ function presetCompleteItems(sourceItems,targetCount){
   const item={...raw},match=String(item.name||"").match(/^(.*) ([ED])$/);
   if(match){
    item.name=match[1]+" (E/D)";
-   item.detail=(item.detail||"Exercício funcional").replace(/ · executar os dois lados$/,"")+" · executar os dois lados";
+   item.detail=(item.detail||"WORKOUT").replace(/ · executar os dois lados$/,"")+" · executar os dois lados";
   }
   return item;
  };
@@ -1052,7 +1052,7 @@ function presetCompleteItems(sourceItems,targetCount){
   if(normalized.length>=targetCount)break;
   const key=String(item.name||"").toLocaleLowerCase("pt-BR");
   if(seen.has(key))continue;
-  normalized.push({...item,detail:item.detail||"Exercício funcional"});
+  normalized.push({...item,detail:item.detail||"WORKOUT"});
   seen.add(key);represented.add(item.cat);
  }
  return normalized.slice(0,targetCount);
@@ -1124,14 +1124,14 @@ function presetExerciseBlock(label,addFinalRest=false){
  if(items.length<4){
   const bank=getExerciseBank().map(raw=>{
    const item={...raw},match=String(item.name||"").match(/^(.*) ([ED])$/);
-   if(match){item.name=match[1]+" (E/D)";item.detail=(item.detail||"Exercício funcional")+" · executar os dois lados";}
+   if(match){item.name=match[1]+" (E/D)";item.detail=(item.detail||"WORKOUT")+" · executar os dois lados";}
    return item;
   });
   const seen=new Set(items.map(item=>String(item.name||"").toLocaleLowerCase("pt-BR")));
   for(const item of shuffle(bank)){
    const key=String(item.name||"").toLocaleLowerCase("pt-BR");
    if(!key||seen.has(key))continue;
-   items.push({...item,detail:item.detail||"Exercício funcional"});
+   items.push({...item,detail:item.detail||"WORKOUT"});
    seen.add(key);
    if(items.length===4)break;
   }
@@ -1141,7 +1141,7 @@ function presetExerciseBlock(label,addFinalRest=false){
   return;
  }
  manualParts.push(presetPart("individual",label,{seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items}));
- manualParts.push(presetPause("Descanso funcional",40));
+ manualParts.push(presetPause("Rest funcional",40));
 }
 const presetCircuitBlocks=[
  {types:["fullbody"],items:[{name:"Agachamento + desenvolvimento",detail:"Pernas e ombros",cat:"pernas"},{name:"Supino",detail:"Peito",cat:"peito"},{name:"Abdominal remador",detail:"Core",cat:"core"}]},
@@ -1175,7 +1175,7 @@ function presetCircuit(label,addFinalRest=false){
  // Circuitos continuam com três exercícios; pares E/D contam como um exercício bilateral.
  const items=presetCompleteItems(source,3);
  manualParts.push(presetPart("circuit",label,{durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items}));
- manualParts.push(presetPause("Descanso do circuito",40));
+ manualParts.push(presetPause("Rest do circuito",40));
 }
 function presetFightBlock(label,addPauseAfter=false){
  const list=getFightBank().filter((name,index,arr)=>arr.indexOf(name)===index),items=[];
@@ -1321,7 +1321,7 @@ function manualRenderPreview(){
  const parts=manualParts.filter(p=>!["rest","transition","activePause"].includes(p.type));
  if(!parts.length){host.innerHTML='<div class="manual-preview-empty">Ainda não há exercícios montados. Gere um modelo ou adicione exercícios para visualizar aqui.</div>';return}
  host.innerHTML=parts.map((p,idx)=>{
-  const sourceItems=(p.items||[]).map((it,originalIndex)=>({it,originalIndex})).filter(x=>x.it&&x.it.name&&!["DESCANSO","PAUSA ATIVA","TROCA PARA LUTA"].includes(String(x.it.name).toUpperCase()));
+  const sourceItems=(p.items||[]).map((it,originalIndex)=>({it,originalIndex})).filter(x=>x.it&&x.it.name&&!["REST","PAUSA ATIVA","SWITCH TO FIGHT"].includes(String(x.it.name).toUpperCase()));
   const title=escHtml(p.title||manualTypeLabel(p.type));
   const rows=sourceItems.map((x,n)=>{
    const pi=manualParts.indexOf(p),ii=x.originalIndex,options=manualOptions(p),current=options.find(o=>o.name===x.it.name),selectedCat=current?.cat||x.it.cat||"cardio";
@@ -1544,7 +1544,7 @@ function manualExpandItems(){
    const duration=Math.max(1,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
    const cycleSeconds=Math.max(1,p.items.length*(Math.max(1,Number(p.seconds)||50)+Math.max(0,Number(p.rest)||0)));
    for(let cycle=0;cycle<Math.ceil(duration/cycleSeconds);cycle++)p.items.forEach((it,ii)=>items.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+p.seconds+" s",partIndex:pi,itemIndex:ii,isTimedCircuit:true,circuitDuration:cycle===0&&ii===0?duration:null}));
-  }else if(p.type==="rest"||p.type==="transition"||p.type==="activePause")items.push({name:p.type==="transition"?"TROCA PARA LUTA":p.type==="activePause"?"PAUSA ATIVA":"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Troca para luta: ":p.type==="activePause"?"Recuperação ativa: ":"Pausa de ")+p.seconds+" segundos",partIndex:pi,itemIndex:0});
+  }else if(p.type==="rest"||p.type==="transition"||p.type==="activePause")items.push({name:p.type==="transition"?"SWITCH TO FIGHT":p.type==="activePause"?"PAUSA ATIVA":"REST",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Switch to FIGHT: ":p.type==="activePause"?"Recuperação ativa: ":"Pausa de ")+p.seconds+" segundos",partIndex:pi,itemIndex:0});
   else p.items.forEach((it,ii)=>items.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+p.seconds+" s",partIndex:pi,itemIndex:ii}));
  });
  return items;
@@ -1555,7 +1555,7 @@ function manualOpenPlay(){
  if(!manualParts.length||!manualParts.some(p=>p.items.length)){document.getElementById("manualStatus").textContent="Adicione partes e itens antes de iniciar o Modo Play.";return}
  manualPlayItems=[];
  manualParts.forEach((p,pi)=>{
-  if(p.type==="rest"||p.type==="transition"||p.type==="activePause"){const pauseName=p.title||(p.type==="transition"?"TROCA PARA LUTA":p.type==="activePause"?"PAUSA ATIVA":"DESCANSO");manualPlayItems.push({name:pauseName,group:p.title||manualTypeLabel(p.type),detail:pauseName+" · "+manualFormatTime(Number(p.seconds)||(p.type==="activePause"?30:90)),partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||(p.type==="activePause"?30:90)});return}
+  if(p.type==="rest"||p.type==="transition"||p.type==="activePause"){const pauseName=p.title||(p.type==="transition"?"SWITCH TO FIGHT":p.type==="activePause"?"PAUSA ATIVA":"REST");manualPlayItems.push({name:pauseName,group:p.title||manualTypeLabel(p.type),detail:pauseName+" · "+manualFormatTime(Number(p.seconds)||(p.type==="activePause"?30:90)),partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||(p.type==="activePause"?30:90)});return}
   const isCircuit=p.type==="circuit"||p.type==="fightCircuit";
   if(isCircuit){
    const duration=Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
@@ -1563,8 +1563,8 @@ function manualOpenPlay(){
   }else if(p.type==="individual"){
    const duration=Math.max(0,Number(p.durationMinutes??Math.floor((Number(p.seconds)||50)/60)))*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??((Number(p.seconds)||50)%60))));
    const rest=Math.max(0,Number(p.restMinutes??Math.floor((Number(p.rest)||0)/60)))*60+Math.max(0,Math.min(59,Number(p.restExtraSeconds??((Number(p.rest)||0)%60))));
-   p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:"Exercício · "+manualFormatTime(duration),partIndex:pi,itemIndex:ii,isTimedIndividual:true,durationSeconds:duration});if(rest>0&&ii<p.items.length-1)manualPlayItems.push({name:"DESCANSO",group:p.title||manualTypeLabel(p.type),detail:"Descanso · "+manualFormatTime(rest),partIndex:pi,isPause:true,durationSeconds:rest})});
-  }else p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+manualFormatTime(Number(p.seconds)||55),partIndex:pi,durationSeconds:Number(p.seconds)||55,isTimedIndividual:true});if((p.type==="fight"||p.type==="fightCircuit")&&Number(p.rest)>0&&ii<p.items.length-1)manualPlayItems.push({name:"DESCANSO ENTRE SEQUÊNCIAS",group:p.title||manualTypeLabel(p.type),detail:"Descanso · "+manualFormatTime(Number(p.rest)),partIndex:pi,isPause:true,durationSeconds:Number(p.rest)});});
+   p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:"Exercício · "+manualFormatTime(duration),partIndex:pi,itemIndex:ii,isTimedIndividual:true,durationSeconds:duration});if(rest>0&&ii<p.items.length-1)manualPlayItems.push({name:"REST",group:p.title||manualTypeLabel(p.type),detail:"Rest · "+manualFormatTime(rest),partIndex:pi,isPause:true,durationSeconds:rest})});
+  }else p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+manualFormatTime(Number(p.seconds)||55),partIndex:pi,durationSeconds:Number(p.seconds)||55,isTimedIndividual:true});if((p.type==="fight"||p.type==="fightCircuit")&&Number(p.rest)>0&&ii<p.items.length-1)manualPlayItems.push({name:"REST ENTRE SEQUÊNCIAS",group:p.title||manualTypeLabel(p.type),detail:"Rest · "+manualFormatTime(Number(p.rest)),partIndex:pi,isPause:true,durationSeconds:Number(p.rest)});});
  });
  manualPlayIndex=0;manualCircuitDeadline=null;manualItemDeadline=null;manualCurrentCircuitPart=null;manualStopTimer();manualRenderPlay();document.getElementById("playOverlay").hidden=false;
 }
