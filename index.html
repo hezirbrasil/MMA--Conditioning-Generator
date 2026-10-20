@@ -956,6 +956,35 @@ function manualLoadLibrary(){
     savedAt:new Date().toISOString()
    });
   }
+  // Bloco de 4 exercícios enviado pelo usuário (WORKOUT · Bloco 1).
+  const starterFourExerciseId="starter-workout-bloco-1-four";
+  if(!items.some(entry=>entry?.id===starterFourExerciseId)){
+   items.push({
+    id:starterFourExerciseId,
+    kind:"part",
+    name:"WORKOUT · Bloco 1 (4 exercícios)",
+    part:{
+     id:"starter-part-workout-bloco-1-four",
+     type:"individual",
+     title:"WORKOUT · Bloco 1",
+     rounds:1,
+     seconds:50,
+     durationMinutes:0,
+     durationExtraSeconds:50,
+     rest:10,
+     restMinutes:0,
+     restExtraSeconds:10,
+     items:[
+      {name:"Abdominal + Jab e Direto",detail:"Core e luta",cat:"core"},
+      {name:"Prancha T",detail:"Core",cat:"core"},
+      {name:"Abdominal passando a perna pelo halter",detail:"Core",cat:"core"},
+      {name:"Abdominal Infra Alternado",detail:"Core",cat:"core"}
+     ]
+    },
+    savedAt:new Date().toISOString()
+   });
+   addedStarterCircuits=true;
+  }
   // Classifica automaticamente todos os blocos já salvos e os blocos padrão.
   let classifiedExistingBlocks=false;
   items.forEach(entry=>{
