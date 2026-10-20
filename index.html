@@ -636,8 +636,15 @@ document.getElementById("playNext").addEventListener("click",()=>{
  if(typeof manualPlayItems!=="undefined"&&manualPlayItems.length){
   if(manualPlayIndex<manualPlayItems.length-1){
    const current=manualPlayItems[manualPlayIndex];
-   if(current&&current.isTimedCircuit){const next=manualPlayItems.findIndex((x,i)=>i>manualPlayIndex&&x.partIndex>current.partIndex);manualPlayIndex=next>=0?next:manualPlayItems.length-1;}
-   else manualPlayIndex++;
+   manualStopTimer();
+   manualCircuitDeadline=null;
+   manualItemDeadline=null;
+   if(current&&current.isTimedCircuit){
+    const next=manualPlayItems.findIndex((x,i)=>i>manualPlayIndex&&x.partIndex>current.partIndex);
+    manualPlayIndex=next>=0?next:manualPlayItems.length-1;
+   }else manualPlayIndex++;
+   manualCurrentCircuitPart=null;
+   manualLastBeepSecond=null;
    manualRenderPlay();
   }
  }else if(playIndex<playItems.length-1){playIndex++;renderPlay();}
