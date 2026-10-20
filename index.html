@@ -1280,8 +1280,12 @@ function loadWorkoutOption(option){
  document.getElementById("manualStatus").textContent=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" aplicado com "+(option===1?"Opção 1":"Opção 2")+". Você pode trocar qualquer exercício e salvar o treino completo.";
  document.getElementById("manualBuilder").scrollIntoView({behavior:"smooth",block:"start"});
 }
-document.getElementById("loadOption1").addEventListener("click",()=>loadWorkoutOption(1));
-document.getElementById("loadOption2").addEventListener("click",()=>loadWorkoutOption(2));
+function safeLoadWorkoutOption(option){
+ const status=document.getElementById("manualStatus");
+ try{loadWorkoutOption(option)}catch(error){console.error("Erro ao gerar treino:",error);if(status)status.textContent="Erro ao gerar o treino: "+(error&&error.message?error.message:"falha inesperada")+". Atualize a página e tente novamente.";}
+}
+document.getElementById("loadOption1").addEventListener("click",()=>safeLoadWorkoutOption(1));
+document.getElementById("loadOption2").addEventListener("click",()=>safeLoadWorkoutOption(2));
 function manualAddPart(type,source){
  const base=JSON.parse(JSON.stringify(manualPartDefaults[type]||manualPartDefaults.circuit));
  const part=source?JSON.parse(JSON.stringify(source)):{id:manualId(),type,...base};
