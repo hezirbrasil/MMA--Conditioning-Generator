@@ -889,9 +889,9 @@ const manualPartDefaults={
  fightCircuit:{title:"FIGHT",rounds:1,seconds:240,rest:0,durationMinutes:4,durationExtraSeconds:0,items:[]},
  individual:{title:"Exercício individual",rounds:1,seconds:50,rest:0,items:[]},
  fight:{title:"FIGHT",rounds:1,seconds:240,rest:0,durationMinutes:4,durationExtraSeconds:0,items:[]},
-  transition:{title:"Switch to FIGHT",rounds:1,seconds:30,rest:0,items:[{name:"SWITCH TO FIGHT",detail:"Transição"}]},
- rest:{title:"Rest",rounds:1,seconds:90,rest:0,items:[{name:"REST",detail:"Pausa"}]},
-  activePause:{title:"Pausa ativa",rounds:1,seconds:30,rest:0,items:[{name:"PAUSA ATIVA",detail:"Recuperação ativa"}]}
+  transition:{title:"Switch to FIGHT",rounds:1,seconds:30,rest:0,items:[{name:"REST",detail:"Transição"}]},
+ rest:{title:"REST",rounds:1,seconds:90,rest:0,items:[{name:"REST",detail:"REST"}]},
+  activePause:{title:"REST",rounds:1,seconds:30,rest:0,items:[{name:"REST",detail:"REST"}]}
 };
 function manualId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
 function manualLoadLibrary(){
@@ -967,7 +967,7 @@ function manualLoadLibrary(){
  }catch(e){return[]}
 }
 function manualStoreLibrary(items){try{localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));return true}catch(e){return false}}
-function manualTypeLabel(type){return ({circuit:"WORKOUT",fightCircuit:"FIGHT",individual:"WORKOUT",fight:"FIGHT",transition:"TRANSITION",rest:"REST",activePause:"ACTIVE REST"})[type]||"WORKOUT"}
+function manualTypeLabel(type){return ({circuit:"WORKOUT",fightCircuit:"FIGHT",individual:"WORKOUT",fight:"FIGHT",transition:"REST",rest:"REST",activePause:"REST"})[type]||"WORKOUT"}
 
 const fightCategoryLabels={
  "Começam com Jab":"Jab",
@@ -1189,7 +1189,7 @@ function presetFightBlock(label,addPauseAfter=false){
   items.push({name,detail:"Sequência de FIGHT",cat:classifyFightCombo(name)});
  }
  manualParts.push(presetPart("fight",label,{seconds:240,durationMinutes:4,durationExtraSeconds:0,rest:0,items}));
- if(addPauseAfter){manualParts.push(presetPause("Pausa ativa",30,"activePause"));}
+ if(addPauseAfter){manualParts.push(presetPause("REST",30,"activePause"));}
 }
 function loadWorkoutOption(option){
  if(manualParts.length&&!confirm("Aplicar este modelo vai substituir as partes que estão no montador. Quer continuar?"))return;
@@ -1323,7 +1323,7 @@ function manualRenderPreview(){
  const parts=manualParts.filter(p=>!["rest","transition","activePause"].includes(p.type));
  if(!parts.length){host.innerHTML='<div class="manual-preview-empty">Ainda não há exercícios montados. Gere um modelo ou adicione exercícios para visualizar aqui.</div>';return}
  host.innerHTML=parts.map((p,idx)=>{
-  const sourceItems=(p.items||[]).map((it,originalIndex)=>({it,originalIndex})).filter(x=>x.it&&x.it.name&&!["REST","PAUSA ATIVA","SWITCH TO FIGHT"].includes(String(x.it.name).toUpperCase()));
+  const sourceItems=(p.items||[]).map((it,originalIndex)=>({it,originalIndex})).filter(x=>x.it&&x.it.name&&!["REST","REST","REST"].includes(String(x.it.name).toUpperCase()));
   const title=escHtml(p.title||manualTypeLabel(p.type));
   const rows=sourceItems.map((x,n)=>{
    const pi=manualParts.indexOf(p),ii=x.originalIndex,options=manualOptions(p),current=options.find(o=>o.name===x.it.name),selectedCat=current?.cat||x.it.cat||"cardio";
@@ -1546,7 +1546,7 @@ function manualExpandItems(){
    const duration=Math.max(1,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
    const cycleSeconds=Math.max(1,p.items.length*(Math.max(1,Number(p.seconds)||50)+Math.max(0,Number(p.rest)||0)));
    for(let cycle=0;cycle<Math.ceil(duration/cycleSeconds);cycle++)p.items.forEach((it,ii)=>items.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+p.seconds+" s",partIndex:pi,itemIndex:ii,isTimedCircuit:true,circuitDuration:cycle===0&&ii===0?duration:null}));
-  }else if(p.type==="rest"||p.type==="transition"||p.type==="activePause")items.push({name:p.type==="transition"?"SWITCH TO FIGHT":p.type==="activePause"?"PAUSA ATIVA":"REST",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Switch to FIGHT: ":p.type==="activePause"?"Recuperação ativa: ":"Pausa de ")+p.seconds+" segundos",partIndex:pi,itemIndex:0});
+  }else if(p.type==="rest"||p.type==="transition"||p.type==="activePause")items.push({name:p.type==="transition"?"REST":p.type==="activePause"?"REST":"REST",group:p.title||manualTypeLabel(p.type),detail:(p.type==="transition"?"Switch to FIGHT: ":p.type==="activePause"?"Recuperação ativa: ":"Pausa de ")+p.seconds+" segundos",partIndex:pi,itemIndex:0});
   else p.items.forEach((it,ii)=>items.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+p.seconds+" s",partIndex:pi,itemIndex:ii}));
  });
  return items;
@@ -1557,7 +1557,7 @@ function manualOpenPlay(){
  if(!manualParts.length||!manualParts.some(p=>p.items.length)){document.getElementById("manualStatus").textContent="Adicione partes e itens antes de iniciar o Modo Play.";return}
  manualPlayItems=[];
  manualParts.forEach((p,pi)=>{
-  if(p.type==="rest"||p.type==="transition"||p.type==="activePause"){const pauseName=p.title||(p.type==="transition"?"SWITCH TO FIGHT":p.type==="activePause"?"PAUSA ATIVA":"REST");manualPlayItems.push({name:pauseName,group:p.title||manualTypeLabel(p.type),detail:pauseName+" · "+manualFormatTime(Number(p.seconds)||(p.type==="activePause"?30:90)),partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||(p.type==="activePause"?30:90)});return}
+  if(p.type==="rest"||p.type==="transition"||p.type==="activePause"){const pauseName=p.title||(p.type==="transition"?"REST":p.type==="activePause"?"REST":"REST");manualPlayItems.push({name:pauseName,group:p.title||manualTypeLabel(p.type),detail:pauseName+" · "+manualFormatTime(Number(p.seconds)||(p.type==="activePause"?30:90)),partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||(p.type==="activePause"?30:90)});return}
   const isCircuit=p.type==="circuit"||p.type==="fightCircuit"||p.type==="fight";
   if(isCircuit){
    const duration=(p.type==="fight"||p.type==="fightCircuit")?240:Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
@@ -1566,7 +1566,7 @@ function manualOpenPlay(){
    const duration=Math.max(0,Number(p.durationMinutes??Math.floor((Number(p.seconds)||50)/60)))*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??((Number(p.seconds)||50)%60))));
    const rest=Math.max(0,Number(p.restMinutes??Math.floor((Number(p.rest)||0)/60)))*60+Math.max(0,Math.min(59,Number(p.restExtraSeconds??((Number(p.rest)||0)%60))));
    p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:"Exercício · "+manualFormatTime(duration),partIndex:pi,itemIndex:ii,isTimedIndividual:true,durationSeconds:duration});if(rest>0&&ii<p.items.length-1)manualPlayItems.push({name:"REST",group:p.title||manualTypeLabel(p.type),detail:"Rest · "+manualFormatTime(rest),partIndex:pi,isPause:true,durationSeconds:rest})});
-  }else p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+manualFormatTime(Number(p.seconds)||55),partIndex:pi,durationSeconds:Number(p.seconds)||55,isTimedIndividual:true});if((p.type==="fight"||p.type==="fightCircuit")&&Number(p.rest)>0&&ii<p.items.length-1)manualPlayItems.push({name:"REST ENTRE SEQUÊNCIAS",group:p.title||manualTypeLabel(p.type),detail:"Rest · "+manualFormatTime(Number(p.rest)),partIndex:pi,isPause:true,durationSeconds:Number(p.rest)});});
+  }else p.items.forEach((it,ii)=>{manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+manualFormatTime(Number(p.seconds)||55),partIndex:pi,durationSeconds:Number(p.seconds)||55,isTimedIndividual:true});if((p.type==="fight"||p.type==="fightCircuit")&&Number(p.rest)>0&&ii<p.items.length-1)manualPlayItems.push({name:"REST",group:p.title||manualTypeLabel(p.type),detail:"Rest · "+manualFormatTime(Number(p.rest)),partIndex:pi,isPause:true,durationSeconds:Number(p.rest)});});
  });
  manualPlayIndex=0;manualCircuitDeadline=null;manualItemDeadline=null;manualCurrentCircuitPart=null;manualStopTimer();manualRenderPlay();document.getElementById("playOverlay").hidden=false;
 }
