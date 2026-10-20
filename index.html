@@ -923,29 +923,7 @@ function manualLoadLibrary(){
     savedAt:new Date().toISOString()
    });
   }
-  // Modelos individuais predefinidos recuperados do histórico.
-  const starterIndividualBlocks=[
-   ["Bloco individual 01",["Deitar, sentar e levantar no step","Abdominal infra alternado","Abdominal bicicleta","Desenvolvimento com polichinelo"]],
-   ["Bloco individual 02",["Stiff unilateral E","Stiff unilateral D","Afundo E","Afundo D"]],
-   ["Bloco individual 03",["Prancha alta/baixa","Prancha tocando o pé","Abdominal + Jab e Direto","Abdominal infra"]],
-   ["Bloco individual 04",["Búlgaro D","Búlgaro E","Joelhada no step E","Joelhada no step D"]],
-   ["Bloco individual 05",["Agachamento + touch down","Deslocamento lateral + touch down","Prancha + toque alternado dos pés"]],
-   ["Bloco individual 06",["Agachamento sumô","Abdominal supra","Abdominal infra"]],
-   ["Bloco individual 07",["Agachamento + troca de base","Prancha + toque alternado dos pés","Afundo alternado"]],
-   ["Bloco individual 08",["Agachamento com salto","Escalador","Supino"]],
-   ["Bloco individual 09",["Afundo + salto","Abdominal infra alternado","Agachamento + remada alta"]],
-   ["Bloco individual 10",["Abdominal + Jab e Direto","Prancha T","Abdominal passando a perna pelo halter"]],
-   ["Bloco individual 11",["Sprint","Corrida lateral com touch down","Joelhada no step alternada"]],
-   ["Bloco individual 12",["Elevação lateral + frontal","Abdominal remador","Agachamento + remada alta"]]
-  ];
-  let addedStarterIndividualBlocks=false;
-  starterIndividualBlocks.forEach(([name,names],index)=>{
-   const id="starter-individual-block-"+String(index+1).padStart(2,"0");
-   if(items.some(existing=>existing?.id===id))return;
-   items.push({id,kind:"part",name,part:{id:"starter-part-individual-block-"+String(index+1).padStart(2,"0"),type:"individual",title:name,rounds:1,seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items:names.map(exercise=>({name:exercise,detail:"Exercício individual"+(names.length<4?" · modelo recuperado parcialmente":"")}))},savedAt:"2026-10-20T00:00:00.000Z"});
-   addedStarterIndividualBlocks=true;
-  });
-  if(addedStarterCircuits||addedStarterIndividualBlocks||items.length!==x.length||!x.some(entry=>entry?.id===starterBlockId))localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
+  if(addedStarterCircuits||items.length!==x.length||!x.some(entry=>entry?.id===starterBlockId))localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
   return items;
  }catch(e){return[]}
 }
@@ -1257,10 +1235,9 @@ function manualRenderParts(){
   const addUi=isRest||p.type==="individual"?"": ((p.type==="fight"||p.type==="fightCircuit")?'<div class="builder-field" style="margin-bottom:9px"><label>1. Escolha a classe de golpe</label><select data-manual-fight-category="'+pi+'">'+fightCats.map(cat=>'<option value="'+escHtml(cat)+'"'+(cat===selectedFightCat?' selected':'')+'>'+escHtml(fightCategoryLabels[cat]||cat)+'</option>').join("")+'</select></div>':p.type==="circuit"?'<div class="builder-field" style="margin-bottom:9px"><label>1. Escolha o grupamento muscular</label><select data-manual-exercise-category="'+pi+'">'+exerciseCats.map(cat=>'<option value="'+escHtml(cat)+'"'+(cat===selectedExerciseCat?' selected':'')+'>'+escHtml(bankCategoryLabels[cat]||cat)+'</option>').join("")+'</select></div>':'')+'<div class="builder-item-add"><select data-manual-select="'+pi+'"><option value="">'+(availableOpts.length?((p.type==="fight"||p.type==="fightCircuit")?"2. Escolha a sequência…":p.type==="circuit"?"2. Escolha o exercício…":"Escolha um exercício para adicionar…"):"Não há mais itens disponíveis neste grupamento")+"</option>"+manualOptionsMarkup(availableOpts)+'</select><button type="button" class="primary" data-manual-action="add-item" data-p="'+pi+'" '+(availableOpts.length?"":"disabled")+">＋ Adicionar "+((p.type==="fight"||p.type==="fightCircuit")?"sequência":"exercício")+'</button></div>';
   const savedParts=manualLoadLibrary().filter(entry=>entry&&entry.kind==="part"&&entry.part&&Array.isArray(entry.part.items)&&entry.part.items.length);
   const savedCircuits=savedParts.filter(entry=>entry.part.type==="circuit");
-  const savedIndividualBlocks=savedParts.filter(entry=>entry.part.type==="individual"&&/^Bloco individual \\d+/.test(entry.name||""));
   const individualOptions=manualOptions({type:"individual"});
   const individualSelects=[0,1,2,3].map(n=>'<label>Exercício individual '+(n+1)+'</label><select data-manual-four-exercise data-p="'+pi+'" data-slot="'+n+'"><option value="">Escolha o exercício…</option>'+manualOptionsMarkup(individualOptions)+'</select>').join("");
-  const swapPartUi='<div class="builder-part-swap" hidden><label>Como deseja substituir este bloco?</label><select data-manual-swap-mode data-p="'+pi+'"><option value="">Escolha o tipo de substituição…</option><option value="circuit">Por um circuito</option><option value="individuals">Por quatro exercícios individuais</option><option value="preset">Por um bloco pré-definido</option></select><div data-manual-swap-preset-panel hidden><label>Escolha o bloco pré-definido</label><select data-manual-replace-preset data-p="'+pi+'"><option value="">Escolha um bloco…</option>'+savedIndividualBlocks.map(entry=>'<option value="'+escHtml(entry.id)+'">'+escHtml(entry.name)+' · '+entry.part.items.length+' exercício(s)</option>').join("")+'</select><button type="button" class="primary" data-manual-swap-apply="preset" data-p="'+pi+'">Aplicar bloco pré-definido</button></div><div data-manual-swap-circuit-panel hidden><label>Escolha o circuito</label><select data-manual-replace-part data-p="'+pi+'"><option value="">Escolha um circuito…</option>'+savedCircuits.map(entry=>'<option value="'+escHtml(entry.id)+'">'+escHtml(entry.name)+' · '+entry.part.items.length+' exercício(s)</option>').join("")+'</select><button type="button" class="primary" data-manual-swap-apply="circuit" data-p="'+pi+'">Aplicar circuito</button></div><div data-manual-swap-individual-panel hidden>'+individualSelects+'<button type="button" class="primary" data-manual-swap-apply="individuals" data-p="'+pi+'">Aplicar quatro exercícios</button></div><small>Somente este bloco será substituído; o restante do treino será mantido.</small></div>';
+  const swapPartUi='<div class="builder-part-swap" hidden><label>Como deseja substituir este bloco?</label><select data-manual-swap-mode data-p="'+pi+'"><option value="">Escolha o tipo de substituição…</option><option value="circuit">Por um circuito</option><option value="individuals">Por quatro exercícios individuais</option></select><div data-manual-swap-circuit-panel hidden><label>Escolha o circuito</label><select data-manual-replace-part data-p="'+pi+'"><option value="">Escolha um circuito…</option>'+savedCircuits.map(entry=>'<option value="'+escHtml(entry.id)+'">'+escHtml(entry.name)+' · '+entry.part.items.length+' exercício(s)</option>').join("")+'</select><button type="button" class="primary" data-manual-swap-apply="circuit" data-p="'+pi+'">Aplicar circuito</button></div><div data-manual-swap-individual-panel hidden>'+individualSelects+'<button type="button" class="primary" data-manual-swap-apply="individuals" data-p="'+pi+'">Aplicar quatro exercícios</button></div><small>Somente este bloco será substituído; o restante do treino será mantido.</small></div>';
   return '<article class="builder-part'+(p.collapsed?' is-collapsed':'')+'"><div class="builder-part-head"><div><strong>'+escHtml(p.title||manualTypeLabel(p.type))+'</strong><small>'+manualTypeLabel(p.type)+' · '+p.items.length+' item(ns)'+(isCircuit?' · '+String(Math.max(0,Number(p.durationMinutes)||0)).padStart(2,"0")+':'+String(Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0))).padStart(2,"0"):'')+'</small></div><div class="builder-part-actions"><button type="button" class="secondary" data-manual-action="up" data-p="'+pi+'" aria-label="Mover parte para cima">↑</button><button type="button" class="secondary" data-manual-action="down" data-p="'+pi+'" aria-label="Mover parte para baixo">↓</button><button type="button" class="secondary builder-part-collapse" data-manual-action="toggle-collapse" data-p="'+pi+'" >'+(isCircuit?(p.collapsed?'＋ Editar circuito':'− Minimizar edição'):(p.collapsed?'＋ Expandir':'− Minimizar'))+'</button><button type="button" class="secondary" data-manual-action="swap-part" data-p="'+pi+'">⇄ Trocar bloco</button><button type="button" class="secondary" data-manual-action="save-part" data-p="'+pi+'">★ Salvar parte</button><button type="button" class="secondary remove" data-manual-action="delete-part" data-p="'+pi+'">✕ Excluir</button></div></div>'+swapPartUi+'<div class="builder-part-body"'+(p.collapsed?' hidden':'')+'>'+settings+(p.type==="individual"?'': '<div class="builder-item-list">'+(itemRows||'<div class="builder-empty">Nenhum item adicionado nesta parte.</div>')+'</div>'+addUi)+'</div></article>';
  }).join("");
  if(!document.getElementById("manualPreview").hidden)manualRenderPreview();
@@ -1384,10 +1361,8 @@ document.getElementById("manualParts").addEventListener("change",e=>{
   const card=modeSelect.closest(".builder-part-swap");
   const circuitPanel=card?.querySelector("[data-manual-swap-circuit-panel]");
   const individualPanel=card?.querySelector("[data-manual-swap-individual-panel]");
-  const presetPanel=card?.querySelector("[data-manual-swap-preset-panel]");
   if(circuitPanel)circuitPanel.hidden=modeSelect.value!=="circuit";
   if(individualPanel)individualPanel.hidden=modeSelect.value!=="individuals";
-  if(presetPanel)presetPanel.hidden=modeSelect.value!=="preset";
   return;
  }
 });
@@ -1399,13 +1374,7 @@ document.getElementById("manualParts").addEventListener("click",e=>{
   const mode=b.dataset.manualSwapApply,pi=Number(b.dataset.p),current=manualParts[pi];
   if(!current)return;
   let replacement;
-  if(mode==="preset"){
-   const select=b.closest("[data-manual-swap-preset-panel]")?.querySelector("[data-manual-replace-preset]");
-   const entry=manualLoadLibrary().find(x=>x&&x.id===select?.value&&x.kind==="part"&&x.part&&x.part.type==="individual"&&/^Bloco individual \d+/.test(x.name||""));
-   if(!entry){document.getElementById("manualStatus").textContent="Escolha um bloco pré-definido antes de aplicar.";return;}
-   replacement=JSON.parse(JSON.stringify(entry.part));
-   document.getElementById("manualStatus").textContent="Bloco substituído por: "+entry.name+" ("+replacement.items.length+" exercícios).";
-  }else if(mode==="circuit"){
+  if(mode==="circuit"){
    const select=b.closest("[data-manual-swap-circuit-panel]")?.querySelector("[data-manual-replace-part]");
    const entry=manualLoadLibrary().find(x=>x&&x.id===select?.value&&x.kind==="part"&&x.part&&x.part.type==="circuit");
    if(!entry){document.getElementById("manualStatus").textContent="Escolha um circuito antes de aplicar.";return;}
