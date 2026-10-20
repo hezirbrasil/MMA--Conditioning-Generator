@@ -923,7 +923,14 @@ function manualLoadLibrary(){
     savedAt:new Date().toISOString()
    });
   }
-  if(addedStarterCircuits||items.length!==x.length||!x.some(entry=>entry?.id===starterBlockId))localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
+  // Classifica automaticamente todos os blocos já salvos e os blocos padrão.
+  let classifiedExistingBlocks=false;
+  items.forEach(entry=>{
+   if(entry?.kind!=="part"||!entry.part||["fight","fightCircuit"].includes(entry.part.type))return;
+   const category=manualLibraryCategory({...entry,category:undefined});
+   if(category&&entry.category!==category){entry.category=category;classifiedExistingBlocks=true;}
+  });
+  if(addedStarterCircuits||classifiedExistingBlocks||items.length!==x.length||!x.some(entry=>entry?.id===starterBlockId))localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
   return items;
  }catch(e){return[]}
 }
