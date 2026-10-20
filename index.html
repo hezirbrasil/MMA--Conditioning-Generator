@@ -85,6 +85,7 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
 <header class="top"><div class="brand"><span class="mark"><img src="./icon.svg?v=octagon2" alt="MMA Conditioning — octógono roxo e preto"></span><span>MMA <em>CONDITIONING</em><small>MODELOS DE AULA • TREINO</small></span></div><span class="tag">2 MODELOS DE AULA</span></header>
 <main class="wrap">
 <section class="hero"><div class="eyebrow">● MMA CONDITIONING</div><h1>Monte seu<br><span>treino.</span></h1><p>Escolha Fullbody ou Leg Blast e combine com um dos dois modelos de aula para montar a sequência completa e iniciar no Modo Play.</p></section>
+<section class="panel" id="backupPanel" style="padding:16px;margin-top:14px"><div class="eyebrow purple">SEGURANÇA DOS SEUS DADOS</div><h2 style="margin:7px 0;font-size:17px">Backup do banco e dos treinos</h2><p class="tip" style="margin:0">Salve seus exercícios personalizados, sequências FIGHT, biblioteca e treinos em um arquivo para restaurar depois ou em outro aparelho.</p><div class="buttons"><button type="button" class="primary" id="exportBackup">↓ Exportar backup</button><button type="button" class="secondary" id="importBackupButton">↑ Importar backup</button><input type="file" id="importBackupFile" accept=".json,application/json" hidden></div><div id="backupStatus" class="formstatus" aria-live="polite"></div><p class="tip">Importar um backup substitui os dados salvos atualmente neste app. Exporte primeiro para não perder alterações recentes.</p></section>
 <div hidden aria-hidden="true"><select id="type"><option value="fullbody">Full Body</option><option value="legblast">Leg Blast</option></select><button id="generate" type="button"></button></div>
 
 <section class="panel custom-builder" id="manualBuilder">
@@ -1806,6 +1807,46 @@ document.getElementById("manualLibraryList").addEventListener("click",e=>{
  }
  if(b.dataset.libraryAction==="load"&&entry.kind==="workout"){manualParts=JSON.parse(JSON.stringify(entry.parts||[]));document.getElementById("manualWorkoutName").value=entry.name;manualRenderParts();document.getElementById("manualStatus").textContent='Treino "'+entry.name+'" carregado. Edite à vontade; o favorito original permanece salvo.';document.getElementById("manualBuilder").scrollIntoView({behavior:"smooth",block:"start"})}
 });
+
+
+/* Backup portátil dos dados personalizados do MMA Conditioning */
+(function(){
+ const exportButton=document.getElementById("exportBackup");
+ const importButton=document.getElementById("importBackupButton");
+ const fileInput=document.getElementById("importBackupFile");
+ const status=document.getElementById("backupStatus");
+ if(!exportButton||!importButton||!fileInput||!status)return;
+ const backupKeys=()=>Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)).filter(k=>k&&k.startsWith("mc-"));
+ exportButton.addEventListener("click",()=>{
+  try{
+   const storage={};
+   backupKeys().forEach(key=>{storage[key]=localStorage.getItem(key)});
+   const payload={app:"MMA Conditioning",schemaVersion:1,exportedAt:new Date().toISOString(),storage};
+   const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"});
+   const url=URL.createObjectURL(blob);
+   const a=document.createElement("a");
+   a.href=url;a.download="mma-conditioning-backup-"+new Date().toISOString().slice(0,10)+".json";
+   document.body.appendChild(a);a.click();a.remove();
+   setTimeout(()=>URL.revokeObjectURL(url),1000);
+   status.textContent="Backup exportado. Confira se o arquivo JSON foi salvo no seu aparelho.";
+  }catch(error){status.textContent="Não foi possível exportar. Verifique o espaço disponível no aparelho."}
+ });
+ importButton.addEventListener("click",()=>{fileInput.value="";fileInput.click()});
+ fileInput.addEventListener("change",async()=>{
+  const file=fileInput.files&&fileInput.files[0];if(!file)return;
+  try{
+   const payload=JSON.parse(await file.text());
+   if(!payload||payload.app!=="MMA Conditioning"||payload.schemaVersion!==1||!payload.storage||typeof payload.storage!=="object"||Array.isArray(payload.storage))throw new Error("Formato inválido");
+   const entries=Object.entries(payload.storage);
+   if(!entries.length||entries.some(([key,value])=>!key.startsWith("mc-")||typeof value!=="string"))throw new Error("Dados inválidos");
+   if(!confirm("Restaurar este backup? Os dados atuais salvos neste app serão substituídos. Se precisar deles, cancele e exporte um backup primeiro."))return;
+   backupKeys().forEach(key=>localStorage.removeItem(key));
+   entries.forEach(([key,value])=>localStorage.setItem(key,value));
+   status.textContent="Backup restaurado. O app será recarregado para atualizar os bancos e a biblioteca.";
+   setTimeout(()=>window.location.reload(),500);
+  }catch(error){status.textContent="Arquivo inválido ou incompatível. Selecione um backup JSON exportado pelo MMA Conditioning."}
+ });
+})(); 
 
 </script>
 </body></html>
