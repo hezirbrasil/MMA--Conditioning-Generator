@@ -86,7 +86,7 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
 <main class="wrap">
 <section class="hero"><div class="eyebrow">● MMA CONDITIONING</div><h1>Monte seu<br><span>treino.</span></h1><p>Escolha Fullbody ou Leg Blast e combine com um dos dois modelos de aula para montar a sequência completa e iniciar no Modo Play.</p></section>
 <section class="panel" id="savedShortcutPanel" style="padding:16px;margin-top:14px"><div class="eyebrow purple">SUA BIBLIOTECA</div><h2 style="margin:7px 0;font-size:17px">Salve seus treinos e sequências</h2><p class="tip" style="margin:0 0 12px">Escolha um objetivo, troque os exercícios que quiser e salve o treino personalizado para usar novamente quando quiser.</p><div class="buttons"><button type="button" class="primary" id="saveWorkoutTop">★ Salvar treino</button><button type="button" class="secondary" id="openSavedLibraryTop">♥ Ver treinos salvos</button></div></section>
-<div hidden aria-hidden="true"><select id="type"><option value="fullbody">Full Body</option><option value="legblast">Leg Blast</option></select><button id="generate" type="button"></button></div>
+<div hidden aria-hidden="true"><select id="type"><option value="fullbody">Full Body</option><option value="legblast">Leg Blast</option></select><button id="generate" type="button" onclick="createWorkout()"></button></div>
 
 <section class="panel custom-builder" id="manualBuilder">
  <div class="eyebrow purple">MODELOS DE AULA</div>
