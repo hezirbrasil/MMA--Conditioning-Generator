@@ -1836,13 +1836,13 @@ function manualLibraryCategory(entry){
  return "";
 }
 let manualLibraryFilter="Todos";
-let manualLibraryTypeFilter="Todos";
+let manualLibraryTypeFilter="workout";
 let manualLibraryMode="exercises";
 function manualRenderLibrary(){
  const host=document.getElementById("manualLibraryList"),items=manualLoadLibrary();
  const parts=items.filter(x=>x.kind==="part");
  const visible=items.slice().reverse().filter(x=>{const isFight=x.kind==="part"&&["fight","fightCircuit"].includes(x.part?.type);if(manualLibraryMode==="fight")return x.kind==="part"&&isFight;if(manualLibraryTypeFilter==="workout")return x.kind==="workout";if(x.kind==="part"&&isFight)return false;if(manualLibraryTypeFilter==="Todos")return false;return x.kind==="part"&&((manualLibraryTypeFilter==="circuit"&&x.part?.type==="circuit")||(manualLibraryTypeFilter==="individual"&&x.part?.type==="individual"))&&(manualLibraryFilter==="Todos"||(manualLibraryCategory(x)||"Sem categoria")===manualLibraryFilter)});
- const filterUi=manualLibraryMode==="fight"?'<div class="builder-play-note">Biblioteca exclusiva para sequências e blocos de FIGHT.</div>':'<div class="library-start"><h4>O que você quer consultar?</h4><p>Escolha uma opção para mostrar somente os blocos desse tipo.</p><div class="library-type-choices"><button type="button" class="'+(manualLibraryTypeFilter==="circuit"?"primary":"secondary")+'" data-library-type="circuit">WORKOUTs <small>3 exercícios</small></button><button type="button" class="'+(manualLibraryTypeFilter==="individual"?"primary":"secondary")+'" data-library-type="individual">Exercícios individuais <small>4 exercícios</small></button><button type="button" class="'+(manualLibraryTypeFilter==="workout"?"primary":"secondary")+'" data-library-type="workout">Treinos completos</button></div>'+(manualLibraryTypeFilter==="Todos"?'':'<div class="builder-field" style="margin:14px 0"><label for="manualLibraryFilter">Filtrar por grupo muscular</label><select id="manualLibraryFilter"><option value="Todos"'+(manualLibraryFilter==="Todos"?' selected':'')+'>Todos os grupos</option><option value="Sem categoria"'+(manualLibraryFilter==="Sem categoria"?' selected':'')+'>Sem categoria</option>'+manualBlockCategories.map(cat=>'<option value="'+escHtml(cat)+'"'+(manualLibraryFilter===cat?' selected':'')+'>'+escHtml(cat)+'</option>').join("")+'</select></div>')+'</div>';
+  const filterUi=manualLibraryMode==="fight"?'<div class="builder-play-note">Biblioteca exclusiva para sequências e blocos de FIGHT.</div>':'<div class="library-start"><h4>Treinos completos salvos</h4><p>Aqui aparecem somente os treinos completos que você salvou.</p></div>';
  const exTab=document.getElementById("manualLibraryExercises"),fightTab=document.getElementById("manualLibraryFight");
  if(exTab){exTab.className=manualLibraryMode==="exercises"?"primary":"secondary";exTab.onclick=()=>{manualLibraryMode="exercises";manualLibraryFilter="Todos";manualLibraryTypeFilter="Todos";manualRenderLibrary()}}
  if(fightTab){fightTab.className=manualLibraryMode==="fight"?"primary":"secondary";fightTab.onclick=()=>{manualLibraryMode="fight";manualRenderLibrary()}}
