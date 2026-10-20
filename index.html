@@ -1177,7 +1177,7 @@ function presetCircuit(label,addFinalRest=false){
  // WORKOUTs continuam com três exercícios; pares E/D contam como um exercício bilateral.
  const items=presetCompleteItems(source,3);
  manualParts.push(presetPart("circuit",label,{durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items}));
- manualParts.push(presetPause("Rest do circuito",40));
+ if(addFinalRest){manualParts.push(presetPause("REST",40));}
 }
 function presetFightBlock(label,addPauseAfter=false){
  const list=getFightBank().filter((name,index,arr)=>arr.indexOf(name)===index),items=[];
@@ -1194,7 +1194,7 @@ function presetFightBlock(label,addPauseAfter=false){
 function loadWorkoutOption(option){
  if(manualParts.length&&!confirm("Aplicar este modelo vai substituir as partes que estão no montador. Quer continuar?"))return;
  manualParts=[];presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetResetCircuitOrder();presetResetBlock050Order();presetOption=option;presetResetFunctionalPhase(0);
- const addSwitch=title=>manualParts.push(presetPause(title,90,"transition"));
+ const addSwitch=title=>manualParts.push(presetPause(title.includes("LUTA")?"SWITCH TO FIGHT":"SWITCH TO WORKOUT",90,"transition"));
  manualParts.push(presetPause("AQUECIMENTO",180));
  if(option===1){
   presetCircuit("WORKOUT · WORKOUT 1",true);
@@ -1557,7 +1557,7 @@ function manualOpenPlay(){
  if(!manualParts.length||!manualParts.some(p=>p.items.length)){document.getElementById("manualStatus").textContent="Adicione partes e itens antes de iniciar o Modo Play.";return}
  manualPlayItems=[];
  manualParts.forEach((p,pi)=>{
-  if(p.type==="rest"||p.type==="transition"||p.type==="activePause"){const specialTitle=String(p.title||"").trim().toUpperCase();const pauseName=specialTitle==="AQUECIMENTO"?"AQUECIMENTO":p.type==="activePause"?"ACTIVE REST":"REST";manualPlayItems.push({name:pauseName,group:pauseName,detail:pauseName+" · "+manualFormatTime(Number(p.seconds)||(p.type==="activePause"?30:90)),partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||(p.type==="activePause"?30:90)});return}
+  if(p.type==="rest"||p.type==="transition"||p.type==="activePause"){const specialTitle=String(p.title||"").trim().toUpperCase();const pauseName=specialTitle==="AQUECIMENTO"?"AQUECIMENTO":p.type==="transition"?(specialTitle||"SWITCH"):p.type==="activePause"?"ACTIVE REST":"REST";manualPlayItems.push({name:pauseName,group:pauseName,detail:pauseName+" · "+manualFormatTime(Number(p.seconds)||(p.type==="activePause"?30:90)),partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||(p.type==="activePause"?30:90)});return}
   const isCircuit=p.type==="circuit"||p.type==="fightCircuit"||p.type==="fight";
   if(isCircuit){
    const duration=(p.type==="fight"||p.type==="fightCircuit")?240:Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
