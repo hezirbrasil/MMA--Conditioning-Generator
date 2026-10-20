@@ -1728,7 +1728,7 @@ document.addEventListener("click",e=>{
  select.addEventListener("blur",()=>{if(!select.value){const h=document.createElement("h1");h.id="playName";h.className="play-name";h.textContent=current;select.replaceWith(h)}});
 });
 document.getElementById("manualPlay").addEventListener("click",manualOpenPlay);
-document.getElementById("saveWorkoutTop").addEventListener("click",()=>{document.getElementById("saveWorkoutButton").click();});
+document.getElementById("saveWorkoutTop").addEventListener("click",()=>{if(!manualParts.length){document.getElementById("manualStatus").textContent="Gere um treino ou aplique um modelo antes de salvar.";document.getElementById("manualBuilder").scrollIntoView({behavior:"smooth",block:"start"});return}manualSaveMode="workout";document.getElementById("manualLibraryKind").value="workout";document.getElementById("manualLibraryName").value=document.getElementById("manualWorkoutName").value.trim()||"Meu treino personalizado";document.getElementById("manualLibrary").hidden=false;const tools=document.querySelector("#manualLibrary .library-save-tools");if(tools)tools.open=true;document.getElementById("manualLibrary").scrollIntoView({behavior:"smooth",block:"center"});});
 document.getElementById("openSavedLibraryTop").addEventListener("click",()=>{document.getElementById("savedWorkoutsPanel").hidden=false;renderSavedItems();document.getElementById("savedWorkoutsPanel").scrollIntoView({behavior:"smooth",block:"center"});});
 
 
