@@ -1284,8 +1284,10 @@ function safeLoadWorkoutOption(option){
  const status=document.getElementById("manualStatus");
  try{loadWorkoutOption(option);if(status&&!manualParts.some(p=>p.type==="circuit"||p.type==="individual"||p.type==="fight"))status.textContent="O modelo não gerou exercícios. Confira se há exercícios cadastrados e tente novamente."}catch(error){console.error("Erro ao gerar treino:",error);if(status)status.textContent="Erro ao gerar o treino: "+(error&&error.message?error.message:"falha inesperada")+". Atualize a página e tente novamente.";}
 }
-document.getElementById("loadOption1").addEventListener("click",()=>safeLoadWorkoutOption(1));
-document.getElementById("loadOption2").addEventListener("click",()=>safeLoadWorkoutOption(2));
+document.getElementById("loadOption1").onclick=function(){safeLoadWorkoutOption(1)};
+document.getElementById("loadOption2").onclick=function(){safeLoadWorkoutOption(2)};
+document.getElementById("loadOption1").setAttribute("onclick","safeLoadWorkoutOption(1)");
+document.getElementById("loadOption2").setAttribute("onclick","safeLoadWorkoutOption(2)");
 function manualAddPart(type,source){
  const base=JSON.parse(JSON.stringify(manualPartDefaults[type]||manualPartDefaults.circuit));
  const part=source?JSON.parse(JSON.stringify(source)):{id:manualId(),type,...base};
