@@ -1207,12 +1207,8 @@ function manualToggleCollapse(button){
  button.textContent=part.type==="circuit"?(part.collapsed?"＋ Editar circuito":"− Minimizar edição"):(part.collapsed?"＋ Expandir":"− Minimizar");
 }
 function manualGuessCircuitCategory(part){
- const items=part?.items||[],names=items.map(item=>String(item.name||"").toLowerCase()),cats=items.map(item=>String(item.cat||"").toLowerCase());
- if(cats.some(cat=>cat==="core"||cat==="abdomen"||cat==="abdômen")||names.some(name=>name.includes("abdominal")))return "Abdômen";
- if(cats.some(cat=>["pernas","legs","posterior"].includes(cat))||names.some(name=>/agachamento|afundo|búlgaro|stiff|extensora|flexora|panturrilha/.test(name)))return "Pernas";
- if(cats.some(cat=>["peito","costas","ombros","ombro","bíceps","biceps","tríceps","triceps"].includes(cat)))return "Superiores";
- if(cats.some(cat=>["cardio","funcional"].includes(cat))||names.some(name=>/sprawl|escalador|sprint|burpee|hop out/.test(name)))return "Cardio + Funcional";
- return "Full Body";
+ const pseudo={kind:"part",part};
+ return manualLibraryCategory(pseudo)||"Full Body";
 }
 function manualRenderParts(){
  const host=document.getElementById("manualParts");
@@ -1650,7 +1646,7 @@ document.getElementById("manualConfirmSave").addEventListener("click",()=>{
  document.getElementById("manualStatus").textContent=(kind==="part"?"Parte reutilizável":"Treino completo")+" salvo na biblioteca.";
  manualRenderLibrary();
 });
-const manualBlockCategories=["Abdômen","Pernas (Leg Blast)","Superiores","Full Body","Cardio + Funcional","Luta"];
+const manualBlockCategories=["Superiores","Inferiores","Full Body","Inferiores + Core","Cardio"];
 function manualLibraryCategory(entry){
  if(entry.category)return entry.category;
  if(entry.kind!=="part"||!entry.part)return "";
@@ -1659,10 +1655,16 @@ function manualLibraryCategory(entry){
  const items=part.items||[];
  const cats=items.map(item=>String(item.cat||"").toLowerCase());
  const names=items.map(item=>String(item.name||"").toLowerCase());
- if(cats.some(cat=>cat==="core"||cat==="abdomen"||cat==="abdômen")||names.some(name=>name.includes("abdominal")))return "Abdômen";
- if(cats.some(cat=>cat==="pernas"||cat==="legs")||names.some(name=>/agachamento|afundo|búlgaro|stiff|extensora|flexora|panturrilha|joelhada step/.test(name)))return "Pernas (Leg Blast)";
- if(cats.some(cat=>["peito","costas","ombro","bíceps","biceps","tríceps","triceps","superiores"].includes(cat)))return "Superiores";
- if(cats.some(cat=>cat==="cardio"||cat==="funcional")||names.some(name=>/sprawl|escalador|sprint|burpee|hop out/.test(name)))return "Cardio + Funcional";
+ const lower=cats.some(cat=>["pernas","legs","posterior"].includes(cat))||names.some(name=>/agachamento|afundo|búlgaro|stiff|extensora|flexora|panturrilha|joelhada step/.test(name));
+ const core=cats.some(cat=>["core","abdomen","abdômen"].includes(cat))||names.some(name=>name.includes("abdominal"));
+ const upper=cats.some(cat=>["peito","costas","ombro","ombros","bíceps","biceps","tríceps","triceps","superiores"].includes(cat));
+ const cardio=cats.some(cat=>["cardio","funcional"].includes(cat))||names.some(name=>/sprawl|escalador|sprint|burpee|hop out/.test(name));
+ if(lower&&core)return "Inferiores + Core";
+ if(lower)return "Inferiores";
+ if(upper&&cardio)return "Full Body";
+ if(upper)return "Superiores";
+ if(cardio)return "Cardio";
+ if(core)return "Inferiores + Core";
  if(part.type==="circuit"||part.type==="individual")return "Full Body";
  return "";
 }
