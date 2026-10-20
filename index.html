@@ -923,7 +923,29 @@ function manualLoadLibrary(){
     savedAt:new Date().toISOString()
    });
   }
-  if(addedStarterCircuits||items.length!==x.length||!x.some(entry=>entry?.id===starterBlockId))localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
+  // Modelos individuais predefinidos recuperados do histórico.
+  const starterIndividualBlocks=[
+   ["Bloco individual 01",["Deitar, sentar e levantar no step","Abdominal infra alternado","Abdominal bicicleta","Desenvolvimento com polichinelo"]],
+   ["Bloco individual 02",["Stiff unilateral E","Stiff unilateral D","Afundo E","Afundo D"]],
+   ["Bloco individual 03",["Prancha alta/baixa","Prancha tocando o pé","Abdominal + Jab e Direto","Abdominal infra"]],
+   ["Bloco individual 04",["Búlgaro D","Búlgaro E","Joelhada no step E","Joelhada no step D"]],
+   ["Bloco individual 05",["Agachamento + touch down","Deslocamento lateral + touch down","Prancha + toque alternado dos pés"]],
+   ["Bloco individual 06",["Agachamento sumô","Abdominal supra","Abdominal infra"]],
+   ["Bloco individual 07",["Agachamento + troca de base","Prancha + toque alternado dos pés","Afundo alternado"]],
+   ["Bloco individual 08",["Agachamento com salto","Escalador","Supino"]],
+   ["Bloco individual 09",["Afundo + salto","Abdominal infra alternado","Agachamento + remada alta"]],
+   ["Bloco individual 10",["Abdominal + Jab e Direto","Prancha T","Abdominal passando a perna pelo halter"]],
+   ["Bloco individual 11",["Sprint","Corrida lateral com touch down","Joelhada no step alternada"]],
+   ["Bloco individual 12",["Elevação lateral + frontal","Abdominal remador","Agachamento + remada alta"]]
+  ];
+  let addedStarterIndividualBlocks=false;
+  starterIndividualBlocks.forEach(([name,names],index)=>{
+   const id="starter-individual-block-"+String(index+1).padStart(2,"0");
+   if(items.some(existing=>existing?.id===id))return;
+   items.push({id,kind:"part",name,part:{id:"starter-part-individual-block-"+String(index+1).padStart(2,"0"),type:"individual",title:name,rounds:1,seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items:names.map(exercise=>({name:exercise,detail:"Exercício individual"+(names.length<4?" · modelo recuperado parcialmente":"")}))},savedAt:"2026-10-20T00:00:00.000Z"});
+   addedStarterIndividualBlocks=true;
+  });
+  if(addedStarterCircuits||addedStarterIndividualBlocks||items.length!==x.length||!x.some(entry=>entry?.id===starterBlockId))localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
   return items;
  }catch(e){return[]}
 }
