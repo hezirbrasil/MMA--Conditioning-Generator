@@ -1522,7 +1522,10 @@ function manualRenderPlay(){
  upcomingName.textContent=upcomingItem?upcomingItem.name:"";
  const fightPreview=document.getElementById("playFightPreview"),fightPreviewList=document.getElementById("playFightPreviewList");
  const upcomingFights=manualPlayItems.slice(manualPlayIndex+1).filter(x=>!x.isPause&&!x.isTimedCircuit&&manualParts[x.partIndex]&&(manualParts[x.partIndex].type==="fight"||manualParts[x.partIndex].type==="fightCircuit")).slice(0,3);
- fightPreview.hidden=upcomingFights.length===0||isCircuitDisplay;
+ const currentPart=manualParts[it.partIndex];
+ const nextPart=manualParts[manualPlayItems.slice(manualPlayIndex+1).find(x=>!x.isPause&&!x.isTimedCircuit)?.partIndex];
+ const switchingToFight=(currentPart?.type==="transition"||nextPart?.type==="fight"||nextPart?.type==="fightCircuit")&&upcomingFights.length>0;
+ fightPreview.hidden=!switchingToFight||isCircuitDisplay;
  fightPreviewList.innerHTML=upcomingFights.map((x,i)=>'<li><b>'+(i+1)+'</b><span>'+escHtml(x.name)+'</span></li>').join("");
  document.getElementById("playType").textContent=it.detail;
  document.getElementById("playCount").textContent="ITEM "+(manualPlayIndex+1)+" DE "+manualPlayItems.length;
