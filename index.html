@@ -1287,8 +1287,20 @@ function safeLoadWorkoutOption(option){
 }
 document.getElementById("loadOption1").onclick=function(){safeLoadWorkoutOption(1)};
 document.getElementById("loadOption2").onclick=function(){safeLoadWorkoutOption(2)};
-document.getElementById("loadOption1").setAttribute("onclick","safeLoadWorkoutOption(1)");
-document.getElementById("loadOption2").setAttribute("onclick","safeLoadWorkoutOption(2)");
+document.addEventListener("click",function(event){
+ const button=event.target.closest("#loadOption1, #loadOption2");
+ if(!button)return;
+ event.preventDefault();
+ const status=document.getElementById("manualStatus");
+ if(status)status.textContent="Gerando treino...";
+ try{
+  safeLoadWorkoutOption(button.id==="loadOption1"?1:2);
+  if(status&&manualParts.length)status.textContent="Treino gerado com "+manualParts.filter(p=>["circuit","individual","fight","fightCircuit"].includes(p.type)).length+" blocos.";
+ }catch(error){
+  if(status)status.textContent="Falha ao gerar: "+String(error&&error.message||error);
+  console.error(error);
+ }
+},true);
 function manualAddPart(type,source){
  const base=JSON.parse(JSON.stringify(manualPartDefaults[type]||manualPartDefaults.circuit));
  const part=source?JSON.parse(JSON.stringify(source)):{id:manualId(),type,...base};
