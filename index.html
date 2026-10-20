@@ -1631,7 +1631,21 @@ document.getElementById("manualConfirmSave").addEventListener("click",()=>{
  manualRenderLibrary();
 });
 const manualBlockCategories=["Abdômen","Pernas (Leg Blast)","Superiores","Full Body","Cardio + Funcional","Luta"];
-function manualLibraryCategory(entry){return entry.category||(entry.kind==="part"&&["fight","fightCircuit"].includes(entry.part?.type)?"Luta":"");}
+function manualLibraryCategory(entry){
+ if(entry.category)return entry.category;
+ if(entry.kind!=="part"||!entry.part)return "";
+ const part=entry.part;
+ if(["fight","fightCircuit"].includes(part.type))return "Luta";
+ const items=part.items||[];
+ const cats=items.map(item=>String(item.cat||"").toLowerCase());
+ const names=items.map(item=>String(item.name||"").toLowerCase());
+ if(cats.some(cat=>cat==="core"||cat==="abdomen"||cat==="abdômen")||names.some(name=>name.includes("abdominal")))return "Abdômen";
+ if(cats.some(cat=>cat==="pernas"||cat==="legs")||names.some(name=>/agachamento|afundo|búlgaro|stiff|extensora|flexora|panturrilha|joelhada step/.test(name)))return "Pernas (Leg Blast)";
+ if(cats.some(cat=>["peito","costas","ombro","bíceps","biceps","tríceps","triceps","superiores"].includes(cat)))return "Superiores";
+ if(cats.some(cat=>cat==="cardio"||cat==="funcional")||names.some(name=>/sprawl|escalador|sprint|burpee|hop out/.test(name)))return "Cardio + Funcional";
+ if(part.type==="circuit"||part.type==="individual")return "Full Body";
+ return "";
+}
 let manualLibraryFilter="Todos";
 let manualLibraryMode="exercises";
 function manualRenderLibrary(){
