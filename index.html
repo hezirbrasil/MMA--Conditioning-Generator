@@ -1304,9 +1304,21 @@ document.getElementById("manualPreviewBack").addEventListener("click",()=>{
 document.getElementById("manualPreviewContent").addEventListener("click",e=>{
  const btn=e.target.closest("[data-preview-swap]");
  if(!btn)return;
- const key=btn.dataset.previewSwap+"-"+btn.dataset.i;
+ const pi=Number(btn.dataset.previewSwap),ii=Number(btn.dataset.i),key=pi+"-"+ii;
  const panel=document.querySelector('[data-preview-panel="'+key+'"]');
- if(panel)panel.hidden=!panel.hidden;
+ if(!panel)return;
+ panel.hidden=!panel.hidden;
+ if(!panel.hidden){
+  const part=manualParts[pi],item=part?.items?.[ii];
+  const category=panel.querySelector("[data-preview-category]");
+  const exercise=panel.querySelector("[data-preview-exercise]");
+  if(category&&exercise&&part&&item){
+   const current=manualOptions(part).find(o=>o.name===item.name);
+   if(current&&[...category.options].some(o=>o.value===current.cat))category.value=current.cat;
+   category.dispatchEvent(new Event("change",{bubbles:true}));
+   if(current&&[...exercise.options].some(o=>o.value===current.name))exercise.value=current.name;
+  }
+ }
 });
 document.getElementById("manualPreviewContent").addEventListener("change",e=>{
  const catSelect=e.target.closest("[data-preview-category]");
