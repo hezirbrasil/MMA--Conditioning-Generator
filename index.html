@@ -835,7 +835,7 @@ function renderSavedItems(){
 document.getElementById("saveWorkoutButton").addEventListener("click",()=>{
  if(!workoutGroups.length){document.getElementById("status").textContent="Gere um treino antes de salvar.";return}
  document.getElementById("savedWorkoutName").value=document.getElementById("resultName").textContent+" favorito";
- document.getElementById("savedItemType").value="workout";document.getElementById("savedBlockLabel").hidden=true;
+ document.getElementById("savedItemType").value="workout";const savedBlockLabel=document.getElementById("savedBlockLabel");if(savedBlockLabel)savedBlockLabel.hidden=true;
  document.getElementById("savedWorkoutsPanel").hidden=false;renderSavedItems();
  document.getElementById("savedWorkoutsPanel").scrollIntoView({behavior:"smooth",block:"center"});
 });
@@ -1282,7 +1282,7 @@ function loadWorkoutOption(option){
 }
 function safeLoadWorkoutOption(option){
  const status=document.getElementById("manualStatus");
- try{loadWorkoutOption(option)}catch(error){console.error("Erro ao gerar treino:",error);if(status)status.textContent="Erro ao gerar o treino: "+(error&&error.message?error.message:"falha inesperada")+". Atualize a página e tente novamente.";}
+ try{loadWorkoutOption(option);if(status&&!manualParts.some(p=>p.type==="circuit"||p.type==="individual"||p.type==="fight"))status.textContent="O modelo não gerou exercícios. Confira se há exercícios cadastrados e tente novamente."}catch(error){console.error("Erro ao gerar treino:",error);if(status)status.textContent="Erro ao gerar o treino: "+(error&&error.message?error.message:"falha inesperada")+". Atualize a página e tente novamente.";}
 }
 document.getElementById("loadOption1").addEventListener("click",()=>safeLoadWorkoutOption(1));
 document.getElementById("loadOption2").addEventListener("click",()=>safeLoadWorkoutOption(2));
