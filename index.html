@@ -1143,7 +1143,7 @@ function presetExerciseBlock(label,addFinalRest=false){
   return;
  }
  manualParts.push(presetPart("individual",label,{seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items}));
- manualParts.push(presetPause("Rest WORKOUT",40));
+ if(addFinalRest){manualParts.push(presetPause("REST",40));}
 }
 const presetCircuitBlocks=[
  {types:["fullbody"],items:[{name:"Agachamento + desenvolvimento",detail:"Pernas e ombros",cat:"pernas"},{name:"Supino",detail:"Peito",cat:"peito"},{name:"Abdominal remador",detail:"Core",cat:"core"}]},
@@ -1194,7 +1194,7 @@ function presetFightBlock(label,addPauseAfter=false){
 function loadWorkoutOption(option){
  if(manualParts.length&&!confirm("Aplicar este modelo vai substituir as partes que estão no montador. Quer continuar?"))return;
  manualParts=[];presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetResetCircuitOrder();presetResetBlock050Order();presetOption=option;presetResetFunctionalPhase(0);
- const addSwitch=title=>manualParts.push(presetPause(title.includes("LUTA")?"SWITCH TO FIGHT":"SWITCH TO WORKOUT",90,"transition"));
+ const addSwitch=title=>{if(manualParts.length&&manualParts[manualParts.length-1]?.type==="rest")manualParts.pop();manualParts.push(presetPause(title.includes("LUTA")?"SWITCH TO FIGHT":"SWITCH TO WORKOUT",90,"transition"));};
  manualParts.push(presetPause("AQUECIMENTO",180));
  if(option===1){
   presetCircuit("WORKOUT · WORKOUT 1",true);
