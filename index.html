@@ -1693,14 +1693,15 @@ function manualLibraryCategory(entry){
  return "";
 }
 let manualLibraryFilter="Todos";
+let manualLibraryTypeFilter="Todos";
 let manualLibraryMode="exercises";
 function manualRenderLibrary(){
  const host=document.getElementById("manualLibraryList"),items=manualLoadLibrary();
  const parts=items.filter(x=>x.kind==="part");
- const visible=items.slice().reverse().filter(x=>{const isFight=x.kind==="part"&&["fight","fightCircuit"].includes(x.part?.type);if(manualLibraryMode==="fight")return x.kind==="part"&&isFight;if(x.kind==="part"&&isFight)return false;return x.kind==="workout"||x.kind==="part"&&(manualLibraryFilter==="Todos"||(manualLibraryCategory(x)||"Sem categoria")===manualLibraryFilter)});
- const filterUi=manualLibraryMode==="fight"?'<div class="builder-play-note">Biblioteca exclusiva para sequências e blocos de luta.</div>':'<div class="builder-field" style="margin:10px 0"><label for="manualLibraryFilter">Filtrar blocos por categoria</label><select id="manualLibraryFilter"><option value="Todos"'+(manualLibraryFilter==="Todos"?" selected":"")+'>Todas as categorias</option><option value="Sem categoria"'+(manualLibraryFilter==="Sem categoria"?" selected":"")+'>Sem categoria</option>'+manualBlockCategories.map(cat=>'<option value="'+escHtml(cat)+'"'+(manualLibraryFilter===cat?" selected":"")+'>'+escHtml(cat)+'</option>').join("")+'</select></div>';
+ const visible=items.slice().reverse().filter(x=>{const isFight=x.kind==="part"&&["fight","fightCircuit"].includes(x.part?.type);if(manualLibraryMode==="fight")return x.kind==="part"&&isFight;if(x.kind==="part"&&isFight)return false;return x.kind==="workout"||x.kind==="part"&&(manualLibraryTypeFilter==="Todos"||(manualLibraryTypeFilter==="circuit"&&x.part?.type==="circuit")||(manualLibraryTypeFilter==="individual"&&x.part?.type==="individual"))&&(manualLibraryFilter==="Todos"||(manualLibraryCategory(x)||"Sem categoria")===manualLibraryFilter)});
+ const filterUi=manualLibraryMode==="fight"?'<div class="builder-play-note">Biblioteca exclusiva para sequências e blocos de luta.</div>':'<div class="builder-field" style="margin:10px 0"><label for="manualLibraryTypeFilter">1. O que deseja consultar?</label><select id="manualLibraryTypeFilter"><option value="Todos"'+(manualLibraryTypeFilter==="Todos"?' selected':'')+'>Todos os tipos</option><option value="circuit"'+(manualLibraryTypeFilter==="circuit"?' selected':'')+'>Circuito (3 exercícios)</option><option value="individual"'+(manualLibraryTypeFilter==="individual"?' selected':'')+'>Bloco com 4 exercícios individuais</option></select></div><div class="builder-field" style="margin:10px 0"><label for="manualLibraryFilter">2. Filtrar por grupo muscular</label><select id="manualLibraryFilter"><option value="Todos"'+(manualLibraryFilter==="Todos"?' selected':'')+'>Todos os grupos</option><option value="Sem categoria"'+(manualLibraryFilter==="Sem categoria"?' selected':'')+'>Sem categoria</option>'+manualBlockCategories.map(cat=>'<option value="'+escHtml(cat)+'"'+(manualLibraryFilter===cat?' selected':'')+'>'+escHtml(cat)+'</option>').join("")+'</select></div>';
  const exTab=document.getElementById("manualLibraryExercises"),fightTab=document.getElementById("manualLibraryFight");
- if(exTab){exTab.className=manualLibraryMode==="exercises"?"primary":"secondary";exTab.onclick=()=>{manualLibraryMode="exercises";manualLibraryFilter="Todos";manualRenderLibrary()}}
+ if(exTab){exTab.className=manualLibraryMode==="exercises"?"primary":"secondary";exTab.onclick=()=>{manualLibraryMode="exercises";manualLibraryFilter="Todos";manualLibraryTypeFilter="Todos";manualRenderLibrary()}}
  if(fightTab){fightTab.className=manualLibraryMode==="fight"?"primary":"secondary";fightTab.onclick=()=>{manualLibraryMode="fight";manualRenderLibrary()}}
  if(!items.length){host.innerHTML=filterUi+'<div class="builder-empty">Ainda não há partes ou treinos salvos.</div>';return}
  host.innerHTML=filterUi+visible.map(x=>{
@@ -1709,6 +1710,8 @@ function manualRenderLibrary(){
   const positionUi=x.kind==="part"&&manualLibraryMode==="exercises"?'<label class="library-position-label">Bloco do treino <select data-library-position data-id="'+escHtml(x.id)+'">'+Array.from({length:5},(_,i)=>'<option value="'+(i+1)+'"'+(i===Math.min(4,manualParts.length)?" selected":"")+'>'+"Bloco "+(i+1)+'</option>').join("")+'</select></label>':"";
   return '<div class="builder-library-entry"><div><strong>'+escHtml(x.name)+'</strong><small>'+(x.kind==="part"?(["fight","fightCircuit"].includes(x.part?.type)?"Luta":"Bloco de exercícios")+" · "+(currentCategory||"Sem categoria"):"Treino completo")+' · '+new Date(x.savedAt).toLocaleDateString("pt-BR")+'</small>'+categoryUi+positionUi+'</div><div class="builder-part-actions">'+(x.kind==="part"?'<button type="button" class="secondary" data-library-action="insert" data-id="'+escHtml(x.id)+'">＋ Inserir no treino</button>':'<button type="button" class="secondary" data-library-action="load" data-id="'+escHtml(x.id)+'">Carregar treino</button>')+'<button type="button" class="secondary remove" data-library-action="delete" data-id="'+escHtml(x.id)+'">Excluir</button></div></div>';
  }).join("");
+ const typeFilter=document.getElementById("manualLibraryTypeFilter");
+ if(typeFilter)typeFilter.addEventListener("change",()=>{manualLibraryTypeFilter=typeFilter.value;manualRenderLibrary()});
  const filter=document.getElementById("manualLibraryFilter");
  if(filter)filter.addEventListener("change",()=>{manualLibraryFilter=filter.value;manualRenderLibrary()});
 }
