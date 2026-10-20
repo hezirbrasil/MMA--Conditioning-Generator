@@ -1519,9 +1519,9 @@ document.getElementById("manualParts").addEventListener("change",e=>{
   const savedCircuits=manualLoadLibrary().filter(entry=>entry.kind==="part"&&entry.part?.type==="circuit");
   const group=categorySelect.value;
   const normalizedGroup=group==="Cardio + WORKOUT"?"Cardio":group;
-  const matching=savedCircuits.filter(entry=>!group||((entry.category||manualLibraryCategory(entry)||manualGuessCircuitCategory(entry.part))===normalizedGroup||(group==="Cardio + WORKOUT"&&/hop out|escalador|sprawl|sprint|burpee|polichinelo/i.test((entry.part.items||[]).map(item=>item.name).join(" ")))));
-  if(circuitSelect)circuitSelect.innerHTML='<option value="">Escolha um circuito…</option>'+matching.map(entry=>{const names=(entry.part.items||[]).map(item=>item.name).filter(Boolean);return '<option value="'+escHtml(entry.id)+'">'+escHtml(names.join(" + ")) +'</option>';}).join("");
-  return;
+   const matchesGroup=entry=>{const names=(entry.part.items||[]).map(item=>item.name).join(" ");const category=entry.category||manualLibraryCategory(entry)||manualGuessCircuitCategory(entry.part)||"";if(!group)return true;if(group==="Pernas (Leg Blast)")return /perna|agach|búlgaro|bulgaro|stiff|avanço|afundo|joelhada/i.test(names)||/inferior|perna/i.test(category);if(group==="Abdômen")return /abdominal|prancha|core|oblíquo|obliquo|infra/i.test(names)||/core|abdômen|abdomen/i.test(category);if(group==="Superiores")return /supino|remada|puxada|crucifixo|tríceps|triceps|bíceps|biceps|ombro/i.test(names)||/superior/i.test(category);if(group==="Full Body")return /full body/i.test(category)||(/perna/i.test(names)&&/supino|remada|puxada/i.test(names));if(group==="Cardio + WORKOUT")return /hop out|escalador|sprawl|sprint|burpee|polichinelo|joelhada step/i.test(names)||/cardio/i.test(category);return category===normalizedGroup};
+   let matching=savedCircuits.filter(matchesGroup);if(group&&matching.length===0)matching=savedCircuits;
+   if(circuitSelect)circuitSelect.innerHTML='<option value="">Escolha um circuito…</option>'+matching.map(entry=>{const names=(entry.part.items||[]).map(item=>item.name).filter(Boolean);return '<option value="'+escHtml(entry.id)+'">'+escHtml(entry.name||"Circuito")+(names.length?" · "+escHtml(names.join(" + ")):"") +'</option>';}).join("");
  }
  const modeSelect=e.target.closest("select[data-manual-swap-mode]");
  if(modeSelect){
