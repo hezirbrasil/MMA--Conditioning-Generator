@@ -1392,7 +1392,7 @@ document.getElementById("manualParts").addEventListener("change",e=>{
   const savedCircuits=manualLoadLibrary().filter(entry=>entry.kind==="part"&&entry.part?.type==="circuit");
   const group=categorySelect.value;
   const matching=savedCircuits.filter(entry=>!group||((entry.category||manualLibraryCategory(entry)||manualGuessCircuitCategory(entry.part))===group));
-  if(circuitSelect)circuitSelect.innerHTML='<option value="">Escolha um circuito…</option>'+matching.map(entry=>{const category=entry.category||manualLibraryCategory(entry)||manualGuessCircuitCategory(entry.part);const numbered=String(entry.name||"").match(/^Circuito\\s+\\d+/i);const label=numbered?numbered[0]:entry.name;return '<option value="'+escHtml(entry.id)+'">'+escHtml(label)+' · '+category+' · '+entry.part.items.length+' exercícios</option>';}).join("");
+  if(circuitSelect)circuitSelect.innerHTML='<option value="">Escolha um circuito…</option>'+matching.map(entry=>{const names=(entry.part.items||[]).map(item=>item.name).filter(Boolean);return '<option value="'+escHtml(entry.id)+'">'+escHtml(names.join(" + ")) +'</option>';}).join("");
   return;
  }
  const modeSelect=e.target.closest("select[data-manual-swap-mode]");
