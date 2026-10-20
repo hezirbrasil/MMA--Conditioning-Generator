@@ -1283,7 +1283,31 @@ function loadWorkoutOption(option){
 }
 function safeLoadWorkoutOption(option){
  const status=document.getElementById("manualStatus");
- try{loadWorkoutOption(option);if(status&&!manualParts.some(p=>p.type==="circuit"||p.type==="individual"||p.type==="fight"))status.textContent="O modelo não gerou exercícios. Confira se há exercícios cadastrados e tente novamente."}catch(error){console.error("Erro ao gerar treino:",error);if(status)status.textContent="Erro ao gerar o treino: "+(error&&error.message?error.message:"falha inesperada")+". Atualize a página e tente novamente.";}
+ try{
+  loadWorkoutOption(option);
+  if(status&&!manualParts.some(p=>["circuit","individual","fight","fightCircuit"].includes(p.type)))throw new Error("O modelo terminou sem criar blocos.");
+ }catch(error){
+  console.error("Erro ao gerar treino:",error);
+  try{
+   manualParts=[];
+   presetSelectedType=document.getElementById("presetWorkoutType")?.value||"fullbody";
+   presetOption=option;presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();
+   presetResetCircuitOrder();presetResetBlock050Order();presetResetFunctionalPhase(0);
+   const addCircuit=(name)=>{const pool=presetCircuitBlocks.filter(x=>x.types.includes(presetSelectedType));const source=pool.length?pool[manualParts.filter(p=>p.type==="circuit").length%pool.length].items:[];const items=presetCompleteItems(source,3);manualParts.push(presetPart("circuit",name,{durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items}));};
+   const addIndividual=(name)=>{const items=[];for(let i=0;i<4;i++)items.push(presetPickExercise());manualParts.push(presetPart("individual",name,{seconds:50,rest:10,items}));};
+   const addFight=(name)=>{const names=getFightBank();const items=Array.from({length:4},(_,i)=>({name:names.length?names[(manualParts.length*4+i)%names.length]:"Jab + Direto",detail:"Sequência de FIGHT"}));manualParts.push(presetPart("fight",name,{seconds:240,rest:0,items}));};
+   const pause=(name,seconds,type="rest")=>manualParts.push(presetPause(name,seconds,type));
+   pause("AQUECIMENTO",180);
+   if(option===1){addCircuit("WORKOUT · WORKOUT 1");pause("REST",40);addCircuit("WORKOUT · WORKOUT 2");addIndividual("WORKOUT · Exercícios individuais");pause("SWITCH TO FIGHT",90,"transition");addFight("FIGHT · Bloco 1");addFight("FIGHT · Bloco 2");pause("SWITCH TO WORKOUT",90,"transition");presetResetFunctionalPhase(1);addIndividual("WORKOUT · Exercícios individuais");addCircuit("WORKOUT · WORKOUT final");pause("FIM",300);}
+   else{addFight("FIGHT · Bloco 1");addFight("FIGHT · Bloco 2");pause("SWITCH TO WORKOUT",90,"transition");addIndividual("WORKOUT · Bloco 1");addIndividual("WORKOUT · Bloco 2");pause("SWITCH TO FIGHT",90,"transition");addFight("FIGHT · Bloco 3");pause("FIM",300);}
+   document.getElementById("manualWorkoutName").value=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" — Opção "+option;
+   manualRenderParts();
+   if(status)status.textContent="Treino montado pelo modo de recuperação. Confira os blocos e tempos.";
+  }catch(fallbackError){
+   console.error("Falha também no modo de recuperação:",fallbackError);
+   if(status)status.textContent="Erro ao gerar: "+String(fallbackError?.message||error?.message||"falha inesperada");
+  }
+ }
 }
 document.getElementById("loadOption1").onclick=function(){safeLoadWorkoutOption(1)};
 document.getElementById("loadOption2").onclick=function(){safeLoadWorkoutOption(2)};
