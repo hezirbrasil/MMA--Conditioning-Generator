@@ -1210,6 +1210,8 @@ function manualRenderParts(){
  const host=document.getElementById("manualParts");
  if(!manualParts.length){host.innerHTML='<div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div>';return}
  host.innerHTML=manualParts.map((p,pi)=>{
+  // Aquecimento, descansos, pausas ativas e transições permanecem no treino/timer, mas ficam ocultos no montador para focar nos blocos.
+  if(["rest","transition","activePause"].includes(p.type))return "";
   const isCircuit=p.type==="circuit";
   const isRest=p.type==="rest"||p.type==="transition"||p.type==="activePause";
   const opts=manualOptions(p);
