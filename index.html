@@ -1627,16 +1627,42 @@ document.getElementById("manualConfirmSave").addEventListener("click",()=>{
  document.getElementById("manualStatus").textContent=(kind==="part"?"Parte reutilizável":"Treino completo")+" salvo na biblioteca.";
  manualRenderLibrary();
 });
+const manualBlockCategories=["Abdômen","Pernas (Leg Blast)","Superiores","Full Body","Cardio + Funcional"];
+let manualLibraryFilter="Todos";
 function manualRenderLibrary(){
  const host=document.getElementById("manualLibraryList"),items=manualLoadLibrary();
+ const parts=items.filter(x=>x.kind==="part");
+ const visible=items.slice().reverse().filter(x=>x.kind!=="part"||manualLibraryFilter==="Todos"||(x.category||"Sem categoria")===manualLibraryFilter);
+ const filterUi='<div class="builder-field" style="margin:10px 0"><label for="manualLibraryFilter">Filtrar blocos por categoria</label><select id="manualLibraryFilter"><option value="Todos"'+(manualLibraryFilter==="Todos"?" selected":"")+'>Todas as categorias</option><option value="Sem categoria"'+(manualLibraryFilter==="Sem categoria"?" selected":"")+'>Sem categoria</option>'+manualBlockCategories.map(cat=>'<option value="'+escHtml(cat)+'"'+(manualLibraryFilter===cat?" selected":"")+'>'+escHtml(cat)+'</option>').join("")+'</select></div>';
  if(!items.length){host.innerHTML='<div class="builder-empty">Ainda não há partes ou treinos salvos.</div>';return}
- host.innerHTML=items.slice().reverse().map(x=>'<div class="builder-library-entry"><div><strong>'+escHtml(x.name)+'</strong><small>'+(x.kind==="part"?"Parte reutilizável":"Treino completo")+' · '+new Date(x.savedAt).toLocaleDateString("pt-BR")+'</small></div><div class="builder-part-actions">'+(x.kind==="part"?'<button type="button" class="secondary" data-library-action="insert" data-id="'+escHtml(x.id)+'">＋ Inserir parte</button>':'<button type="button" class="secondary" data-library-action="load" data-id="'+escHtml(x.id)+'">Carregar treino</button>')+'<button type="button" class="secondary remove" data-library-action="delete" data-id="'+escHtml(x.id)+'">Excluir</button></div></div>').join("");
+ host.innerHTML=filterUi+visible.map(x=>{
+  const categoryUi=x.kind==="part"?'<label class="library-category-label">Categoria <select data-library-category data-id="'+escHtml(x.id)+'"><option value="">Sem categoria</option>'+manualBlockCategories.map(cat=>'<option value="'+escHtml(cat)+'"'+(x.category===cat?" selected":"")+'>'+escHtml(cat)+'</option>').join("")+'</select></label>':"";
+  const positionUi=x.kind==="part"?'<label class="library-position-label">Posição no treino <select data-library-position data-id="'+escHtml(x.id)+'">'+Array.from({length:manualParts.length+1},(_,i)=>'<option value="'+(i+1)+'"'+(i===manualParts.length?" selected":"")+'>'+(i+1)+(i===0?" · início":i===manualParts.length?" · final":"")+'</option>').join("")+'</select></label>':"";
+  return '<div class="builder-library-entry"><div><strong>'+escHtml(x.name)+'</strong><small>'+(x.kind==="part"?"Bloco reutilizável · "+(x.category||"Sem categoria"):"Treino completo")+' · '+new Date(x.savedAt).toLocaleDateString("pt-BR")+'</small>'+categoryUi+positionUi+'</div><div class="builder-part-actions">'+(x.kind==="part"?'<button type="button" class="secondary" data-library-action="insert" data-id="'+escHtml(x.id)+'">＋ Inserir no treino</button>':'<button type="button" class="secondary" data-library-action="load" data-id="'+escHtml(x.id)+'">Carregar treino</button>')+'<button type="button" class="secondary remove" data-library-action="delete" data-id="'+escHtml(x.id)+'">Excluir</button></div></div>';
+ }).join("");
+ const filter=document.getElementById("manualLibraryFilter");
+ if(filter)filter.addEventListener("change",()=>{manualLibraryFilter=filter.value;manualRenderLibrary()});
 }
+document.getElementById("manualLibraryList").addEventListener("change",e=>{
+ const categorySelect=e.target.closest("select[data-library-category]");
+ if(categorySelect){
+  const items=manualLoadLibrary(),entry=items.find(x=>x.id===categorySelect.dataset.id);if(!entry)return;
+  entry.category=categorySelect.value||"";
+  manualStoreLibrary(items);manualRenderLibrary();return;
+ }
+});
 document.getElementById("manualLibraryList").addEventListener("click",e=>{
  const b=e.target.closest("button[data-library-action]");if(!b)return;
  const items=manualLoadLibrary(),entry=items.find(x=>x.id===b.dataset.id);if(!entry)return;
  if(b.dataset.libraryAction==="delete"){if(!confirm('Excluir "'+entry.name+'" da biblioteca?'))return;manualStoreLibrary(items.filter(x=>x.id!==entry.id));manualRenderLibrary();return}
- if(b.dataset.libraryAction==="insert"&&entry.kind==="part"){manualAddPart(entry.part.type,entry.part);const added=manualParts[manualParts.length-1];added.id=manualId();document.getElementById("manualStatus").textContent='Parte "'+entry.name+'" inserida no treino.';manualRenderParts()}
+ if(b.dataset.libraryAction==="insert"&&entry.kind==="part"){
+  const positionSelect=document.querySelector('select[data-library-position][data-id="'+CSS.escape(entry.id)+'"]');
+  const position=positionSelect?Math.max(0,Math.min(manualParts.length,Number(positionSelect.value)-1)):manualParts.length;
+  const added=JSON.parse(JSON.stringify(entry.part));added.id=manualId();
+  manualParts.splice(position,0,added);manualRenderParts();
+  document.getElementById("manualStatus").textContent='Bloco "'+entry.name+'" inserido na posição '+(position+1)+'.';
+  document.getElementById("manualParts").scrollIntoView({behavior:"smooth",block:"start"});
+ }
  if(b.dataset.libraryAction==="load"&&entry.kind==="workout"){manualParts=JSON.parse(JSON.stringify(entry.parts||[]));document.getElementById("manualWorkoutName").value=entry.name;manualRenderParts();document.getElementById("manualStatus").textContent='Treino "'+entry.name+'" carregado. Edite à vontade; o favorito original permanece salvo.';document.getElementById("manualBuilder").scrollIntoView({behavior:"smooth",block:"start"})}
 });
 
