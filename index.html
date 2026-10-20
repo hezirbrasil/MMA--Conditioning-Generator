@@ -1384,8 +1384,10 @@ document.getElementById("manualParts").addEventListener("change",e=>{
   const card=modeSelect.closest(".builder-part-swap");
   const circuitPanel=card?.querySelector("[data-manual-swap-circuit-panel]");
   const individualPanel=card?.querySelector("[data-manual-swap-individual-panel]");
+  const presetPanel=card?.querySelector("[data-manual-swap-preset-panel]");
   if(circuitPanel)circuitPanel.hidden=modeSelect.value!=="circuit";
   if(individualPanel)individualPanel.hidden=modeSelect.value!=="individuals";
+  if(presetPanel)presetPanel.hidden=modeSelect.value!=="preset";
   return;
  }
 });
@@ -1397,7 +1399,13 @@ document.getElementById("manualParts").addEventListener("click",e=>{
   const mode=b.dataset.manualSwapApply,pi=Number(b.dataset.p),current=manualParts[pi];
   if(!current)return;
   let replacement;
-  if(mode==="circuit"){
+  if(mode==="preset"){
+   const select=b.closest("[data-manual-swap-preset-panel]")?.querySelector("[data-manual-replace-preset]");
+   const entry=manualLoadLibrary().find(x=>x&&x.id===select?.value&&x.kind==="part"&&x.part&&x.part.type==="individual"&&/^Bloco individual \d+/.test(x.name||""));
+   if(!entry){document.getElementById("manualStatus").textContent="Escolha um bloco pré-definido antes de aplicar.";return;}
+   replacement=JSON.parse(JSON.stringify(entry.part));
+   document.getElementById("manualStatus").textContent="Bloco substituído por: "+entry.name+" ("+replacement.items.length+" exercícios).";
+  }else if(mode==="circuit"){
    const select=b.closest("[data-manual-swap-circuit-panel]")?.querySelector("[data-manual-replace-part]");
    const entry=manualLoadLibrary().find(x=>x&&x.id===select?.value&&x.kind==="part"&&x.part&&x.part.type==="circuit");
    if(!entry){document.getElementById("manualStatus").textContent="Escolha um circuito antes de aplicar.";return;}
