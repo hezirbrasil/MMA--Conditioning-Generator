@@ -956,6 +956,20 @@ function classifyFightCombo(name){
  if(first.startsWith("joelhada")||first.startsWith("clinch"))return "Começam com Joelhada";
  return "Outros golpes";
 }
+function manualExerciseKey(name){
+ return String(name||"").trim().toLocaleLowerCase("pt-BR").replace(/\s*\((?:e\/d|e \+ d)\)$/i,"").replace(/\s+[ed]$/i,"").replace(/\s+/g," ");
+}
+function manualRepeatedExerciseNames(candidateItems,replacePartIndex){
+ const used=new Map();
+ manualParts.forEach((part,index)=>{
+  if(index===replacePartIndex)return;
+  if(!part||!Array.isArray(part.items)||!["circuit","individual"].includes(part.type))return;
+  part.items.forEach(item=>{const key=manualExerciseKey(item.name);if(key)used.set(key,item.name)});
+ });
+ const duplicates=[];
+ (candidateItems||[]).forEach(item=>{const key=manualExerciseKey(item.name);if(key&&used.has(key))duplicates.push(item.name)});
+ return [...new Set(duplicates)];
+}
 function manualOptions(part){
  if(part.type==="circuit"||part.type==="individual"){
    const list=getExerciseBank().slice().sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
@@ -1430,6 +1444,8 @@ document.getElementById("manualParts").addEventListener("click",e=>{
    const entry=manualLoadLibrary().find(x=>x&&x.id===select?.value&&x.kind==="part"&&x.part&&x.part.type==="circuit");
    if(!entry){document.getElementById("manualStatus").textContent="Escolha um circuito antes de aplicar.";return;}
    replacement=JSON.parse(JSON.stringify(entry.part));
+   const repeated=manualRepeatedExerciseNames(replacement.items||[],pi);
+   if(repeated.length){document.getElementById("manualStatus").textContent="Este circuito repete exercícios que já estão em outros blocos: "+repeated.join(", ")+". Escolha outro circuito.";return;}
    document.getElementById("manualStatus").textContent="Bloco substituído por: "+entry.name+".";
   }else{
    const selects=[...b.closest("[data-manual-swap-individual-panel]").querySelectorAll("[data-manual-four-exercise]")];
@@ -1438,6 +1454,8 @@ document.getElementById("manualParts").addEventListener("click",e=>{
    if(new Set(names).size!==4){document.getElementById("manualStatus").textContent="Escolha quatro exercícios diferentes, sem repetir.";return;}
    const options=manualOptions({type:"individual"});
    const items=names.map(name=>options.find(o=>o.name===name)).filter(Boolean);
+   const repeated=manualRepeatedExerciseNames(items,pi);
+   if(repeated.length){document.getElementById("manualStatus").textContent="Esses exercícios já aparecem em outro circuito ou bloco individual: "+repeated.join(", ")+". Escolha exercícios diferentes.";return;}
    if(items.length!==4){document.getElementById("manualStatus").textContent="Não foi possível localizar um dos exercícios escolhidos.";return;}
    replacement={...JSON.parse(JSON.stringify(manualPartDefaults.individual)),type:"individual",title:"Quatro exercícios individuais",rounds:1,seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items,collapsed:false};
    document.getElementById("manualStatus").textContent="Bloco substituído por quatro exercícios individuais.";
