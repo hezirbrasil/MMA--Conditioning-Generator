@@ -1417,7 +1417,8 @@ document.getElementById("manualParts").addEventListener("change",e=>{
   const circuitSelect=panel?.querySelector("[data-manual-replace-part]");
   const savedCircuits=manualLoadLibrary().filter(entry=>entry.kind==="part"&&entry.part?.type==="circuit");
   const group=categorySelect.value;
-  const matching=savedCircuits.filter(entry=>!group||((entry.category||manualLibraryCategory(entry)||manualGuessCircuitCategory(entry.part))===group));
+  const normalizedGroup=group==="Cardio + Funcional"?"Cardio":group;
+  const matching=savedCircuits.filter(entry=>!group||((entry.category||manualLibraryCategory(entry)||manualGuessCircuitCategory(entry.part))===normalizedGroup||(group==="Cardio + Funcional"&&/hop out|escalador|sprawl|sprint|burpee|polichinelo/i.test((entry.part.items||[]).map(item=>item.name).join(" ")))));
   if(circuitSelect)circuitSelect.innerHTML='<option value="">Escolha um circuito…</option>'+matching.map(entry=>{const names=(entry.part.items||[]).map(item=>item.name).filter(Boolean);return '<option value="'+escHtml(entry.id)+'">'+escHtml(names.join(" + ")) +'</option>';}).join("");
   return;
  }
