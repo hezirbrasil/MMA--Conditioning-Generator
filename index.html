@@ -1680,8 +1680,9 @@ function manualLibraryCategory(entry){
  const names=items.map(item=>String(item.name||"").toLowerCase());
  const lower=cats.some(cat=>["pernas","legs","posterior"].includes(cat))||names.some(name=>/agachamento|afundo|búlgaro|stiff|extensora|flexora|panturrilha|joelhada step/.test(name));
  const core=cats.some(cat=>["core","abdomen","abdômen"].includes(cat))||names.some(name=>name.includes("abdominal"));
- const upper=cats.some(cat=>["peito","costas","ombro","ombros","bíceps","biceps","tríceps","triceps","superiores"].includes(cat));
+ const upper=cats.some(cat=>["peito","costas","ombro","ombros","bíceps","biceps","tríceps","triceps","superiores"].includes(cat))||names.some(name=>/supino|crucifixo|remada|pull.?down|desenvolvimento|elevação|bíceps|biceps|tríceps|triceps|flexão/.test(name));
  const cardio=cats.some(cat=>["cardio","funcional"].includes(cat))||names.some(name=>/sprawl|escalador|sprint|burpee|hop out/.test(name));
+ if(upper&&(lower||core||cardio))return "Full Body";
  if(lower&&core)return "Inferiores + Core";
  if(lower)return "Inferiores";
  if(upper&&cardio)return "Full Body";
