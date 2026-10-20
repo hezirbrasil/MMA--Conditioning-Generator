@@ -1605,7 +1605,7 @@ document.getElementById("manualParts").addEventListener("click",e=>{
  else if(action==="delete-part"){manualParts.splice(pi,1);manualRenderParts()}
  else if(action==="up"&&pi>0){[manualParts[pi-1],manualParts[pi]]=[manualParts[pi],manualParts[pi-1]];manualRenderParts()}
  else if(action==="down"&&pi<manualParts.length-1){[manualParts[pi+1],manualParts[pi]]=[manualParts[pi],manualParts[pi+1]];manualRenderParts()}
- else if(action==="save-part"){document.getElementById("manualStatus").textContent="Salve o treino completo pelo botão ★ Salvar treino."});document.getElementById("manualStatus").textContent="Confirme o nome para salvar esta parte reutilizável."}
+ else if(action==="save-part"){document.getElementById("manualStatus").textContent="Salve o treino completo pelo botão ★ Salvar treino."; }
 });
 function manualExpandItems(){
  const items=[];
