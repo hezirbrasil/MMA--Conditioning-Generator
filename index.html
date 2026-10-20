@@ -1732,7 +1732,8 @@ document.getElementById("saveWorkoutTop").addEventListener("click",()=>{if(!manu
 document.getElementById("openSavedLibraryTop").addEventListener("click",()=>{document.getElementById("savedWorkoutsPanel").hidden=false;renderSavedItems();document.getElementById("savedWorkoutsPanel").scrollIntoView({behavior:"smooth",block:"center"});});
 
 
-document.getElementById("manualSaveWorkout").addEventListener("click",()=>{
+const manualSaveWorkoutButton=document.getElementById("manualSaveWorkout");
+if(manualSaveWorkoutButton)manualSaveWorkoutButton.addEventListener("click",()=>{
  if(!manualParts.length){document.getElementById("manualStatus").textContent="Adicione partes antes de salvar o treino.";return}
  manualSaveMode="workout";
  document.getElementById("manualLibraryName").value=document.getElementById("manualWorkoutName").value.trim()||"Meu treino personalizado";
