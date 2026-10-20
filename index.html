@@ -886,12 +886,12 @@ let manualSaveMode="workout";
 let manualSavePartId=null;
 const manualPartDefaults={
  circuit:{title:"WORKOUT",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items:[]},
- fightCircuit:{title:"FIGHT",rounds:1,seconds:250,rest:0,durationMinutes:4,durationExtraSeconds:10,items:[]},
+ fightCircuit:{title:"FIGHT",rounds:1,seconds:240,rest:0,durationMinutes:4,durationExtraSeconds:0,items:[]},
  individual:{title:"Exercício individual",rounds:1,seconds:50,rest:0,items:[]},
- fight:{title:"FIGHT",rounds:1,seconds:250,rest:0,durationMinutes:4,durationExtraSeconds:10,items:[]},
+ fight:{title:"FIGHT",rounds:1,seconds:240,rest:0,durationMinutes:4,durationExtraSeconds:0,items:[]},
   transition:{title:"Switch to FIGHT",rounds:1,seconds:30,rest:0,items:[{name:"REST",detail:"Transição"}]},
  rest:{title:"REST",rounds:1,seconds:90,rest:0,items:[{name:"REST",detail:"REST"}]},
-  activePause:{title:"REST",rounds:1,seconds:30,rest:0,items:[{name:"REST",detail:"REST"}]}
+  activePause:{title:"ACTIVE REST",rounds:1,seconds:30,rest:0,items:[{name:"ACTIVE REST",detail:"ACTIVE REST"}]}
 };
 function manualId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
 function manualLoadLibrary(){
@@ -1188,8 +1188,8 @@ function presetFightBlock(label,addPauseAfter=false){
   presetUsedFightNames.add(name);presetFightCursor++;
   items.push({name,detail:"Sequência de FIGHT",cat:classifyFightCombo(name)});
  }
- manualParts.push(presetPart("fight",label,{seconds:250,durationMinutes:4,durationExtraSeconds:10,rest:0,items}));
- if(addPauseAfter){manualParts.push(presetPause("REST",30,"activePause"));}
+ manualParts.push(presetPart("fight",label,{seconds:240,durationMinutes:4,durationExtraSeconds:0,rest:0,items}));
+ if(addPauseAfter){manualParts.push(presetPause("ACTIVE REST",30,"activePause"));}
 }
 function loadWorkoutOption(option){
  if(manualParts.length&&!confirm("Aplicar este modelo vai substituir as partes que estão no montador. Quer continuar?"))return;
@@ -1557,10 +1557,10 @@ function manualOpenPlay(){
  if(!manualParts.length||!manualParts.some(p=>p.items.length)){document.getElementById("manualStatus").textContent="Adicione partes e itens antes de iniciar o Modo Play.";return}
  manualPlayItems=[];
  manualParts.forEach((p,pi)=>{
-  if(p.type==="rest"||p.type==="transition"||p.type==="activePause"){const isWarmup=String(p.title||"").trim().toUpperCase()==="AQUECIMENTO";const pauseName=isWarmup?"AQUECIMENTO":"REST";manualPlayItems.push({name:pauseName,group:pauseName,detail:pauseName+" · "+manualFormatTime(Number(p.seconds)||(p.type==="activePause"?30:90)),partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||(p.type==="activePause"?30:90)});return}
+  if(p.type==="rest"||p.type==="transition"||p.type==="activePause"){const specialTitle=String(p.title||"").trim().toUpperCase();const pauseName=specialTitle==="AQUECIMENTO"?"AQUECIMENTO":p.type==="activePause"?"ACTIVE REST":"REST";manualPlayItems.push({name:pauseName,group:pauseName,detail:pauseName+" · "+manualFormatTime(Number(p.seconds)||(p.type==="activePause"?30:90)),partIndex:pi,isPause:true,durationSeconds:Number(p.seconds)||(p.type==="activePause"?30:90)});return}
   const isCircuit=p.type==="circuit"||p.type==="fightCircuit"||p.type==="fight";
   if(isCircuit){
-   const duration=(p.type==="fight"||p.type==="fightCircuit")?250:Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
+   const duration=(p.type==="fight"||p.type==="fightCircuit")?240:Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0));
    p.items.forEach((it,ii)=>manualPlayItems.push({name:it.name,group:p.title||manualTypeLabel(p.type),detail:manualTypeLabel(p.type)+" · "+manualFormatTime(duration),partIndex:pi,isTimedCircuit:true,circuitDuration:ii===0?duration:null}));
   }else if(p.type==="individual"){
    const duration=Math.max(0,Number(p.durationMinutes??Math.floor((Number(p.seconds)||50)/60)))*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??((Number(p.seconds)||50)%60))));
