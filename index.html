@@ -1641,7 +1641,7 @@ document.getElementById("manualSaveWorkout").addEventListener("click",()=>{
  document.getElementById("manualLibraryName").value=document.getElementById("manualWorkoutName").value.trim()||"Meu treino personalizado";
  document.getElementById("manualLibrary").hidden=false;document.getElementById("manualLibrary").scrollIntoView({behavior:"smooth",block:"center"});
 });
-document.getElementById("manualShowLibrary").addEventListener("click",()=>{document.getElementById("manualLibrary").hidden=false;manualLibraryMode="exercises";manualLibraryFilter="Todos";manualLibraryTypeFilter="Todos";manualRenderLibrary();document.getElementById("manualLibrary").scrollIntoView({behavior:"smooth",block:"start"})});
+document.getElementById("manualShowLibrary").addEventListener("click",()=>{const library=document.getElementById("manualLibrary");library.hidden=false;manualLibraryMode="exercises";manualLibraryFilter="Todos";manualLibraryTypeFilter="Todos";manualRenderLibrary();library.scrollIntoView({behavior:"smooth",block:"start"})});
 document.getElementById("manualBuilderTab").addEventListener("click",()=>{document.getElementById("manualLibrary").hidden=true;document.getElementById("manualParts").scrollIntoView({behavior:"smooth",block:"start"})});
  document.getElementById("manualCloseLibrary").addEventListener("click",()=>document.getElementById("manualLibrary").hidden=true);
 document.getElementById("manualLibraryKind").addEventListener("change",()=>{manualSaveMode=document.getElementById("manualLibraryKind").value});
