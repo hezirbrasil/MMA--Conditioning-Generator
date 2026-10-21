@@ -1842,15 +1842,41 @@ if(manualSaveWorkoutButton)manualSaveWorkoutButton.addEventListener("click",()=>
 
 
 let manualVisualLibraryKind="circuit";
+function manualVisualLibraryEntries(){
+ const all=manualLoadLibrary().filter(entry=>entry&&entry.kind==="part"&&entry.part&&["circuit","individual"].includes(entry.part.type)&&entry.part.type===manualVisualLibraryKind);
+ const prefix=manualVisualLibraryKind==="circuit"?"C":"B";
+ const getFixedNumber=entry=>{
+  const id=String(entry.id||"");
+  if(prefix==="C"){
+   let m=id.match(/^starter-preset-circuit-(\\d+)$/);if(m)return Number(m[1]);
+   if(id==="starter-user-C18")return 18;
+   if(/^starter-circuit-/.test(id))return ({ "starter-circuit-superior":19,"starter-circuit-inferior-core":20,"starter-circuit-WORKOUT":21 })[id]||null;
+   m=String(entry.name||"").match(/^C(\\d+)\\b/i);if(m)return Number(m[1]);
+  }else{
+   if(id==="starter-workout-bloco-1-four")return 1;
+   if(id==="starter-bulgaro-joelhada-step")return 2;
+   let m=id.match(/^starter-user-B(\\d+)$/i);if(m)return Number(m[1]);
+   m=String(entry.name||"").match(/^B(\\d+)\\b/i);if(m)return Number(m[1]);
+  }
+  return null;
+ };
+ const fixed=all.map(entry=>({entry,number:getFixedNumber(entry)}));
+ const used=new Set(fixed.filter(x=>Number.isInteger(x.number)&&x.number>0).map(x=>x.number));
+ let next=prefix==="C"?22:3;
+ fixed.forEach(x=>{if(x.number==null){while(used.has(next))next++;x.number=next;used.add(next++);}});
+ return fixed.filter(x=>!(prefix==="C"&&(x.number===6||x.number===14)))
+  .sort((a,b)=>a.number-b.number)
+  .map(x=>({...x.entry,displayName:prefix+x.number,displayNumber:x.number}));
+}
 function manualRenderVisualLibrary(){
  const grid=document.getElementById("manualVisualLibraryGrid");
  if(!grid)return;
- const entries=manualLoadLibrary().filter(entry=>entry&&entry.kind==="part"&&entry.part&&["circuit","individual"].includes(entry.part.type)&&entry.part.type===manualVisualLibraryKind);
- grid.innerHTML=entries.length?entries.map((entry,index)=>{
+ const entries=manualVisualLibraryEntries();
+ grid.innerHTML=entries.length?entries.map(entry=>{
   const part=entry.part;
   const duration=part.type==="circuit"?(Math.max(0,Number(part.durationMinutes)||0)+Math.floor(Math.max(0,Number(part.durationExtraSeconds)||0)/60))+":"+String(Math.max(0,Number(part.durationExtraSeconds)||0)%60).padStart(2,"0"):"4 exercícios";
   const names=(part.items||[]).map((item,i)=>'<span><b>'+String(i+1).padStart(2,"0")+'</b>'+escHtml(item.name||"Exercício")+'</span>').join("");
-  return '<details class="swap-library-card" style="display:block;padding:14px;cursor:pointer"><summary class="swap-library-card-top"><strong>'+escHtml(entry.name||part.title||"Bloco salvo")+'</strong><small>'+(part.type==="circuit"?"CIRCUITO":"BLOCO DE 4 EXERCÍCIOS")+' · '+duration+'</small></summary><div class="swap-library-card-items" style="margin-top:12px">'+(names||'<span>Nenhum exercício cadastrado.</span>')+'</div></details>';
+  return '<details class="swap-library-card" style="display:block;padding:14px;cursor:pointer"><summary class="swap-library-card-top"><strong>'+escHtml(entry.displayName)+'</strong><small>'+(part.type==="circuit"?"CIRCUITO":"BLOCO DE 4 EXERCÍCIOS")+' · '+duration+'</small></summary><div class="swap-library-card-items" style="margin-top:12px">'+(names||'<span>Nenhum exercício cadastrado.</span>')+'</div></details>';
  }).join(""):'<div class="builder-empty">Não há blocos nesta categoria.</div>';
  document.querySelectorAll("[data-visual-library-filter]").forEach(tab=>{tab.className=tab.dataset.visualLibraryFilter===manualVisualLibraryKind?"primary":"secondary";});
 }
