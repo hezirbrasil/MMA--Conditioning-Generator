@@ -1418,10 +1418,26 @@ function loadWorkoutOption(option,forceRegenerate=false){
     const previousSignature=previous&&previous.type===part.type?signature(previous.items):"";
     return nextSignature!==previousSignature&&candidate.items.every(item=>!usedNames.has(String(item.name||"").trim().toLocaleLowerCase("pt-BR")));
    }));
-   const replacement=candidates[0];
-   if(replacement){
-    part.items=replacement.items.map(item=>({...item}));
+   let replacement=candidates[0];
+   // Se não houver bloco totalmente sem conflitos, trocar o bloco inteiro por outra composição equivalente,
+   // escolhendo a alternativa com menos exercícios repetidos entre os blocos já montados.
+   if(!replacement){
+    const previousSignature=previous&&previous.type===part.type?signature(previous.items):signature(part.items);
+    const fallback=shuffle(templates.map(block=>({
+     items:part.type==="circuit"
+      ?presetCompleteItems(JSON.parse(JSON.stringify(block.items)),3)
+      :JSON.parse(JSON.stringify(block.items)).map(item=>({...item}))
+    })).filter(candidate=>{
+     const names=normalizedNames(candidate.items);
+     return candidate.items.length===targetCount&&names.every(Boolean)&&new Set(names).size===names.length&&signature(candidate.items)!==previousSignature;
+    }));
+    fallback.sort((a,b)=>{
+     const overlap=items=>normalizedNames(items).filter(name=>usedNames.has(name)).length;
+     return overlap(a.items)-overlap(b.items);
+    });
+    replacement=fallback[0];
    }
+   if(replacement)part.items=replacement.items.map(item=>({...item}));
    (part.items||[]).forEach(item=>usedNames.add(String(item.name||"").trim().toLocaleLowerCase("pt-BR")));
   });
  }
