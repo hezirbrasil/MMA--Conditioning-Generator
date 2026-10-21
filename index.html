@@ -941,7 +941,6 @@ function manualLoadLibrary(){
   const starterCircuits=[
    {id:"starter-circuit-superior",name:"WORKOUT Superior",part:{type:"circuit",title:"WORKOUT Superior",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Supino pegada fechada",detail:"Peito e tríceps",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps Francês",detail:"Tríceps",cat:"tríceps"}]}},
    {id:"starter-circuit-inferior-core",name:"WORKOUT Inferior + Core",part:{type:"circuit",title:"WORKOUT Inferior + Core",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"},{name:"Abdominal Oblíquo E",detail:"Core · esquerda",cat:"core"},{name:"Abdominal Oblíquo D",detail:"Core · direita",cat:"core"}]}},
-   {id:"starter-circuit-WORKOUT",name:"WORKOUT WORKOUT",part:{type:"circuit",title:"WORKOUT WORKOUT",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Hop Out Step",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Sprawl + Salto",detail:"Cardio e WORKOUT",cat:"cardio"}]}}
   ];
   let addedStarterCircuits=false;
   starterCircuits.forEach(entry=>{if(!items.some(existing=>existing?.id===entry.id)){items.push({...entry,kind:"part",part:{...entry.part,id:"starter-part-"+entry.id.replace("starter-circuit-",""),items:entry.part.items.map(item=>({...item}))},savedAt:"2026-10-20T00:00:00.000Z"});addedStarterCircuits=true;}});
@@ -1056,11 +1055,10 @@ function manualLoadLibrary(){
    if(items.some(existing=>existing?.id===entry.id))return;
    items.push({id:entry.id,kind:"part",name:entry.name,category:"Full Body",part:{id:"starter-part-"+entry.id,type:"individual",title:entry.name,rounds:1,seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items:entry.items.map(item=>({...item}))},savedAt:"2026-10-21T00:00:00.000Z"});
   });
-  // Circuito personalizado renumerado como C16.
-  const userC18Id="starter-user-C18";
-  if(!items.some(existing=>existing?.id===userC18Id)){
-   items.push({id:userC18Id,kind:"part",name:"C16",category:"Full Body",part:{id:"starter-part-C16",type:"circuit",title:"C16",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Avanço + Elevação Lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Terra + Desenvolvimento",detail:"Posterior e ombros",cat:"composto"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"}]},savedAt:"2026-10-21T00:00:00.000Z"});
-  }
+   // Remove a cópia antiga de C16: duplicava o circuito predefinido C14.
+   const beforeDuplicateCRemoval=items.length;
+   const withoutDuplicateC=items.filter(entry=>entry?.id!=="starter-user-C18" && !(entry?.kind==="part" && String(entry?.name||"").trim().toUpperCase()==="C16" && (entry?.part?.items||[]).map(item=>item.name).sort().join("|")==["Agachamento + Remada Alta","Avanço + Elevação Lateral","Terra + Desenvolvimento"].sort().join("|")));
+   if(withoutDuplicateC.length!==beforeDuplicateCRemoval){items.splice(0,items.length,...withoutDuplicateC);renumberedLibrary=true;}
   // Classifica automaticamente todos os blocos já salvos e os blocos padrão.
   let classifiedExistingBlocks=false;
   items.forEach(entry=>{
