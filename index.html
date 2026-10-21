@@ -1903,9 +1903,17 @@ function manualRenderVisualLibrary(){
   const part=entry.part;
   const duration=part.type==="circuit"?(Math.max(0,Number(part.durationMinutes)||0)+Math.floor(Math.max(0,Number(part.durationExtraSeconds)||0)/60))+":"+String(Math.max(0,Number(part.durationExtraSeconds)||0)%60).padStart(2,"0"):"4 exercícios";
   const names=(part.items||[]).map((item,i)=>'<span><b>'+String(i+1).padStart(2,"0")+'</b>'+escHtml(item.name||"Exercício")+'</span>').join("");
-  const roundTypes=["circuit","individual","fight","fightCircuit"];
-  let roundNumber=0;
-  const targets=manualParts.map((p,index)=>({p,index,round:roundTypes.includes(p.type)?++roundNumber:null})).filter(x=>x.p.type===part.type);
+  // Rounds seguem a estrutura fixa das duas opções de aula:
+  // Opção 1: WORKOUT nos rounds 1-3 e 7-8; FIGHT nos rounds 4-6 e 9-10.
+  // Opção 2: FIGHT nos rounds 1-3 e 7-8; WORKOUT nos rounds 4-6 e 9-10.
+  const isFightPart=p=>p&&["fight","fightCircuit"].includes(p.type);
+  const workoutTargets=manualParts.map((p,index)=>({p,index})).filter(x=>x.p&&["circuit","individual"].includes(x.p.type));
+  const fightTargets=manualParts.map((p,index)=>({p,index})).filter(x=>isFightPart(x.p));
+  const workoutRounds=presetOption===2?[4,5,6,9,10]:[1,2,3,7,8];
+  const fightRounds=presetOption===2?[1,2,3,7,8]:[4,5,6,9,10];
+  const targets=(part.type==="circuit"||part.type==="individual"?workoutTargets:fightTargets)
+   .map((x,i)=>({...x,round:(part.type==="circuit"||part.type==="individual"?workoutRounds:fightRounds)[i]??i+1}))
+   .filter(x=>x.p.type===part.type);
   const targetOptions=targets.map(x=>'<option value="'+x.index+'">Round '+x.round+'</option>').join("");
   const replaceUi='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px"><select aria-label="Escolher bloco da aula para substituir" data-visual-library-target="'+escHtml(entry.id)+'" style="flex:1;min-width:180px" '+(targets.length?'':'disabled')+'><option value="">'+(targets.length?'Escolha um bloco do mesmo tipo na aula…':'Carregue uma aula para substituir um bloco')+'</option>'+targetOptions+'</select><button type="button" class="secondary" data-visual-library-replace="'+escHtml(entry.id)+'" '+(targets.length?'':'disabled')+'>↻ Trocar na aula</button></div>';
   return '<div class="swap-library-card" style="display:block;padding:14px"><div class="swap-library-card-top"><strong>'+escHtml(entry.displayName)+'</strong><small>'+(part.type==="circuit"?"CIRCUITO":"BLOCO DE 4 EXERCÍCIOS")+' · '+duration+'</small></div><div class="swap-library-card-items" style="display:grid;gap:8px;margin-top:12px">'+(names||'<span>Nenhum exercício cadastrado.</span>')+'</div>'+replaceUi+'</div>';
