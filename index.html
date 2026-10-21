@@ -917,6 +917,10 @@ function manualLoadLibrary(){
    if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};
    return entry;
   }).filter(Boolean);
+  // Remove B4 da biblioteca local, inclusive versões antigas já salvas no navegador.
+  const beforeB4Removal=items.length;
+  const withoutB4=items.filter(entry=>!(entry?.kind==="part"&&(entry?.id==="starter-user-B4"||String(entry?.name||"").trim().toUpperCase()==="B4"||String(entry?.part?.title||"").trim().toUpperCase()==="B4")));
+  if(withoutB4.length!==beforeB4Removal){items.splice(0,items.length,...withoutB4);renumberedLibrary=true;}
   // WORKOUTs reutilizáveis padrão: aparecem na troca de bloco mesmo em um navegador novo.
   const starterCircuits=[
    {id:"starter-circuit-superior",name:"WORKOUT Superior",part:{type:"circuit",title:"WORKOUT Superior",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Supino pegada fechada",detail:"Peito e tríceps",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps francês com halter",detail:"Tríceps",cat:"tríceps"}]}},
