@@ -615,7 +615,7 @@ function createWorkout(){
  currentPool=getExerciseBank().filter(x=>allowed.has(x.cat));
  const firstRaw=type==="fullbody"?chooseFullBodyCoverage(currentPool,12):chooseLegBlastBalanced(currentPool,12);
  const used=new Set(firstRaw.map(x=>x.name));
- const secondRaw=type==="fullbody"?chooseUnique(currentPool,8,used):chooseLegBlastBalanced(currentPool,8,used);
+ const secondRaw=type==="fullbody"?chooseFullBodyCoverage(currentPool,8,used):chooseLegBlastBalanced(currentPool,8,used);
  // Aleatório dentro dos grupamentos, com exercícios complementares próximos e pares E/D juntos.
  const first=organizeByMuscleGroup(firstRaw,type);
  const second=organizeByMuscleGroup(secondRaw,type);
