@@ -1193,8 +1193,22 @@ const presetBlock050Blocks=[
 ];
 let presetBlock050Order=[];
 let presetBlock050Cursor=0;
+function presetWorkoutFlowScore(block){
+ const items=Array.isArray(block?.items)?block.items:[];
+ const cardio=items.filter(x=>String(x.cat||"").toLowerCase()==="cardio"||/sprint|sprawl|escalador|polichinelo|hop out|salto|joelhada no step|corrida lateral|senta, levanta e pula/i.test(String(x.name||""))).length;
+ const multi=items.filter(x=>isMultiArticularExercise(x)).length;
+ return {cardio,multi};
+}
+function presetOrderWorkoutFlow(indices,source){
+ return shuffle(indices).sort((a,b)=>{
+  const A=presetWorkoutFlowScore(source[a]),B=presetWorkoutFlowScore(source[b]);
+  // Primeiro, movimentos multiarticulares; blocos com mais cardio ficam no fim.
+  return (A.cardio-B.cardio)||(B.multi-A.multi);
+ });
+}
 function presetResetBlock050Order(){
- presetBlock050Order=shuffle(presetBlock050Blocks.map((block,i)=>({block,i})).filter(x=>x.block&&x.block.types.includes(presetSelectedType)).map(x=>x.i));
+ const eligible=presetBlock050Blocks.map((block,i)=>({block,i})).filter(x=>x.block&&x.block.types.includes(presetSelectedType)).map(x=>x.i);
+ presetBlock050Order=presetOrderWorkoutFlow(eligible,presetBlock050Blocks);
  presetBlock050Cursor=0;
 }
 function presetExerciseBlock(label,addFinalRest=false){
@@ -1250,7 +1264,8 @@ const presetCircuitBlocks=[
 let presetCircuitOrder=[];
 let presetCircuitCursor=0;
 function presetResetCircuitOrder(){
- presetCircuitOrder=shuffle(presetCircuitBlocks.map((block,i)=>({block,i})).filter(x=>x.block.types.includes(presetSelectedType)).map(x=>x.i));
+ const eligible=presetCircuitBlocks.map((block,i)=>({block,i})).filter(x=>x.block&&x.block.types.includes(presetSelectedType)).map(x=>x.i);
+ presetCircuitOrder=presetOrderWorkoutFlow(eligible,presetCircuitBlocks);
  presetCircuitCursor=0;
 }
 function presetCircuit(label,addFinalRest=false){
