@@ -2085,7 +2085,9 @@ if(manualSaveWorkoutButton)manualSaveWorkoutButton.addEventListener("click",()=>
 
 let manualVisualLibraryKind="circuit";
 function manualVisualLibraryEntries(){
- const all=manualLoadLibrary().filter(entry=>entry&&entry.kind==="part"&&entry.part&&["circuit","individual"].includes(entry.part.type)&&entry.part.type===manualVisualLibraryKind);
+ const source=manualLoadLibrary().filter(entry=>entry&&entry.kind==="part"&&entry.part&&["circuit","individual"].includes(entry.part.type)&&entry.part.type===manualVisualLibraryKind);
+ const signatures=new Set();
+ const all=source.filter(entry=>{const signature=(entry.part.items||[]).map(item=>String(item.name||"").trim().toLocaleLowerCase("pt-BR")).join("|");if(!signature)return true;if(signatures.has(signature))return false;signatures.add(signature);return true;});
  const prefix=manualVisualLibraryKind==="circuit"?"C":"B";
  const getFixedNumber=entry=>{
   const id=String(entry.id||"");
