@@ -1341,6 +1341,7 @@ function presetFightBlock(label,addPauseAfter=false){
 function loadWorkoutOption(option,forceRegenerate=false){
   lastPresetOption=option;
 
+ const previousFirstWorkout=forceRegenerate?JSON.stringify((manualParts.find(p=>p&&["circuit","individual"].includes(p.type))?.items||[]).map(x=>x.name)):null;
  manualParts=[];presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetResetCircuitOrder();presetResetBlock050Order();presetOption=option;presetResetFunctionalPhase(0);
  const addSwitch=title=>{if(manualParts.length&&manualParts[manualParts.length-1]?.type==="rest")manualParts.pop();manualParts.push(presetPause(title.includes("LUTA")?"SWITCH TO FIGHT":"SWITCH TO WORKOUT",90,"transition"));};
  manualParts.push(presetPause("AQUECIMENTO",180));
@@ -1421,7 +1422,16 @@ function loadWorkoutOption(option,forceRegenerate=false){
  });
  const remainingDuplicates=workoutParts.flatMap(part=>(part.items||[]).filter(item=>item._duplicateExercise).map(item=>item.name));
  if(remainingDuplicates.length)document.getElementById("manualStatus").textContent="Atenção: o banco não tem alternativas únicas suficientes para evitar estas repetições: "+[...new Set(remainingDuplicates)].join(", ")+". Revise os blocos antes da aula.";
- const targetSeconds=3000;
+ if(forceRegenerate){
+ const firstWorkout=manualParts.find(p=>p&&["circuit","individual"].includes(p.type));
+ if(firstWorkout&&JSON.stringify((firstWorkout.items||[]).map(x=>x.name))===previousFirstWorkout){
+  const usedNames=new Set(manualParts.filter(p=>p&&["circuit","individual"].includes(p.type)).flatMap(p=>(p.items||[]).map(x=>String(x.name||"").toLocaleLowerCase("pt-BR"))));
+  const firstItem=firstWorkout.items&&firstWorkout.items[0];
+  const alternatives=shuffle(getExerciseBank().filter(x=>x&&x.name&&String(x.name).toLocaleLowerCase("pt-BR")!==String(firstItem?.name||"").toLocaleLowerCase("pt-BR")&&!usedNames.has(String(x.name).toLocaleLowerCase("pt-BR"))&&(!firstItem?.cat||x.cat===firstItem.cat)));
+  if(alternatives.length&&firstWorkout.items.length)firstWorkout.items[0]={...alternatives[0],detail:alternatives[0].detail||firstItem.detail||"WORKOUT"};
+ }
+}
+const targetSeconds=3000;
  const estimatedSeconds=manualParts.reduce((sum,p)=>{
   if(p.type==="circuit"||p.type==="fightCircuit")return sum+Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??30)));
   if(p.type==="rest"||p.type==="transition"||p.type==="activePause")return sum+Math.max(0,Number(p.seconds)||0);
