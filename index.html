@@ -1943,9 +1943,10 @@ function manualVisualLibraryEntries(){
  const used=new Set(fixed.filter(x=>Number.isInteger(x.number)&&x.number>0).map(x=>x.number));
  let next=prefix==="C"?22:3;
  fixed.forEach(x=>{if(x.number==null){while(used.has(next))next++;x.number=next;used.add(next++);}});
- return fixed.filter(x=>!(prefix==="C"&&(x.number===6||x.number===14)))
-  .sort((a,b)=>a.number-b.number)
-  .map(x=>({...x.entry,displayName:prefix+x.number,displayNumber:x.number}));
+ const visible=fixed.filter(x=>!(prefix==="C"&&(x.number===6||x.number===14)))
+  .sort((a,b)=>a.number-b.number);
+ // Renumera a lista visível sem lacunas sempre que um bloco for excluído.
+ return visible.map((x,index)=>({...x.entry,displayName:prefix+(index+1),displayNumber:index+1}));
 }
 function manualRenderVisualLibrary(){
  const grid=document.getElementById("manualVisualLibraryGrid");
