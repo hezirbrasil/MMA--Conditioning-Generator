@@ -968,8 +968,7 @@ function manualLoadLibrary(){
     items.push({id,kind:"part",name:"WORKOUT "+String(index+1).padStart(2,"0")+" · "+shortNames,part:freshPart,savedAt:"2026-10-20T00:00:00.000Z"});
     addedStarterCircuits=true;
    });
-    addedStarterCircuits=true;
-   });
+   addedStarterCircuits=true;
   }
   // Corrige também a cópia local antiga do C16 (era C17 antes da remoção de C12).
   const savedC17=items.find(entry=>entry?.id==="starter-preset-circuit-16");
