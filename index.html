@@ -1341,7 +1341,7 @@ function presetFightBlock(label,addPauseAfter=false){
 function loadWorkoutOption(option,forceRegenerate=false){
   lastPresetOption=option;
 
- const previousFirstWorkout=forceRegenerate?JSON.stringify((manualParts.find(p=>p&&["circuit","individual"].includes(p.type))?.items||[]).map(x=>x.name)):null;
+ const previousWorkoutBlocks=forceRegenerate?manualParts.filter(p=>p&&["circuit","individual"].includes(p.type)).map(p=>({type:p.type,items:(p.items||[]).map(x=>({...x}))})):[];
  manualParts=[];presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetResetCircuitOrder();presetResetBlock050Order();presetOption=option;presetResetFunctionalPhase(0);
  const addSwitch=title=>{if(manualParts.length&&manualParts[manualParts.length-1]?.type==="rest")manualParts.pop();manualParts.push(presetPause(title.includes("LUTA")?"SWITCH TO FIGHT":"SWITCH TO WORKOUT",90,"transition"));};
  manualParts.push(presetPause("AQUECIMENTO",180));
@@ -1388,6 +1388,38 @@ function loadWorkoutOption(option,forceRegenerate=false){
    return;
   }
  }
+ // Ao regenerar, troca cada bloco/circuito WORKOUT por outro conjunto completo equivalente.
+ // Mantém a quantidade de exercícios e a configuração temporal de cada parte.
+ if(forceRegenerate){
+  const normalizedNames=items=>(items||[]).map(x=>String(x.name||"").trim().toLocaleLowerCase("pt-BR"));
+  const signature=items=>normalizedNames(items).join("|");
+  const usedNames=new Set();
+  const partsToRegenerate=manualParts.filter(p=>p&&["circuit","individual"].includes(p.type));
+  partsToRegenerate.forEach((part,index)=>{
+   const previous=previousWorkoutBlocks[index];
+   const targetCount=part.type==="circuit"?3:4;
+   const templates=(part.type==="circuit"?presetCircuitBlocks:presetBlock050Blocks)
+    .filter(block=>block&&Array.isArray(block.types)&&block.types.includes(presetSelectedType)&&Array.isArray(block.items)&&block.items.length===targetCount);
+   const candidates=shuffle(templates.map(block=>{
+    const items=part.type==="circuit"
+     ?presetCompleteItems(JSON.parse(JSON.stringify(block.items)),3)
+     :JSON.parse(JSON.stringify(block.items)).map(item=>({...item}));
+    return {items};
+   }).filter(candidate=>{
+    const names=normalizedNames(candidate.items);
+    return candidate.items.length===targetCount&&names.every(Boolean)&&new Set(names).size===names.length;
+   }).filter(candidate=>{
+    const nextSignature=signature(candidate.items);
+    const previousSignature=previous&&previous.type===part.type?signature(previous.items):"";
+    return nextSignature!==previousSignature&&candidate.items.every(item=>!usedNames.has(String(item.name||"").trim().toLocaleLowerCase("pt-BR")));
+   }));
+   const replacement=candidates[0];
+   if(replacement){
+    part.items=replacement.items.map(item=>({...item}));
+   }
+   (part.items||[]).forEach(item=>usedNames.add(String(item.name||"").trim().toLocaleLowerCase("pt-BR")));
+  });
+ }
  // Validação global para evitar exercícios repetidos entre circuitos C e blocos B na mesma aula.
  const workoutParts=manualParts.filter(p=>p&&["circuit","individual"].includes(p.type));
  const usedWorkoutNames=new Set();
@@ -1422,32 +1454,6 @@ function loadWorkoutOption(option,forceRegenerate=false){
  });
  const remainingDuplicates=workoutParts.flatMap(part=>(part.items||[]).filter(item=>item._duplicateExercise).map(item=>item.name));
  if(remainingDuplicates.length)document.getElementById("manualStatus").textContent="Atenção: o banco não tem alternativas únicas suficientes para evitar estas repetições: "+[...new Set(remainingDuplicates)].join(", ")+". Revise os blocos antes da aula.";
- if(forceRegenerate){
- const firstWorkout=manualParts.find(p=>p&&["circuit","individual"].includes(p.type));
- if(firstWorkout&&JSON.stringify((firstWorkout.items||[]).map(x=>x.name))===previousFirstWorkout){
-  const normalizeRegeneratedExercise=raw=>{
-   const item={...raw},match=String(item.name||"").match(/^(.*) ([ED])$/);
-   if(match){
-    item.name=match[1]+" (E/D)";
-    item.detail=(item.detail||"WORKOUT").replace(/ · executar os dois lados$/,"")+" · executar os dois lados";
-   }
-   return item;
-  };
-  const bank=getExerciseBank().map(normalizeRegeneratedExercise)
-   .filter(x=>x&&x.name&&Array.isArray(x.types)&&x.types.includes(presetSelectedType));
-  const usedNames=new Set(manualParts.filter(p=>p&&["circuit","individual"].includes(p.type))
-   .flatMap(p=>(p.items||[]).map(x=>String(normalizeRegeneratedExercise(x).name||"").toLocaleLowerCase("pt-BR"))));
-  const firstItem=firstWorkout.items&&firstWorkout.items[0];
-  const firstName=String(normalizeRegeneratedExercise(firstItem||{}).name||"").toLocaleLowerCase("pt-BR");
-  const alternatives=shuffle(bank.filter(x=>{
-   const name=String(x.name||"").toLocaleLowerCase("pt-BR");
-   return name&&name!==firstName&&!usedNames.has(name)&&(!firstItem?.cat||x.cat===firstItem.cat);
-  }));
-  // Só altera o primeiro item se houver alternativa única do mesmo tipo e grupamento.
-  // Isso evita inserir exercícios incompatíveis com Full Body/Leg Blast ou separar lados E/D.
-  if(alternatives.length&&firstWorkout.items.length)firstWorkout.items[0]={...alternatives[0],detail:alternatives[0].detail||firstItem.detail||"WORKOUT"};
- }
-}
 const targetSeconds=3000;
  const estimatedSeconds=manualParts.reduce((sum,p)=>{
   if(p.type==="circuit"||p.type==="fightCircuit")return sum+Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??30)));
