@@ -306,16 +306,24 @@ function isMultiArticularExercise(ex){
  return /agachamento|terra|stiff|supino|remada|puxada|desenvolvimento|leg press|passada|afundo|avanço|flexão de braço|barra fixa|paralela|thruster|clean|arranco|levantamento|terra \+|polichinelo \+ desenvolvimento|burpee/.test(name);
 }
 function chooseFullBodyCoverage(pool,n,exclude=new Set()){
- const units=exerciseUnits(pool,exclude);
- const categories=[...new Set(pool.map(x=>x.cat))];
- const selected=[],used=new Set(exclude);
- let count=0;
- for(const cat of shuffle(categories)){
-  const candidates=shuffle(units.filter(unit=>unit[0].cat===cat&&!unit.some(x=>used.has(x.name))));
-  candidates.sort((a,b)=>Number(a.length>1)-Number(b.length>1)||Number(isMultiArticularExercise(b[0]))-Number(isMultiArticularExercise(a[0])));
-  const unit=candidates.find(u=>count+u.length<=n);
-  if(!unit)continue;
-  selected.push(...unit);unit.forEach(x=>used.add(x.name));count+=unit.length;
+ const family=unit=>{
+  const cat=String(unit[0].cat||"").toLowerCase();
+  if(cat==="core")return "core";
+  if(cat==="cardio")return "cardio";
+  if(["peito","costas","ombros","bíceps","tríceps"].includes(cat))return "superior";
+  if(["pernas","posterior"].includes(cat))return "inferior";
+  return "composto";
+ };
+ const selected=[],used=new Set(exclude);let count=0;
+ const quotas=n>=12?{inferior:4,superior:4,core:2,cardio:2}:{inferior:3,superior:2,core:2,cardio:1};
+ for(const key of ["inferior","superior","core","cardio"]){
+  let familyCount=0;
+  while(familyCount<quotas[key]&&count<n){
+   const candidates=shuffle(exerciseUnits(pool,used)).filter(unit=>family(unit)===key&&count+unit.length<=n);
+   candidates.sort((a,b)=>Number(isMultiArticularExercise(b[0]))-Number(isMultiArticularExercise(a[0])));
+   const unit=candidates[0];if(!unit)break;
+   selected.push(...unit);unit.forEach(x=>used.add(x.name));count+=unit.length;familyCount+=unit.length;
+  }
  }
  const remaining=shuffle(exerciseUnits(pool,used));
  remaining.sort((a,b)=>Number(isMultiArticularExercise(b[0]))-Number(isMultiArticularExercise(a[0])));
