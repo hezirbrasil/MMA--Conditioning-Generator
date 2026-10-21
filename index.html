@@ -1368,6 +1368,40 @@ function loadWorkoutOption(option){
    return;
   }
  }
+ // Validação global para evitar exercícios repetidos entre circuitos C e blocos B na mesma aula.
+ const workoutParts=manualParts.filter(p=>p&&["circuit","individual"].includes(p.type));
+ const usedWorkoutNames=new Set();
+ const exerciseBankForDedup=getExerciseBank().map(raw=>{
+  const item={...raw},match=String(item.name||"").match(/^(.*) ([ED])$/);
+  if(match){item.name=match[1]+" (E/D)";item.detail=(item.detail||"WORKOUT")+" · executar os dois lados";}
+  return item;
+ });
+ workoutParts.forEach(part=>{
+  const partNames=new Set();
+  (part.items||[]).forEach((item,index)=>{
+   const original=String(item.name||"").trim();
+   const key=original.toLocaleLowerCase("pt-BR");
+   if(!key)return;
+   if(!usedWorkoutNames.has(key)&&!partNames.has(key)){
+    usedWorkoutNames.add(key);partNames.add(key);return;
+   }
+   const candidates=shuffle(exerciseBankForDedup.filter(candidate=>{
+    const candidateKey=String(candidate.name||"").trim().toLocaleLowerCase("pt-BR");
+    return candidateKey&&!usedWorkoutNames.has(candidateKey)&&!partNames.has(candidateKey)&&candidateKey!==key;
+   }));
+   candidates.sort((a,b)=>Number(a.cat!==item.cat)-Number(b.cat!==item.cat));
+   const replacement=candidates[0];
+   if(replacement){
+    part.items[index]={...replacement,detail:replacement.detail||item.detail||"WORKOUT"};
+    const replacementKey=String(replacement.name).trim().toLocaleLowerCase("pt-BR");
+    usedWorkoutNames.add(replacementKey);partNames.add(replacementKey);
+   }else{
+    part.items[index]={...item,_duplicateExercise:true};
+   }
+  });
+ });
+ const remainingDuplicates=workoutParts.flatMap(part=>(part.items||[]).filter(item=>item._duplicateExercise).map(item=>item.name));
+ if(remainingDuplicates.length)document.getElementById("manualStatus").textContent="Atenção: o banco não tem alternativas únicas suficientes para evitar estas repetições: "+[...new Set(remainingDuplicates)].join(", ")+". Revise os blocos antes da aula.";
  const targetSeconds=3000;
  const estimatedSeconds=manualParts.reduce((sum,p)=>{
   if(p.type==="circuit"||p.type==="fightCircuit")return sum+Math.max(0,Number(p.durationMinutes)||0)*60+Math.max(0,Math.min(59,Number(p.durationExtraSeconds??30)));
