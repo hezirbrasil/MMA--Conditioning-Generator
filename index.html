@@ -951,15 +951,23 @@ function manualLoadLibrary(){
    presetCircuitBlocks.forEach((circuit,index)=>{
     if(index===14||!circuit)return; // O modelo interno equivalente ao circuito personalizado é ignorado após remover C12.
     const id="starter-preset-circuit-"+(index+1);
-    if(items.some(existing=>existing?.id===id))return;
     const names=(circuit.items||[]).map(item=>item.name);
     const shortNames=names.slice(0,2).join(" + ");
-    items.push({
-     id,kind:"part",
-     name:"WORKOUT "+String(index+1).padStart(2,"0")+" · "+shortNames,
-     part:{id:"starter-part-preset-circuit-"+(index+1),type:"circuit",title:"WORKOUT "+String(index+1).padStart(2,"0"),durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:(circuit.items||[]).map(item=>({...item}))},
-     savedAt:"2026-10-20T00:00:00.000Z"
-    });
+    const freshPart={id:"starter-part-preset-circuit-"+(index+1),type:"circuit",title:"WORKOUT "+String(index+1).padStart(2,"0"),durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:(circuit.items||[]).map(item=>({...item}))};
+    const existingIndex=items.findIndex(existing=>existing?.id===id);
+    if(existingIndex>=0){
+     const existing=items[existingIndex];
+     const oldSignature=(existing.part?.items||[]).map(item=>String(item.name||"")).join("|");
+     const newSignature=freshPart.items.map(item=>String(item.name||"")).join("|");
+     if(oldSignature!==newSignature||existing.part?.title!==freshPart.title){
+      items[existingIndex]={...existing,name:"WORKOUT "+String(index+1).padStart(2,"0")+" · "+shortNames,part:{...existing.part,...freshPart}};
+      addedStarterCircuits=true;
+     }
+     return;
+    }
+    items.push({id,kind:"part",name:"WORKOUT "+String(index+1).padStart(2,"0")+" · "+shortNames,part:freshPart,savedAt:"2026-10-20T00:00:00.000Z"});
+    addedStarterCircuits=true;
+   });
     addedStarterCircuits=true;
    });
   }
