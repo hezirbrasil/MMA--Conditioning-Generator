@@ -900,7 +900,23 @@ function manualLoadLibrary(){
   if(!Array.isArray(x))return[];
   const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="WORKOUT de FIGHT"?"Sequências de FIGHT individuais":(p.title||"Sequências de FIGHT individuais")}:p;
   // Preserve todas as partes salvas, inclusive circuitos; normaliza apenas formatos antigos.
-  const items=x.map(entry=>{if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry}).filter(entry=>!["starter-preset-circuit-6","starter-preset-circuit-14"].includes(entry?.id));
+  const circuitIdMap={1:1,2:2,3:3,4:4,5:5,7:6,8:7,9:8,10:9,11:10,12:11,13:12,15:13,16:14,17:15};
+  let renumberedLibrary=false;
+  const items=x.map(entry=>{
+   if(entry&&entry.kind==="part"&&entry.part){
+    const match=String(entry.id||"").match(/^starter-preset-circuit-(\d+)$/);
+    if(match){
+     const oldNumber=Number(match[1]);
+     if(oldNumber===6||oldNumber===14){renumberedLibrary=true;return null;}
+     const newNumber=circuitIdMap[oldNumber];
+     if(newNumber){if(entry.id!=="starter-preset-circuit-"+newNumber||entry.part.title!=="WORKOUT "+String(newNumber).padStart(2,"0"))renumberedLibrary=true;return {...entry,id:"starter-preset-circuit-"+newNumber,name:"WORKOUT "+String(newNumber).padStart(2,"0")+" · "+(entry.part.items||[]).slice(0,2).map(item=>item.name).join(" + "),part:{...normalizePart(entry.part),id:"starter-part-preset-circuit-"+newNumber,title:"WORKOUT "+String(newNumber).padStart(2,"0")}};}
+    }
+    if(entry.id==="starter-user-C18"){if(entry.name!=="C16"||entry.part.title!=="C16")renumberedLibrary=true;return {...entry,name:"C16",part:{...normalizePart(entry.part),id:"starter-part-C16",title:"C16"}};}
+    return {...entry,part:normalizePart(entry.part)};
+   }
+   if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};
+   return entry;
+  }).filter(Boolean);
   // WORKOUTs reutilizáveis padrão: aparecem na troca de bloco mesmo em um navegador novo.
   const starterCircuits=[
    {id:"starter-circuit-superior",name:"WORKOUT Superior",part:{type:"circuit",title:"WORKOUT Superior",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Supino pegada fechada",detail:"Peito e tríceps",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps francês com halter",detail:"Tríceps",cat:"tríceps"}]}},
@@ -909,11 +925,11 @@ function manualLoadLibrary(){
   ];
   let addedStarterCircuits=false;
   starterCircuits.forEach(entry=>{if(!items.some(existing=>existing?.id===entry.id)){items.push({...entry,kind:"part",part:{...entry.part,id:"starter-part-"+entry.id.replace("starter-circuit-",""),items:entry.part.items.map(item=>({...item}))},savedAt:"2026-10-20T00:00:00.000Z"});addedStarterCircuits=true;}});
-  // Recupera todos os circuitos que já existem no banco de geração (17 modelos).
+  // Recupera os circuitos ativos do banco de geração, em numeração sequencial.
   // Isso faz com que cada circuito fique disponível no menu "Trocar bloco".
   if(typeof presetCircuitBlocks!=="undefined"&&Array.isArray(presetCircuitBlocks)){
    presetCircuitBlocks.forEach((circuit,index)=>{
-    if(index===17||!circuit)return; // C18 personalizado é cadastrado abaixo; circuitos removidos são ignorados.
+    if(index===15||!circuit)return; // O modelo interno equivalente ao circuito personalizado é ignorado.
     const id="starter-preset-circuit-"+(index+1);
     if(items.some(existing=>existing?.id===id))return;
     const names=(circuit.items||[]).map(item=>item.name);
@@ -1003,10 +1019,10 @@ function manualLoadLibrary(){
    if(items.some(existing=>existing?.id===entry.id))return;
    items.push({id:entry.id,kind:"part",name:entry.name,category:"Full Body",part:{id:"starter-part-"+entry.id,type:"individual",title:entry.name,rounds:1,seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items:entry.items.map(item=>({...item}))},savedAt:"2026-10-21T00:00:00.000Z"});
   });
-  // Circuito personalizado C18 enviado pelo usuário.
+  // Circuito personalizado renumerado como C16.
   const userC18Id="starter-user-C18";
   if(!items.some(existing=>existing?.id===userC18Id)){
-   items.push({id:userC18Id,kind:"part",name:"C18",category:"Full Body",part:{id:"starter-part-C18",type:"circuit",title:"C18",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Avanço + elevação lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Terra + desenvolvimento",detail:"Posterior e ombros",cat:"composto"},{name:"Agachamento + remada alta",detail:"Pernas e costas",cat:"composto"}]},savedAt:"2026-10-21T00:00:00.000Z"});
+   items.push({id:userC18Id,kind:"part",name:"C16",category:"Full Body",part:{id:"starter-part-C16",type:"circuit",title:"C16",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Avanço + elevação lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Terra + desenvolvimento",detail:"Posterior e ombros",cat:"composto"},{name:"Agachamento + remada alta",detail:"Pernas e costas",cat:"composto"}]},savedAt:"2026-10-21T00:00:00.000Z"});
   }
   // Classifica automaticamente todos os blocos já salvos e os blocos padrão.
   let classifiedExistingBlocks=false;
@@ -1015,7 +1031,7 @@ function manualLoadLibrary(){
    const category=manualLibraryCategory({...entry,category:undefined});
    if(category&&entry.category!==category){entry.category=category;classifiedExistingBlocks=true;}
   });
-  if(addedStarterCircuits||classifiedExistingBlocks||items.length!==x.length||!x.some(entry=>entry?.id===starterBlockId))localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
+  if(addedStarterCircuits||classifiedExistingBlocks||renumberedLibrary||items.length!==x.length||!x.some(entry=>entry?.id===starterBlockId))localStorage.setItem(MANUAL_LIBRARY_KEY,JSON.stringify(items));
   return items;
  }catch(e){return[]}
 }
@@ -1204,7 +1220,6 @@ const presetCircuitBlocks=[
  {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada aberta",detail:"Costas",cat:"costas"},{name:"Desenvolvimento",detail:"Ombros",cat:"ombros"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}]},
  {types:["fullbody","legblast"],items:[{name:"Terra com desenvolvimento",detail:"WORKOUT",cat:"composto"},{name:"Agachamento com panturrilha",detail:"Pernas",cat:"pernas"},{name:"Joelhada no step",detail:"Cardio e WORKOUT",cat:"cardio"}]},
- null, // Circuito 6 removido a pedido do usuário.
  {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps francês",detail:"Tríceps",cat:"tríceps"}]},
  {types:["fullbody","legblast"],items:[{name:"Hop out Step",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Sprawl + Salto",detail:"Cardio e WORKOUT",cat:"cardio"}]},
  {types:["fullbody"],items:[{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Crucifixo invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Elevação lateral + frontal",detail:"Ombros",cat:"ombros"}]},
@@ -1212,7 +1227,6 @@ const presetCircuitBlocks=[
  {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Elevação frontal + lateral",detail:"Ombros",cat:"ombros"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento sumo",detail:"Pernas",cat:"pernas"},{name:"Agachamento neutro",detail:"Pernas",cat:"pernas"},{name:"Agachamento livre",detail:"Pernas",cat:"pernas"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento com rotação",detail:"Pernas e mobilidade",cat:"pernas"},{name:"Afundo com troca de base",detail:"Pernas e potência",cat:"pernas"},{name:"Agachamento com pico de contração e salto",detail:"Pernas e potência",cat:"pernas"}]},
- null, // Circuito 14 removido a pedido do usuário.
  {types:["fullbody"],items:[{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Remada unilateral E",detail:"Costas",cat:"costas"},{name:"Remada unilateral D",detail:"Costas",cat:"costas"}]},
  {types:["legblast"],items:[{name:"Agachamento goblet",detail:"Pernas",cat:"pernas"},{name:"Agachamento lateral",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"}]},
  {types:["fullbody"],items:[{name:"Agachamento goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}]},
