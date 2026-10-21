@@ -1425,9 +1425,26 @@ function loadWorkoutOption(option,forceRegenerate=false){
  if(forceRegenerate){
  const firstWorkout=manualParts.find(p=>p&&["circuit","individual"].includes(p.type));
  if(firstWorkout&&JSON.stringify((firstWorkout.items||[]).map(x=>x.name))===previousFirstWorkout){
-  const usedNames=new Set(manualParts.filter(p=>p&&["circuit","individual"].includes(p.type)).flatMap(p=>(p.items||[]).map(x=>String(x.name||"").toLocaleLowerCase("pt-BR"))));
+  const normalizeRegeneratedExercise=raw=>{
+   const item={...raw},match=String(item.name||"").match(/^(.*) ([ED])$/);
+   if(match){
+    item.name=match[1]+" (E/D)";
+    item.detail=(item.detail||"WORKOUT").replace(/ · executar os dois lados$/,"")+" · executar os dois lados";
+   }
+   return item;
+  };
+  const bank=getExerciseBank().map(normalizeRegeneratedExercise)
+   .filter(x=>x&&x.name&&Array.isArray(x.types)&&x.types.includes(presetSelectedType));
+  const usedNames=new Set(manualParts.filter(p=>p&&["circuit","individual"].includes(p.type))
+   .flatMap(p=>(p.items||[]).map(x=>String(normalizeRegeneratedExercise(x).name||"").toLocaleLowerCase("pt-BR"))));
   const firstItem=firstWorkout.items&&firstWorkout.items[0];
-  const alternatives=shuffle(getExerciseBank().filter(x=>x&&x.name&&String(x.name).toLocaleLowerCase("pt-BR")!==String(firstItem?.name||"").toLocaleLowerCase("pt-BR")&&!usedNames.has(String(x.name).toLocaleLowerCase("pt-BR"))&&(!firstItem?.cat||x.cat===firstItem.cat)));
+  const firstName=String(normalizeRegeneratedExercise(firstItem||{}).name||"").toLocaleLowerCase("pt-BR");
+  const alternatives=shuffle(bank.filter(x=>{
+   const name=String(x.name||"").toLocaleLowerCase("pt-BR");
+   return name&&name!==firstName&&!usedNames.has(name)&&(!firstItem?.cat||x.cat===firstItem.cat);
+  }));
+  // Só altera o primeiro item se houver alternativa única do mesmo tipo e grupamento.
+  // Isso evita inserir exercícios incompatíveis com Full Body/Leg Blast ou separar lados E/D.
   if(alternatives.length&&firstWorkout.items.length)firstWorkout.items[0]={...alternatives[0],detail:alternatives[0].detail||firstItem.detail||"WORKOUT"};
  }
 }
