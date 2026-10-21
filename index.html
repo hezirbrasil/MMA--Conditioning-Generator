@@ -950,7 +950,7 @@ function manualLoadLibrary(){
   // Corrige também a cópia local antiga do C17, caso já estivesse salva como duplicada do C11.
   const savedC17=items.find(entry=>entry?.id==="starter-preset-circuit-17");
   if(savedC17?.part?.type==="circuit"){
-   savedC17.part.items=[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}];
+   savedC17.part.items=[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}];
    savedC17.part.title="WORKOUT 17";
    savedC17.name="WORKOUT 17 · Agachamento goblet + Crucifixo invertido";
    addedStarterCircuits=true;
@@ -1017,7 +1017,7 @@ function manualLoadLibrary(){
    {id:"starter-user-B5",name:"B5",items:[{name:"Agachamento + Abre e Fecha Tocando o Solo",detail:"Cardio e pernas",cat:"cardio"},{name:"Prancha Tocando o Pé",detail:"Core",cat:"core"},{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"}]},
    {id:"starter-user-B6",name:"B6",items:[{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Prancha",detail:"Core",cat:"core"},{name:"Abdominal Remador Alternado",detail:"Core",cat:"core"},{name:"Prancha Baixa + Prancha Alta",detail:"Core e estabilidade",cat:"core"}]},
    {id:"starter-user-B7",name:"B7",items:[{name:"Búlgaro E",detail:"Pernas · esquerda",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas · direita",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Avanço pliométrico",detail:"Pernas e potência",cat:"pernas"}]},
-   {id:"starter-user-B8",name:"B8",items:[{name:"Polichinelo com halter",detail:"Cardio",cat:"cardio"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"},{name:"Agachamento lateral",detail:"Pernas",cat:"pernas"}]}
+   {id:"starter-user-B8",name:"B8",items:[{name:"Polichinelo com halter",detail:"Cardio",cat:"cardio"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"}]}
   ];
   userFourExerciseBlocks.forEach(entry=>{
    if(items.some(existing=>existing?.id===entry.id))return;
@@ -1026,7 +1026,7 @@ function manualLoadLibrary(){
   // Circuito personalizado renumerado como C16.
   const userC18Id="starter-user-C18";
   if(!items.some(existing=>existing?.id===userC18Id)){
-   items.push({id:userC18Id,kind:"part",name:"C16",category:"Full Body",part:{id:"starter-part-C16",type:"circuit",title:"C16",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Avanço + Elevação Lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Terra + desenvolvimento",detail:"Posterior e ombros",cat:"composto"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"}]},savedAt:"2026-10-21T00:00:00.000Z"});
+   items.push({id:userC18Id,kind:"part",name:"C16",category:"Full Body",part:{id:"starter-part-C16",type:"circuit",title:"C16",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Avanço + Elevação Lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Terra + Desenvolvimento",detail:"Posterior e ombros",cat:"composto"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"}]},savedAt:"2026-10-21T00:00:00.000Z"});
   }
   // Classifica automaticamente todos os blocos já salvos e os blocos padrão.
   let classifiedExistingBlocks=false;
@@ -1220,21 +1220,21 @@ function presetExerciseBlock(label,addFinalRest=false){
 }
 const presetCircuitBlocks=[
  {types:["fullbody"],items:[{name:"Agachamento + Desenvolvimento",detail:"Pernas e ombros",cat:"pernas"},{name:"Supino",detail:"Peito",cat:"peito"},{name:"Abdominal Remador",detail:"Core",cat:"core"}]},
- {types:["fullbody"],items:[{name:"Remada aberta",detail:"Costas",cat:"costas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"}]},
- {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada aberta",detail:"Costas",cat:"costas"},{name:"Desenvolvimento",detail:"Ombros",cat:"ombros"}]},
+ {types:["fullbody"],items:[{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"}]},
+ {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Desenvolvimento",detail:"Ombros",cat:"ombros"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}]},
  {types:["fullbody","legblast"],items:[{name:"Terra + Desenvolvimento",detail:"WORKOUT",cat:"composto"},{name:"Agachamento + Panturrilha",detail:"Pernas",cat:"pernas"},{name:"Joelhada no Step",detail:"Cardio e WORKOUT",cat:"cardio"}]},
  {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps Francês + Halter",detail:"Tríceps",cat:"tríceps"}]},
  {types:["fullbody","legblast"],items:[{name:"Hop Out Step",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Sprawl + Salto",detail:"Cardio e WORKOUT",cat:"cardio"}]},
- {types:["fullbody"],items:[{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Crucifixo invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Elevação Lateral + Elevação Frontal",detail:"Ombros",cat:"ombros"}]},
- {types:["fullbody","legblast"],items:[{name:"Terra",detail:"Posterior",cat:"posterior"},{name:"Afundo + Troca de Base",detail:"Pernas",cat:"pernas"},{name:"Agachamento lateral",detail:"Pernas",cat:"pernas"}]},
+ {types:["fullbody"],items:[{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Elevação Lateral + Elevação Frontal",detail:"Ombros",cat:"ombros"}]},
+ {types:["fullbody","legblast"],items:[{name:"Terra",detail:"Posterior",cat:"posterior"},{name:"Afundo + Troca de Base",detail:"Pernas",cat:"pernas"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"}]},
  {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Elevação Frontal + Elevação Lateral",detail:"Ombros",cat:"ombros"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"},{name:"Agachamento neutro",detail:"Pernas",cat:"pernas"},{name:"Agachamento livre",detail:"Pernas",cat:"pernas"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento + Rotação",detail:"Pernas e mobilidade",cat:"pernas"},{name:"Afundo + Troca de Base",detail:"Pernas e potência",cat:"pernas"},{name:"Agachamento + Pico de Contração + Salto",detail:"Pernas e potência",cat:"pernas"}]},
  {types:["fullbody"],items:[{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Remada unilateral E",detail:"Costas",cat:"costas"},{name:"Remada unilateral D",detail:"Costas",cat:"costas"}]},
- {types:["legblast"],items:[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Agachamento lateral",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"}]},
- {types:["fullbody"],items:[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}]},
- {types:["fullbody","legblast"],items:[{name:"Avanço + Elevação Lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Terra + desenvolvimento",detail:"Posterior e ombros",cat:"composto"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"}]}
+ {types:["legblast"],items:[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"}]},
+ {types:["fullbody"],items:[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}]},
+ {types:["fullbody","legblast"],items:[{name:"Avanço + Elevação Lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Terra + Desenvolvimento",detail:"Posterior e ombros",cat:"composto"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"}]}
 ];
 let presetCircuitOrder=[];
 let presetCircuitCursor=0;
