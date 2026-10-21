@@ -1876,7 +1876,7 @@ function manualRenderVisualLibrary(){
   const part=entry.part;
   const duration=part.type==="circuit"?(Math.max(0,Number(part.durationMinutes)||0)+Math.floor(Math.max(0,Number(part.durationExtraSeconds)||0)/60))+":"+String(Math.max(0,Number(part.durationExtraSeconds)||0)%60).padStart(2,"0"):"4 exercícios";
   const names=(part.items||[]).map((item,i)=>'<span><b>'+String(i+1).padStart(2,"0")+'</b>'+escHtml(item.name||"Exercício")+'</span>').join("");
-  return '<details class="swap-library-card" style="display:block;padding:14px;cursor:pointer"><summary class="swap-library-card-top"><strong>'+escHtml(entry.displayName)+'</strong><small>'+(part.type==="circuit"?"CIRCUITO":"BLOCO DE 4 EXERCÍCIOS")+' · '+duration+'</small></summary><div class="swap-library-card-items" style="margin-top:12px">'+(names||'<span>Nenhum exercício cadastrado.</span>')+'</div></details>';
+  return '<div class="swap-library-card" style="display:block;padding:14px"><div class="swap-library-card-top"><strong>'+escHtml(entry.displayName)+'</strong><small>'+(part.type==="circuit"?"CIRCUITO":"BLOCO DE 4 EXERCÍCIOS")+' · '+duration+'</small></div><div class="swap-library-card-items" style="display:grid;gap:8px;margin-top:12px">'+(names||'<span>Nenhum exercício cadastrado.</span>')+'</div></div>';
  }).join(""):'<div class="builder-empty">Não há blocos nesta categoria.</div>';
  document.querySelectorAll("[data-visual-library-filter]").forEach(tab=>{tab.className=tab.dataset.visualLibraryFilter===manualVisualLibraryKind?"primary":"secondary";});
 }
