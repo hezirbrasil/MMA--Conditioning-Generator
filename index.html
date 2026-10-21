@@ -180,7 +180,7 @@ const bank = [
 {name:"Prancha Alternada",cat:"core",types:["fullbody","legblast"]},
 {name:"Prancha 3 Apoios E",cat:"core",types:["fullbody","legblast"]},
 {name:"Prancha 3 Apoios D",cat:"core",types:["fullbody","legblast"]},
-{name:"Prancha Tocando o Pé",cat:"core",types:["fullbody","legblast"]},
+{name:"Prancha + Toque no Pé",cat:"core",types:["fullbody","legblast"]},
 {name:"Prancha Abre e Fecha",cat:"core",types:["fullbody","legblast"]},
 {name:"Prancha T",cat:"core",types:["fullbody","legblast"]},
 {name:"Escalador",cat:"cardio",types:["fullbody","legblast"]},
@@ -1021,12 +1021,12 @@ function manualLoadLibrary(){
   }
   // Blocos personalizados adicionados pelo usuário: B5 a B8.
   const userFourExerciseBlocks=[
-   {id:"starter-user-B5",name:"B5",items:[{name:"Agachamento + Abre e Fecha Tocando o Solo",detail:"Cardio e pernas",cat:"cardio"},{name:"Prancha Tocando o Pé",detail:"Core",cat:"core"},{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"}]},
+   {id:"starter-user-B5",name:"B5",items:[{name:"Agachamento + Abre e Fecha Tocando o Solo",detail:"Cardio e pernas",cat:"cardio"},{name:"Prancha + Toque no Pé",detail:"Core",cat:"core"},{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"}]},
    {id:"starter-user-B6",name:"B6",items:[{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Prancha",detail:"Core",cat:"core"},{name:"Abdominal Remador Alternado",detail:"Core",cat:"core"},{name:"Prancha Baixa + Prancha Alta",detail:"Core e estabilidade",cat:"core"}]},
    {id:"starter-user-B7",name:"B7",items:[{name:"Búlgaro E",detail:"Pernas · esquerda",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas · direita",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Avanço pliométrico",detail:"Pernas e potência",cat:"pernas"}]},
    {id:"starter-user-B8",name:"B8",items:[{name:"Polichinelo",detail:"Cardio",cat:"cardio"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"}]},
    {id:"starter-user-B9",name:"B9",items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Agachamento",detail:"Pernas",cat:"pernas"},{name:"Desenvolvimento",detail:"Ombros",cat:"ombros"}]},
-   {id:"starter-user-B10",name:"B10",items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps Francês",detail:"Tríceps",cat:"tríceps"},{name:"Flexão + Feet Touch",detail:"Peito e core",cat:"peito"}]},
+   {id:"starter-user-B10",name:"B10",items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps Francês",detail:"Tríceps",cat:"tríceps"},{name:"Flexão + Toque Alternado nos Pés",detail:"Peito e core",cat:"peito"}]},
    {id:"starter-user-B11",name:"B11",items:[{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Bíceps",detail:"Bíceps",cat:"bíceps"}]},
    {id:"starter-user-B12",name:"B12",items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Pulldown",detail:"Costas",cat:"costas"}]},
    {id:"starter-user-B13",name:"B13",items:[{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Afundo + Salto",detail:"Pernas e potência",cat:"pernas"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}]},
@@ -1188,7 +1188,7 @@ function presetPickExercise(){
 const presetBlock050Blocks=[
  {types:["fullbody","legblast"],items:[{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"},{name:"Abdominal Bicicleta",detail:"Core",cat:"core"},{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Abdominal Supra + Rotação de Tronco",detail:"Core",cat:"core"}]},
  {types:["fullbody","legblast"],items:[{name:"Stiff unilateral E",detail:"Posterior",cat:"posterior"},{name:"Stiff unilateral D",detail:"Posterior",cat:"posterior"},{name:"Afundo E",detail:"Pernas",cat:"pernas"},{name:"Afundo D",detail:"Pernas",cat:"pernas"}]},
- {types:["fullbody","legblast"],items:[{name:"Prancha Alta + Prancha Baixa",detail:"Core e estabilidade",cat:"core"},{name:"Prancha Tocando o Pé",detail:"Core",cat:"core"},{name:"Abdominal + Jab + Direto",detail:"Core e FIGHT",cat:"core"},{name:"Escalador",detail:"Core e cardio",cat:"cardio"}]},
+ {types:["fullbody","legblast"],items:[{name:"Prancha Alta + Prancha Baixa",detail:"Core e estabilidade",cat:"core"},{name:"Prancha + Toque no Pé",detail:"Core",cat:"core"},{name:"Abdominal + Jab + Direto",detail:"Core e FIGHT",cat:"core"},{name:"Escalador",detail:"Core e cardio",cat:"cardio"}]},
  {types:["fullbody","legblast"],items:[{name:"Búlgaro E",detail:"Pernas",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas",cat:"pernas"},{name:"Joelhada no Step E",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Joelhada no Step D",detail:"Cardio e WORKOUT",cat:"cardio"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento + Touch Down",detail:"Pernas e cardio",cat:"pernas"},{name:"Hop Out Step",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Corrida Lateral + Touch Down",detail:"Cardio e agilidade",cat:"cardio"},{name:"Sprawl",detail:"Cardio e corpo inteiro",cat:"cardio"}]},
  {types:["fullbody","legblast"],items:[{name:"Abdominal Supra + Rotação de Tronco",detail:"Core",cat:"core"},{name:"Abdominal Infra",detail:"Core",cat:"core"},{name:"Prancha",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal Remador",detail:"Core",cat:"core"}]},
