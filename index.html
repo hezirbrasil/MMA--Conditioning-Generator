@@ -1441,7 +1441,7 @@ function regenerateWorkoutPreset(){safeLoadWorkoutOption(lastPresetOption,true);
 function safeLoadWorkoutOption(option,forceRegenerate=false){
  const status=document.getElementById("manualStatus");
  try{
-  loadWorkoutOption(option);
+  loadWorkoutOption(option,forceRegenerate);
   if(status&&!manualParts.some(p=>["circuit","individual","fight","fightCircuit"].includes(p.type)))throw new Error("O modelo terminou sem criar blocos.");
  }catch(error){
   console.error("Erro ao gerar treino:",error);
@@ -1573,7 +1573,7 @@ document.getElementById("manualPreviewButton").addEventListener("click",()=>{
  document.getElementById("manualParts").hidden=true;
  document.getElementById("manualPreview").scrollIntoView({behavior:"smooth",block:"start"});
 });
-document.getElementById("manualPreviewRegenerate").addEventListener("click",()=>{regenerateWorkoutPreset();manualRenderPreview();});
+document.getElementById("manualPreviewRegenerate").addEventListener("click",()=>{regenerateWorkoutPreset();manualRenderPreview();document.getElementById("manualStatus").textContent="Treino regenerado. Os exercícios foram sorteados novamente.";});
 document.getElementById("manualPreviewBack").addEventListener("click",()=>{
  document.getElementById("manualPreview").hidden=true;
  document.getElementById("manualBuilder").classList.remove("preview-mode");
