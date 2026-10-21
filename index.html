@@ -1476,7 +1476,11 @@ const targetSeconds=3000;
  document.getElementById("manualBuilder").scrollIntoView({behavior:"smooth",block:"start"});
 }
 let lastPresetOption=1;
-function regenerateWorkoutPreset(){safeLoadWorkoutOption(lastPresetOption,true);}
+function regenerateWorkoutPreset(){
+ const option=Number(lastPresetOption)===2?2:1;
+ // Sempre sorteia novamente a aula atual, usando o tipo selecionado e preservando a opção de estrutura.
+ safeLoadWorkoutOption(option,true);
+}
 function safeLoadWorkoutOption(option,forceRegenerate=false){
  const status=document.getElementById("manualStatus");
  try{
