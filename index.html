@@ -1200,11 +1200,28 @@ function presetWorkoutFlowScore(block){
  return {cardio,multi};
 }
 function presetOrderWorkoutFlow(indices,source){
- return shuffle(indices).sort((a,b)=>{
-  const A=presetWorkoutFlowScore(source[a]),B=presetWorkoutFlowScore(source[b]);
-  // Primeiro, movimentos multiarticulares; blocos com mais cardio ficam no fim.
-  return (A.cardio-B.cardio)||(B.multi-A.multi);
- });
+ // Ordenação gulosa: evita repetir exercícios entre blocos sempre que houver alternativa,
+ // sem perder a progressão de multiarticulares no começo e cardio no final.
+ const remaining=shuffle(indices),ordered=[],usedNames=new Set();
+ while(remaining.length){
+  let bestPos=0,bestScore=Infinity;
+  for(let pos=0;pos<remaining.length;pos++){
+   const idx=remaining[pos],block=source[idx],items=Array.isArray(block?.items)?block.items:[];
+   const flow=presetWorkoutFlowScore(block);
+   const names=items.map(x=>String(x.name||"").trim().toLocaleLowerCase("pt-BR"));
+   const overlap=names.filter(name=>name&&usedNames.has(name)).length;
+   // Repetição pesa mais que a preferência de fase; cardio tende ao fim e multiarticulares ao início.
+   const score=overlap*12+flow.cardio*3-flow.multi*1.5+Math.random()*0.15;
+   if(score<bestScore){bestScore=score;bestPos=pos;}
+  }
+  const idx=remaining.splice(bestPos,1)[0];
+  ordered.push(idx);
+  for(const item of (source[idx]?.items||[])){
+   const name=String(item.name||"").trim().toLocaleLowerCase("pt-BR");
+   if(name)usedNames.add(name);
+  }
+ }
+ return ordered;
 }
 function presetResetBlock050Order(){
  const eligible=presetBlock050Blocks.map((block,i)=>({block,i})).filter(x=>x.block&&x.block.types.includes(presetSelectedType)).map(x=>x.i);
