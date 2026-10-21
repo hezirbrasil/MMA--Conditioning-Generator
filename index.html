@@ -1224,9 +1224,16 @@ function presetWorkoutFlowScore(block){
  return {cardio,multi};
 }
 function presetOrderWorkoutFlow(indices,source){
- // Ordenação gulosa: evita repetir exercícios entre blocos sempre que houver alternativa,
- // sem perder a progressão de multiarticulares no começo e cardio no final.
- const remaining=shuffle(indices),ordered=[],usedNames=new Set();
+ // Ordena blocos para favorecer variedade muscular e reduzir repetições na aula.
+ const remaining=shuffle(indices),ordered=[],usedNames=new Set(),seenFamilies=new Set();
+ const family=item=>{
+  const cat=String(item?.cat||"").toLowerCase(),name=String(item?.name||"").toLowerCase();
+  if(cat==="core"||/abdominal|prancha|superman/.test(name))return "core";
+  if(cat==="cardio"||/sprint|sprawl|escalador|polichinelo|hop out|joelhada no step|corrida lateral|senta, levanta e pula/.test(name))return "cardio";
+  if(["pernas","posterior"].includes(cat)||/agachamento|afundo|avanço|búlgaro|stiff|panturrilha|terra/.test(name))return "inferior";
+  if(["peito","costas","ombros","bíceps","tríceps"].includes(cat)||/supino|crucifixo|remada|pulldown|desenvolvimento|bíceps|tríceps/.test(name))return "superior";
+  return "composto";
+ };
  while(remaining.length){
   let bestPos=0,bestScore=Infinity;
   for(let pos=0;pos<remaining.length;pos++){
@@ -1234,8 +1241,9 @@ function presetOrderWorkoutFlow(indices,source){
    const flow=presetWorkoutFlowScore(block);
    const names=items.map(x=>String(x.name||"").trim().toLocaleLowerCase("pt-BR"));
    const overlap=names.filter(name=>name&&usedNames.has(name)).length;
-   // Repetição pesa mais que a preferência de fase; cardio tende ao fim e multiarticulares ao início.
-   const score=overlap*12+flow.cardio*3-flow.multi*1.5+Math.random()*0.15;
+   const newFamilies=new Set(items.map(family).filter(key=>!seenFamilies.has(key))).size;
+   // Favorece grupos ainda não representados; mantém a preferência por multiarticulares cedo e cardio mais tarde.
+   const score=overlap*12-newFamilies*2+flow.cardio*3-flow.multi*1.5+Math.random()*0.15;
    if(score<bestScore){bestScore=score;bestPos=pos;}
   }
   const idx=remaining.splice(bestPos,1)[0];
@@ -1243,6 +1251,7 @@ function presetOrderWorkoutFlow(indices,source){
   for(const item of (source[idx]?.items||[])){
    const name=String(item.name||"").trim().toLocaleLowerCase("pt-BR");
    if(name)usedNames.add(name);
+   seenFamilies.add(family(item));
   }
  }
  return ordered;
