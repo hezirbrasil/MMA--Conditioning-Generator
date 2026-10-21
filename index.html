@@ -879,7 +879,7 @@ document.getElementById("savedItemsList").addEventListener("click",event=>{
  const button=event.target.closest("button[data-saved-action]");if(!button)return;
  const items=loadSavedItems(),item=items.find(x=>x.id===button.dataset.savedId);if(!item)return;
  if(button.dataset.savedAction==="delete"){
-  if(!confirm('Excluir "'+item.name+'" da biblioteca?'))return;
+
   if(!storeSavedItems(items.filter(x=>x.id!==item.id)))return;
   renderSavedItems();document.getElementById("savedItemsStatus").textContent="Favorito excluído.";return;
  }
@@ -1340,7 +1340,7 @@ function presetFightBlock(label,addPauseAfter=false){
 }
 function loadWorkoutOption(option,forceRegenerate=false){
   lastPresetOption=option;
- if(!forceRegenerate&&manualParts.length&&!confirm("Aplicar este modelo vai substituir as partes que estão no montador. Quer continuar?"))return;
+
  manualParts=[];presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetResetCircuitOrder();presetResetBlock050Order();presetOption=option;presetResetFunctionalPhase(0);
  const addSwitch=title=>{if(manualParts.length&&manualParts[manualParts.length-1]?.type==="rest")manualParts.pop();manualParts.push(presetPause(title.includes("LUTA")?"SWITCH TO FIGHT":"SWITCH TO WORKOUT",90,"transition"));};
  manualParts.push(presetPause("AQUECIMENTO",180));
@@ -2186,7 +2186,7 @@ document.getElementById("manualLibraryList").addEventListener("change",e=>{
 document.getElementById("manualLibraryList").addEventListener("click",e=>{
  const b=e.target.closest("button[data-library-action]");if(!b)return;
  const items=manualLoadLibrary(),entry=items.find(x=>x.id===b.dataset.id);if(!entry)return;
- if(b.dataset.libraryAction==="delete"){if(!confirm('Excluir "'+entry.name+'" da biblioteca?'))return;manualStoreLibrary(items.filter(x=>x.id!==entry.id));manualRenderLibrary();return}
+ if(b.dataset.libraryAction==="delete"){manualStoreLibrary(items.filter(x=>x.id!==entry.id));manualRenderLibrary();document.getElementById("manualVisualLibraryStatus").textContent="Item excluído da biblioteca.";return}
  if(b.dataset.libraryAction==="insert"&&entry.kind==="part"){
   const positionSelect=document.querySelector('select[data-library-position][data-id="'+CSS.escape(entry.id)+'"]');
   const position=positionSelect?Math.max(0,Math.min(manualParts.length,Number(positionSelect.value)-1)):manualParts.length;
