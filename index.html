@@ -982,6 +982,22 @@ function manualLoadLibrary(){
    });
    addedStarterCircuits=true;
   }
+  // Blocos personalizados adicionados pelo usuário: B5 a B8.
+  const userFourExerciseBlocks=[
+   {id:"starter-user-B5",name:"B5",items:[{name:"Agachamento abre e fecha tocando o chão",detail:"Cardio e pernas",cat:"cardio"},{name:"Prancha tocando o pé",detail:"Core",cat:"core"},{name:"Abdominal remador",detail:"Core",cat:"core"},{name:"Infra alternado",detail:"Core",cat:"core"}]},
+   {id:"starter-user-B6",name:"B6",items:[{name:"Remador",detail:"Core",cat:"core"},{name:"Prancha",detail:"Core",cat:"core"},{name:"Remador alternado",detail:"Core",cat:"core"},{name:"Prancha baixa prancha alta",detail:"Core e estabilidade",cat:"core"}]},
+   {id:"starter-user-B7",name:"B7",items:[{name:"Búlgaro E",detail:"Pernas · esquerda",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas · direita",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Avanço pliométrico",detail:"Pernas e potência",cat:"pernas"}]},
+   {id:"starter-user-B8",name:"B8",items:[{name:"Polichinelo com halter",detail:"Cardio",cat:"cardio"},{name:"Joelhada alternada step",detail:"Cardio e combate",cat:"cardio"},{name:"Agachamento + remada alta",detail:"Pernas e costas",cat:"composto"},{name:"Agachamento lateral",detail:"Pernas",cat:"pernas"}]}
+  ];
+  userFourExerciseBlocks.forEach(entry=>{
+   if(items.some(existing=>existing?.id===entry.id))return;
+   items.push({id:entry.id,kind:"part",name:entry.name,category:"Full Body",part:{id:"starter-part-"+entry.id,type:"individual",title:entry.name,rounds:1,seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items:entry.items.map(item=>({...item}))},savedAt:"2026-10-21T00:00:00.000Z"});
+  });
+  // Circuito personalizado C18 enviado pelo usuário.
+  const userC18Id="starter-user-C18";
+  if(!items.some(existing=>existing?.id===userC18Id)){
+   items.push({id:userC18Id,kind:"part",name:"C18",category:"Full Body",part:{id:"starter-part-C18",type:"circuit",title:"C18",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Avanço + elevação lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Terra + desenvolvimento",detail:"Posterior e ombros",cat:"composto"},{name:"Agachamento + remada alta",detail:"Pernas e costas",cat:"composto"}]},savedAt:"2026-10-21T00:00:00.000Z"});
+  }
   // Classifica automaticamente todos os blocos já salvos e os blocos padrão.
   let classifiedExistingBlocks=false;
   items.forEach(entry=>{
@@ -1189,7 +1205,8 @@ const presetCircuitBlocks=[
  {types:["fullbody","legblast"],items:[{name:"Superman",detail:"Core e cadeia posterior",cat:"core"},{name:"Prancha alternada",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal remador unilateral",detail:"Core",cat:"core"}]},
  {types:["fullbody"],items:[{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Remada unilateral E",detail:"Costas",cat:"costas"},{name:"Remada unilateral D",detail:"Costas",cat:"costas"}]},
  {types:["legblast"],items:[{name:"Agachamento goblet",detail:"Pernas",cat:"pernas"},{name:"Agachamento lateral",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"}]},
- {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Elevação frontal + lateral",detail:"Ombros",cat:"ombros"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"}]}
+ {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Elevação frontal + lateral",detail:"Ombros",cat:"ombros"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"}]},
+ {types:["fullbody","legblast"],items:[{name:"Avanço + elevação lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Terra + desenvolvimento",detail:"Posterior e ombros",cat:"composto"},{name:"Agachamento + remada alta",detail:"Pernas e costas",cat:"composto"}]}
 ];
 let presetCircuitOrder=[];
 let presetCircuitCursor=0;
