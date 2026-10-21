@@ -927,6 +927,14 @@ function manualLoadLibrary(){
     addedStarterCircuits=true;
    });
   }
+  // Corrige também a cópia local antiga do C17, caso já estivesse salva como duplicada do C11.
+  const savedC17=items.find(entry=>entry?.id==="starter-preset-circuit-17");
+  if(savedC17?.part?.type==="circuit"){
+   savedC17.part.items=[{name:"Agachamento goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}];
+   savedC17.part.title="WORKOUT 17";
+   savedC17.name="WORKOUT 17 · Agachamento goblet + Crucifixo invertido";
+   addedStarterCircuits=true;
+  }
   // Bloco reutilizável pré-carregado: Búlgaro + Joelhada Step, esquerda e direita.
   const starterBlockId="starter-bulgaro-joelhada-step";
   if(!items.some(entry=>entry?.id===starterBlockId)){
@@ -1207,7 +1215,7 @@ const presetCircuitBlocks=[
  {types:["fullbody","legblast"],items:[{name:"Superman",detail:"Core e cadeia posterior",cat:"core"},{name:"Prancha alternada",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal remador unilateral",detail:"Core",cat:"core"}]},
  {types:["fullbody"],items:[{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Remada unilateral E",detail:"Costas",cat:"costas"},{name:"Remada unilateral D",detail:"Costas",cat:"costas"}]},
  {types:["legblast"],items:[{name:"Agachamento goblet",detail:"Pernas",cat:"pernas"},{name:"Agachamento lateral",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"}]},
- {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Elevação frontal + lateral",detail:"Ombros",cat:"ombros"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"}]},
+ {types:["fullbody"],items:[{name:"Agachamento goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}]},
  {types:["fullbody","legblast"],items:[{name:"Avanço + elevação lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Terra + desenvolvimento",detail:"Posterior e ombros",cat:"composto"},{name:"Agachamento + remada alta",detail:"Pernas e costas",cat:"composto"}]}
 ];
 let presetCircuitOrder=[];
