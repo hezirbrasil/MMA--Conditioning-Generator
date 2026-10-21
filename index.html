@@ -984,17 +984,31 @@ function manualLoadLibrary(){
    return true;
   });
   if(cleanedItems.length!==beforePresetCleanup)items.splice(0,items.length,...cleanedItems);
-  // Remove duplicatas exatas de circuitos em toda a biblioteca local, não apenas nos circuitos padrão.
+  // Remove circuitos duplicados pela composição, independentemente da ordem ou do ID antigo.
   const seenAllCircuitSignatures=new Set();
   const beforeAllCircuitCleanup=items.length;
   const uniqueCircuitItems=items.filter(entry=>{
    if(entry?.kind!=="part"||entry?.part?.type!=="circuit")return true;
-   const signature=(entry.part.items||[]).map(item=>String(item.name||"").trim().toLocaleLowerCase("pt-BR")).join("|");
+   const names=(entry.part.items||[]).map(item=>String(item.name||"").trim().toLocaleLowerCase("pt-BR")).filter(Boolean).sort();
+   const signature=names.join("|");
    if(!signature)return true;
    if(seenAllCircuitSignatures.has(signature)){renumberedLibrary=true;return false;}
    seenAllCircuitSignatures.add(signature);return true;
   });
   if(uniqueCircuitItems.length!==beforeAllCircuitCleanup)items.splice(0,items.length,...uniqueCircuitItems);
+  // Remove IDs predefinidos antigos que ultrapassam o catálogo ativo (por exemplo C19/C20).
+  const beforeStaleCircuitCleanup=items.length;
+  const activePresetCircuitCount=presetCircuitBlocks.length;
+  const activeCircuitItems=items.filter(entry=>{
+   const idMatch=String(entry?.id||"").match(/^starter-preset-circuit-(\\d+)$/);
+   const title=String(entry?.part?.title||entry?.name||"").trim().toUpperCase();
+   const labelMatch=title.match(/^(?:WORKOUT\\s*)?C(\\d+)\\b/);
+   const staleId=idMatch&&Number(idMatch[1])>activePresetCircuitCount;
+   const staleLabel=labelMatch&&Number(labelMatch[1])>activePresetCircuitCount&&entry?.kind==="part"&&entry?.part?.type==="circuit";
+   if(staleId||staleLabel){renumberedLibrary=true;return false;}
+   return true;
+  });
+  if(activeCircuitItems.length!==beforeStaleCircuitCleanup)items.splice(0,items.length,...activeCircuitItems);
   const savedC17=items.find(entry=>entry?.id==="starter-preset-circuit-16");
   if(savedC17?.part?.type==="circuit"){
    savedC17.part.items=[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}];
