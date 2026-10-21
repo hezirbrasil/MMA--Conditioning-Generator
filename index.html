@@ -984,6 +984,17 @@ function manualLoadLibrary(){
    return true;
   });
   if(cleanedItems.length!==beforePresetCleanup)items.splice(0,items.length,...cleanedItems);
+  // Remove duplicatas exatas de circuitos em toda a biblioteca local, não apenas nos circuitos padrão.
+  const seenAllCircuitSignatures=new Set();
+  const beforeAllCircuitCleanup=items.length;
+  const uniqueCircuitItems=items.filter(entry=>{
+   if(entry?.kind!=="part"||entry?.part?.type!=="circuit")return true;
+   const signature=(entry.part.items||[]).map(item=>String(item.name||"").trim().toLocaleLowerCase("pt-BR")).join("|");
+   if(!signature)return true;
+   if(seenAllCircuitSignatures.has(signature)){renumberedLibrary=true;return false;}
+   seenAllCircuitSignatures.add(signature);return true;
+  });
+  if(uniqueCircuitItems.length!==beforeAllCircuitCleanup)items.splice(0,items.length,...uniqueCircuitItems);
   const savedC17=items.find(entry=>entry?.id==="starter-preset-circuit-16");
   if(savedC17?.part?.type==="circuit"){
    savedC17.part.items=[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}];
