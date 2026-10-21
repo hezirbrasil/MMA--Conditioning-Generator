@@ -900,7 +900,7 @@ function manualLoadLibrary(){
   if(!Array.isArray(x))return[];
   const normalizePart=p=>p&&p.type==="fightCircuit"?{...p,type:"fight",title:p.title==="WORKOUT de FIGHT"?"Sequências de FIGHT individuais":(p.title||"Sequências de FIGHT individuais")}:p;
   // Preserve todas as partes salvas, inclusive circuitos; normaliza apenas formatos antigos.
-  const items=x.map(entry=>{if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry});
+  const items=x.map(entry=>{if(entry&&entry.kind==="part"&&entry.part)return {...entry,part:normalizePart(entry.part)};if(entry&&Array.isArray(entry.parts))return {...entry,parts:entry.parts.map(normalizePart)};return entry}).filter(entry=>!["starter-preset-circuit-6","starter-preset-circuit-14"].includes(entry?.id));
   // WORKOUTs reutilizáveis padrão: aparecem na troca de bloco mesmo em um navegador novo.
   const starterCircuits=[
    {id:"starter-circuit-superior",name:"WORKOUT Superior",part:{type:"circuit",title:"WORKOUT Superior",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Supino pegada fechada",detail:"Peito e tríceps",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps francês com halter",detail:"Tríceps",cat:"tríceps"}]}},
@@ -913,7 +913,7 @@ function manualLoadLibrary(){
   // Isso faz com que cada circuito fique disponível no menu "Trocar bloco".
   if(typeof presetCircuitBlocks!=="undefined"&&Array.isArray(presetCircuitBlocks)){
    presetCircuitBlocks.forEach((circuit,index)=>{
-    if(index===17)return; // C18 personalizado já é cadastrado abaixo com esse nome.
+    if(index===17||!circuit)return; // C18 personalizado é cadastrado abaixo; circuitos removidos são ignorados.
     const id="starter-preset-circuit-"+(index+1);
     if(items.some(existing=>existing?.id===id))return;
     const names=(circuit.items||[]).map(item=>item.name);
@@ -1166,7 +1166,7 @@ const presetBlock050Blocks=[
 let presetBlock050Order=[];
 let presetBlock050Cursor=0;
 function presetResetBlock050Order(){
- presetBlock050Order=shuffle(presetBlock050Blocks.map((block,i)=>({block,i})).filter(x=>x.block.types.includes(presetSelectedType)).map(x=>x.i));
+ presetBlock050Order=shuffle(presetBlock050Blocks.map((block,i)=>({block,i})).filter(x=>x.block&&x.block.types.includes(presetSelectedType)).map(x=>x.i));
  presetBlock050Cursor=0;
 }
 function presetExerciseBlock(label,addFinalRest=false){
@@ -1204,7 +1204,7 @@ const presetCircuitBlocks=[
  {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada aberta",detail:"Costas",cat:"costas"},{name:"Desenvolvimento",detail:"Ombros",cat:"ombros"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}]},
  {types:["fullbody","legblast"],items:[{name:"Terra com desenvolvimento",detail:"WORKOUT",cat:"composto"},{name:"Agachamento com panturrilha",detail:"Pernas",cat:"pernas"},{name:"Joelhada no step",detail:"Cardio e WORKOUT",cat:"cardio"}]},
- {types:["fullbody"],items:[{name:"Remada aberta",detail:"Costas",cat:"costas"},{name:"Pull-down",detail:"Costas",cat:"costas"},{name:"Bíceps",detail:"Bíceps",cat:"bíceps"}]},
+ null, // Circuito 6 removido a pedido do usuário.
  {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps francês",detail:"Tríceps",cat:"tríceps"}]},
  {types:["fullbody","legblast"],items:[{name:"Hop out Step",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Sprawl + Salto",detail:"Cardio e WORKOUT",cat:"cardio"}]},
  {types:["fullbody"],items:[{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Crucifixo invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Elevação lateral + frontal",detail:"Ombros",cat:"ombros"}]},
@@ -1212,7 +1212,7 @@ const presetCircuitBlocks=[
  {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Elevação frontal + lateral",detail:"Ombros",cat:"ombros"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento sumo",detail:"Pernas",cat:"pernas"},{name:"Agachamento neutro",detail:"Pernas",cat:"pernas"},{name:"Agachamento livre",detail:"Pernas",cat:"pernas"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento com rotação",detail:"Pernas e mobilidade",cat:"pernas"},{name:"Afundo com troca de base",detail:"Pernas e potência",cat:"pernas"},{name:"Agachamento com pico de contração e salto",detail:"Pernas e potência",cat:"pernas"}]},
- {types:["fullbody","legblast"],items:[{name:"Superman",detail:"Core e cadeia posterior",cat:"core"},{name:"Prancha alternada",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal remador unilateral",detail:"Core",cat:"core"}]},
+ null, // Circuito 14 removido a pedido do usuário.
  {types:["fullbody"],items:[{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Remada unilateral E",detail:"Costas",cat:"costas"},{name:"Remada unilateral D",detail:"Costas",cat:"costas"}]},
  {types:["legblast"],items:[{name:"Agachamento goblet",detail:"Pernas",cat:"pernas"},{name:"Agachamento lateral",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"}]},
  {types:["fullbody"],items:[{name:"Agachamento goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}]},
@@ -1320,7 +1320,7 @@ function safeLoadWorkoutOption(option){
    presetSelectedType=document.getElementById("presetWorkoutType")?.value||"fullbody";
    presetOption=option;presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();
    presetResetCircuitOrder();presetResetBlock050Order();presetResetFunctionalPhase(0);
-   const addCircuit=(name)=>{const pool=presetCircuitBlocks.filter(x=>x.types.includes(presetSelectedType));const source=pool.length?pool[manualParts.filter(p=>p.type==="circuit").length%pool.length].items:[];const items=presetCompleteItems(source,3);manualParts.push(presetPart("circuit",name,{durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items}));};
+   const addCircuit=(name)=>{const pool=presetCircuitBlocks.filter(x=>x&&x.types.includes(presetSelectedType));const source=pool.length?pool[manualParts.filter(p=>p.type==="circuit").length%pool.length].items:[];const items=presetCompleteItems(source,3);manualParts.push(presetPart("circuit",name,{durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,items}));};
    const addIndividual=(name)=>{const items=[];for(let i=0;i<4;i++)items.push(presetPickExercise());manualParts.push(presetPart("individual",name,{seconds:50,rest:10,items}));};
    const addFight=(name)=>{const names=getFightBank();const items=Array.from({length:4},(_,i)=>({name:names.length?names[(manualParts.length*4+i)%names.length]:"Jab + Direto",detail:"Sequência de FIGHT"}));manualParts.push(presetPart("fight",name,{seconds:240,rest:0,items}));};
    const pause=(name,seconds,type="rest")=>manualParts.push(presetPause(name,seconds,type));
