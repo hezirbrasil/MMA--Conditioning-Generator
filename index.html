@@ -488,8 +488,9 @@ function addBankExerciseToManualBuilder(name,mode){
   part=[...manualParts].reverse().find(p=>p.type==="individual");
   if(!part){manualAddPart("individual");part=manualParts[manualParts.length-1]}
  }
- if(part.items.some(item=>item.name===exercise.name)){
-  status.textContent=exercise.name+" já está nesta parte.";
+ const normalizedName=name=>String(name||"").trim().toLocaleLowerCase("pt-BR");
+ if(manualParts.some(existingPart=>(existingPart.items||[]).some(item=>normalizedName(item.name)===normalizedName(exercise.name)))){
+  status.textContent='O exercício "'+exercise.name+'" já existe nesta aula. Não é permitido repetir nomes.';
   document.getElementById("manualParts").scrollIntoView({behavior:"smooth",block:"start"});
   return;
  }
@@ -1915,6 +1916,16 @@ document.getElementById("manualVisualLibrary").addEventListener("click",event=>{
   return;
  }
  const replacement=JSON.parse(JSON.stringify(entry.part));
+ const normalizeExerciseName=name=>String(name||"").trim().toLocaleLowerCase("pt-BR");
+ const replacementNames=(replacement.items||[]).map(item=>normalizeExerciseName(item.name)).filter(Boolean);
+ const duplicateInside=replacementNames.filter((name,index)=>replacementNames.indexOf(name)!==index);
+ const namesElsewhere=new Set(manualParts.flatMap((part,index)=>index===targetIndex?[]:(part.items||[]).map(item=>normalizeExerciseName(item.name))).filter(Boolean));
+ const conflicts=[...new Set(replacementNames.filter(name=>namesElsewhere.has(name)))];
+ if(duplicateInside.length||conflicts.length){
+  const duplicateNames=[...new Set([...duplicateInside,...conflicts])];
+  document.getElementById("manualVisualLibraryStatus").textContent="Troca cancelada: o bloco repetiria exercício(s) já presente(s) na aula: "+duplicateNames.join(", ")+". Escolha outro bloco para manter todos os nomes únicos.";
+  return;
+ }
  replacement.id=manualParts[targetIndex].id||manualId();
  manualParts[targetIndex]=replacement;
  manualRenderParts();
