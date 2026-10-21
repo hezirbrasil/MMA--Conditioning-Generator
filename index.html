@@ -942,7 +942,7 @@ function manualLoadLibrary(){
   // Isso faz com que cada circuito fique disponível no menu "Trocar bloco".
   if(typeof presetCircuitBlocks!=="undefined"&&Array.isArray(presetCircuitBlocks)){
    presetCircuitBlocks.forEach((circuit,index)=>{
-    if(index===15||!circuit)return; // O modelo interno equivalente ao circuito personalizado é ignorado.
+    if(index===14||!circuit)return; // O modelo interno equivalente ao circuito personalizado é ignorado após remover C12.
     const id="starter-preset-circuit-"+(index+1);
     if(items.some(existing=>existing?.id===id))return;
     const names=(circuit.items||[]).map(item=>item.name);
@@ -956,12 +956,12 @@ function manualLoadLibrary(){
     addedStarterCircuits=true;
    });
   }
-  // Corrige também a cópia local antiga do C17, caso já estivesse salva como duplicada do C11.
-  const savedC17=items.find(entry=>entry?.id==="starter-preset-circuit-17");
+  // Corrige também a cópia local antiga do C16 (era C17 antes da remoção de C12).
+  const savedC17=items.find(entry=>entry?.id==="starter-preset-circuit-16");
   if(savedC17?.part?.type==="circuit"){
    savedC17.part.items=[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}];
-   savedC17.part.title="WORKOUT 17";
-   savedC17.name="WORKOUT 17 · Agachamento goblet + Crucifixo invertido";
+   savedC17.part.title="WORKOUT 16";
+   savedC17.name="WORKOUT 16 · Agachamento goblet + Crucifixo invertido";
    addedStarterCircuits=true;
   }
   // Bloco reutilizável pré-carregado: Búlgaro + Joelhada Step, esquerda e direita.
@@ -1286,7 +1286,6 @@ const presetCircuitBlocks=[
  {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Elevação Lateral + Elevação Frontal",detail:"Ombros",cat:"ombros"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"},{name:"Agachamento Neutro",detail:"Pernas",cat:"pernas"},{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento + Rotação",detail:"Pernas e mobilidade",cat:"pernas"},{name:"Afundo + Troca de Base",detail:"Pernas e potência",cat:"pernas"},{name:"Agachamento + Pico de Contração + Salto",detail:"Pernas e potência",cat:"pernas"}]},
- {types:["fullbody"],items:[{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Remada unilateral E",detail:"Costas",cat:"costas"},{name:"Remada unilateral D",detail:"Costas",cat:"costas"}]},
  {types:["legblast"],items:[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"}]},
  {types:["fullbody"],items:[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}]},
  {types:["fullbody","legblast"],items:[{name:"Avanço + Elevação Lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Terra + Desenvolvimento",detail:"Posterior e ombros",cat:"composto"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"}]},
