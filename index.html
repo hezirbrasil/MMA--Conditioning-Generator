@@ -1015,7 +1015,7 @@ function manualLoadLibrary(){
    const title=String(entry?.part?.title||entry?.name||"").trim().toUpperCase();
    const labelMatch=title.match(/^(?:WORKOUT\s*)?C(\\d+)\b/);
    const staleId=idMatch&&Number(idMatch[1])>activePresetCircuitCount;
-   const staleLabel=labelMatch&&Number(labelMatch[1])>activePresetCircuitCount&&entry?.kind==="part"&&entry?.part?.type==="circuit";
+   const staleLabel=labelMatch&&Number(labelMatch[1])>activePresetCircuitCount&&entry?.kind==="part"&&entry?.part?.type==="circuit"&&entry?.id!=="starter-user-C19";
    if(staleId||staleLabel){renumberedLibrary=true;return false;}
    return true;
   });
@@ -1120,7 +1120,26 @@ function manualLoadLibrary(){
    items.push(updatedEntry);
    addedStarterCircuits=true;
   });
-   // Remove a cópia antiga de C16: duplicava o circuito predefinido C14.
+   // Circuito personalizado C19 solicitado pelo usuário; sincroniza também a biblioteca já salva.
+  const c19Entry={
+   id:"starter-user-C19",kind:"part",name:"C19",category:"Full Body",
+   part:{id:"starter-part-C19",type:"circuit",title:"C19",rounds:1,seconds:50,durationMinutes:3,durationExtraSeconds:30,rest:10,restMinutes:0,restExtraSeconds:10,
+    items:[
+     {name:"Agachamento + Rotação",detail:"Pernas e core",cat:"pernas"},
+     {name:"Afundo + Troca de Base",detail:"Pernas",cat:"pernas"},
+     {name:"Agachamento + Pico de Contração + Salto",detail:"Pernas e potência",cat:"pernas"}
+    ]},
+   savedAt:"2026-10-21T00:00:00.000Z"
+  };
+  const c19Index=items.findIndex(entry=>entry?.id==="starter-user-C19"||(entry?.kind==="part"&&String(entry?.name||"").trim().toUpperCase()==="C19"));
+  if(c19Index>=0){
+   items[c19Index]={...items[c19Index],...c19Entry,part:{...items[c19Index]?.part,...c19Entry.part,items:c19Entry.part.items.map(item=>({...item}))}};
+   addedStarterCircuits=true;
+  }else{
+   items.push(c19Entry);
+   addedStarterCircuits=true;
+  }
+  // Remove a cópia antiga de C16: duplicava o circuito predefinido C14.
    const beforeDuplicateCRemoval=items.length;
    const withoutDuplicateC=items.filter(entry=>entry?.id!=="starter-user-C18" && !(entry?.kind==="part" && String(entry?.name||"").trim().toUpperCase()==="C16" && (entry?.part?.items||[]).map(item=>item.name).sort().join("|")==["Agachamento + Remada Alta","Avanço + Elevação Lateral","Terra + Desenvolvimento"].sort().join("|")));
    if(withoutDuplicateC.length!==beforeDuplicateCRemoval){items.splice(0,items.length,...withoutDuplicateC);renumberedLibrary=true;}
