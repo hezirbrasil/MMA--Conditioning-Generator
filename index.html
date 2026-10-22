@@ -1748,7 +1748,7 @@ function manualRenderPreview(){
    const pi=manualParts.indexOf(p),ii=x.originalIndex,options=manualOptions(p),current=options.find(o=>o.name===x.it.name),selectedCat=current?.cat||x.it.cat||"cardio";
    const cats=Object.keys(bankCategoryLabels).filter(cat=>options.some(o=>o.cat===cat));
    const catOptions=cats.map(cat=>'<option value="'+escHtml(cat)+'"'+(cat===selectedCat?' selected':'')+'>'+escHtml(bankCategoryLabels[cat]||cat)+'</option>').join("");
-   return '<div class="manual-preview-row"><div class="manual-preview-number">'+String(n+1).padStart(2,"0")+'</div><div class="manual-preview-name">'+escHtml(x.it.name)+'</div><button type="button" class="secondary manual-preview-swap" aria-label="Trocar exercício" title="Trocar exercício" data-preview-swap="'+pi+'" data-i="'+ii+'">↻</button><div class="manual-preview-swap-panel" data-preview-panel="'+pi+'-'+ii+'" hidden><label>1. Grupamento muscular</label><select data-preview-category="'+pi+'" data-i="'+ii+'"><option value="">Escolha o grupamento…</option>'+catOptions+'</select><label>2. Exercício</label><select data-preview-exercise="'+pi+'" data-i="'+ii+'"><option value="">Escolha primeiro o grupamento</option></select></div></div>';
+   return '<div class="manual-preview-row"><div class="manual-preview-number">'+String(n+1).padStart(2,"0")+'</div><div class="manual-preview-name">'+escHtml(x.it.name)+'</div><div class="manual-preview-actions"><button type="button" class="secondary" data-preview-move="up" data-p="'+pi+'" data-i="'+ii+'" aria-label="Subir exercício" title="Subir" '+(n===0?'disabled':'')+'>↑</button><button type="button" class="secondary" data-preview-move="down" data-p="'+pi+'" data-i="'+ii+'" aria-label="Descer exercício" title="Descer" '+(n===sourceItems.length-1?'disabled':'')+'>↓</button><button type="button" class="secondary manual-preview-swap" aria-label="Trocar exercício" title="Trocar exercício" data-preview-swap="'+pi+'" data-i="'+ii+'">↻ Trocar</button></div><div class="manual-preview-swap-panel" data-preview-panel="'+pi+'-'+ii+'" hidden><label>1. Grupamento muscular</label><select data-preview-category="'+pi+'" data-i="'+ii+'"><option value="">Escolha o grupamento…</option>'+catOptions+'</select><label>2. Exercício</label><select data-preview-exercise="'+pi+'" data-i="'+ii+'"><option value="">Escolha primeiro o grupamento</option></select></div></div>';
   }).join("");
   return '<article class="manual-preview-part"><h4>'+String(idx+1).padStart(2,"0")+' · '+title+' <span style="color:#c5a4f5;font-weight:500">('+sourceItems.length+' exercícios)</span></h4>'+(rows?'<div class="manual-preview-list">'+rows+'</div>':'<div class="manual-preview-empty">Nenhum exercício nesta parte.</div>')+'</article>';
  }).join("");
@@ -1786,6 +1786,19 @@ document.getElementById("manualPreviewBack").addEventListener("click",()=>{
  document.getElementById("manualParts").scrollIntoView({behavior:"smooth",block:"start"});
 });
 document.getElementById("manualPreviewContent").addEventListener("click",e=>{
+ const move=e.target.closest("[data-preview-move]");
+ if(move){
+  const pi=Number(move.dataset.p),ii=Number(move.dataset.i),p=manualParts[pi];
+  const target=move.dataset.previewMove==="up"?ii-1:ii+1;
+  if(!p||!Number.isInteger(ii)||ii<0||ii>=p.items.length||target<0||target>=p.items.length)return;
+  const item=p.items.splice(ii,1)[0];
+  p.items.splice(target,0,item);
+  manualRenderParts();
+  manualRenderPreview();
+  const status=document.getElementById("manualStatus");
+  if(status)status.textContent="Ordem dos exercícios atualizada no Modo Script.";
+  return;
+ }
  const btn=e.target.closest("[data-preview-swap]");
  if(!btn)return;
  const pi=Number(btn.dataset.previewSwap),ii=Number(btn.dataset.i),key=pi+"-"+ii;
