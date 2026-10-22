@@ -1591,12 +1591,13 @@ function loadWorkoutOption(option,forceRegenerate=false){
    }));
    candidates.sort((a,b)=>Number(a.cat!==item.cat)-Number(b.cat!==item.cat));
    const replacement=candidates[0];
-   if(replacement&&!forceRegenerate){
+   if(replacement){
+    // Regra global: também na regeneração, trocar qualquer exercício repetido por uma alternativa inédita.
     part.items[index]={...replacement,detail:replacement.detail||item.detail||"WORKOUT"};
     const replacementKey=String(replacement.name).trim().toLocaleLowerCase("pt-BR");
     usedWorkoutNames.add(replacementKey);partNames.add(replacementKey);
    }else{
-    // Na regeneração, nunca corrigir repetição trocando só um item: preservar o bloco inteiro.
+    // Só sinaliza erro se o banco realmente não tiver nenhuma alternativa única disponível.
     part.items[index]={...item,_duplicateExercise:true};
    }
   });
