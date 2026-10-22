@@ -1087,7 +1087,7 @@ function manualLoadLibrary(){
   // Blocos personalizados adicionados pelo usuário: B5 a B8.
   const userFourExerciseBlocks=[
    {id:"starter-user-B5",name:"B5",items:[{name:"Agachamento + Abre e Fecha Tocando o Solo",detail:"Pernas e cardio",cat:"cardio"},{name:"Prancha + Feet Touch",detail:"Core",cat:"core"},{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Polichinelo",detail:"Cardio",cat:"cardio"}]},
-   {id:"starter-user-B6",name:"B6",items:[{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Prancha Baixa + Prancha Alta",detail:"Core e estabilidade",cat:"core"},{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}]},
+   {id:"starter-user-B6",name:"B6",items:[{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Prancha Baixa + Prancha Alta",detail:"Core e estabilidade",cat:"core"},{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"},{name:"Remada Alternada",detail:"Costas",cat:"costas"}]},
    {id:"starter-user-B7",name:"B7",items:[{name:"Búlgaro E",detail:"Pernas · esquerda",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas · direita",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Sprint",detail:"Cardio e velocidade",cat:"cardio"}]},
    {id:"starter-user-B8",name:"B8",items:[{name:"Polichinelo",detail:"Cardio",cat:"cardio"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"},{name:"Supino",detail:"Peito",cat:"peito"}]},
    {id:"starter-user-B9",name:"B9",items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"}]},
@@ -1102,8 +1102,23 @@ function manualLoadLibrary(){
    {id:"starter-user-B18",name:"B18",items:[{name:"Sprawl",detail:"Condicionamento para luta",cat:"cardio"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"},{name:"Agachamento + Touch Down",detail:"Pernas e cardio",cat:"pernas"},{name:"Abdominal Supra + Rotação de Tronco",detail:"Core",cat:"core"}]}
   ];
   userFourExerciseBlocks.forEach(entry=>{
-   if(items.some(existing=>existing?.id===entry.id))return;
-   items.push({id:entry.id,kind:"part",name:entry.name,category:"Full Body",part:{id:"starter-part-"+entry.id,type:"individual",title:entry.name,rounds:1,seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items:entry.items.map(item=>({...item}))},savedAt:"2026-10-21T00:00:00.000Z"});
+   const existingIndex=items.findIndex(existing=>existing?.id===entry.id || (entry.id==="starter-user-B6" && existing?.kind==="part" && String(existing?.name||"").trim().toUpperCase()==="B6"));
+   const normalizedItems=entry.items.map(item=>({...item}));
+   if(entry.id==="starter-user-B6" && existingIndex>=0){
+    const existingPart=items[existingIndex]?.part;
+    const existingExercises=Array.isArray(existingPart?.items)?existingPart.items:[];
+    const hasPolichinelo=existingExercises.some(item=>/polichinelo/i.test(String(item?.name||"")));
+    if(hasPolichinelo){
+     const updatedExercises=existingExercises.map(item=>/polichinelo/i.test(String(item?.name||""))?{...item,name:"Remada Alternada",detail:"Costas",cat:"costas"}:{...item});
+     items[existingIndex]={...items[existingIndex],id:entry.id,name:"B6",category:"Full Body",part:{...existingPart,id:"starter-part-"+entry.id,title:"B6",items:updatedExercises}};
+     addedStarterCircuits=true;
+     return;
+    }
+   }
+   const updatedEntry={id:entry.id,kind:"part",name:entry.name,category:"Full Body",part:{id:"starter-part-"+entry.id,type:"individual",title:entry.name,rounds:1,seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items:normalizedItems},savedAt:"2026-10-21T00:00:00.000Z"};
+   if(existingIndex>=0){items[existingIndex]=updatedEntry;addedStarterCircuits=true;return;}
+   items.push(updatedEntry);
+   addedStarterCircuits=true;
   });
    // Remove a cópia antiga de C16: duplicava o circuito predefinido C14.
    const beforeDuplicateCRemoval=items.length;
