@@ -1344,12 +1344,13 @@ function presetOrderWorkoutFlow(indices,source){
  const remaining=shuffle(indices),ordered=[],usedNames=new Set(),seenFamilies=new Set();
  const family=item=>{
   const cat=String(item?.cat||"").toLowerCase(),name=String(item?.name||"").toLowerCase();
-  if(cat==="core"||/abdominal|prancha|superman/.test(name))return "core";
-  if(cat==="cardio"||/sprint|sprawl|escalador|polichinelo|hop out|joelhada no step|corrida lateral|senta, levanta e pula/.test(name))return "cardio";
-  if(["pernas","posterior"].includes(cat)||/agachamento|afundo|avanço|búlgaro|stiff|panturrilha|terra/.test(name))return "inferior";
+  if(cat==="core"||/abdominal|prancha|superman|feet touch|oblíquo|obliquo/.test(name))return "core";
+  if(cat==="cardio"||/sprint|sprawl|escalador|polichinelo|hop out|joelhada no step|corrida lateral|senta, levanta e pula|burpee/.test(name))return "cardio";
+  if(["pernas","posterior"].includes(cat)||/agachamento|afundo|avanço|búlgaro|bulgaro|stiff|panturrilha|terra|extensora|flexora/.test(name))return "inferior";
   if(["peito","costas","ombros","bíceps","tríceps"].includes(cat)||/supino|crucifixo|remada|pulldown|desenvolvimento|bíceps|tríceps/.test(name))return "superior";
   return "composto";
  };
+ const legBlastCounts={inferior:0,core:0,cardio:0};
  while(remaining.length){
   let bestPos=0,bestScore=Infinity;
   for(let pos=0;pos<remaining.length;pos++){
@@ -1357,18 +1358,29 @@ function presetOrderWorkoutFlow(indices,source){
    const flow=presetWorkoutFlowScore(block);
    const names=items.map(x=>String(x.name||"").trim().toLocaleLowerCase("pt-BR"));
    const overlap=names.filter(name=>name&&usedNames.has(name)).length;
-   const newFamilies=new Set(items.map(family).filter(key=>!seenFamilies.has(key))).size;
-   // Favorece grupos ainda não representados; mantém a preferência por multiarticulares cedo e cardio mais tarde.
-   const score=overlap*12-newFamilies*2+flow.cardio*3-flow.multi*1.5+Math.random()*0.15;
+   const families=items.map(family);
+   const newFamilies=new Set(families.filter(key=>!seenFamilies.has(key))).size;
+   let score=overlap*12-newFamilies*2+flow.cardio*3-flow.multi*1.5;
+   if(presetSelectedType==="legblast"){
+    // Balanceia os blocos de inferiores, abdômen e condicionamento ao longo da sequência.
+    const present=new Set(families.filter(key=>Object.prototype.hasOwnProperty.call(legBlastCounts,key)));
+    const balancePenalty=[...present].reduce((sum,key)=>sum+legBlastCounts[key]*2,0);
+    const leastRepresented=Math.min(legBlastCounts.inferior,legBlastCounts.core,legBlastCounts.cardio);
+    const missingBonus=[...present].filter(key=>legBlastCounts[key]===leastRepresented).length;
+    score=overlap*12+balancePenalty-missingBonus*3+flow.cardio*0.35-flow.multi*0.25;
+   }
+   score+=Math.random()*0.15;
    if(score<bestScore){bestScore=score;bestPos=pos;}
   }
   const idx=remaining.splice(bestPos,1)[0];
   ordered.push(idx);
+  const blockFamilies=new Set();
   for(const item of (source[idx]?.items||[])){
    const name=String(item.name||"").trim().toLocaleLowerCase("pt-BR");
    if(name)usedNames.add(name);
-   seenFamilies.add(family(item));
+   const key=family(item);seenFamilies.add(key);blockFamilies.add(key);
   }
+  if(presetSelectedType==="legblast")for(const key of blockFamilies)if(Object.prototype.hasOwnProperty.call(legBlastCounts,key))legBlastCounts[key]++;
  }
  return ordered;
 }
