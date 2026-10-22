@@ -937,6 +937,11 @@ function manualLoadLibrary(){
   const beforeB4Removal=items.length;
   const withoutB4=items.filter(entry=>!(entry?.kind==="part"&&(entry?.id==="starter-user-B4"||String(entry?.name||"").trim().toUpperCase()==="B4"||String(entry?.part?.title||"").trim().toUpperCase()==="B4")));
   if(withoutB4.length!==beforeB4Removal){items.splice(0,items.length,...withoutB4);renumberedLibrary=true;}
+  // Remove C14 pelo conteúdo exato, inclusive versões antigas já salvas no navegador.
+  const c14Signature=["Agachamento Sumô","Abdominal Oblíquo E","Abdominal Oblíquo D"].sort().join("|");
+  const beforeC14Removal=items.length;
+  const withoutC14=items.filter(entry=>!(entry?.kind==="part"&&entry?.part?.type==="circuit"&&(entry?.part?.items||[]).map(item=>String(item?.name||"").trim()).sort().join("|")===c14Signature));
+  if(withoutC14.length!==beforeC14Removal){items.splice(0,items.length,...withoutC14);renumberedLibrary=true;}
   // WORKOUTs reutilizáveis padrão: aparecem na troca de bloco mesmo em um navegador novo.
   const starterCircuits=[
    {id:"starter-circuit-superior",name:"WORKOUT Superior",part:{type:"circuit",title:"WORKOUT Superior",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Supino pegada fechada",detail:"Peito e tríceps",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps Francês",detail:"Tríceps",cat:"tríceps"}]}},
