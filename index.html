@@ -1133,6 +1133,17 @@ function manualLoadLibrary(){
    return !isC12;
   });
   if(withoutC12.length!==beforeC12Removal){items.splice(0,items.length,...withoutC12);renumberedLibrary=true;}
+  // Remove somente o C11 identificado pelo número; não excluir outros circuitos com os mesmos exercícios.
+  const beforeC11Removal=items.length;
+  const withoutC11=items.filter(entry=>{
+   if(entry?.kind!=="part"||!entry?.part||entry.part.type!=="circuit")return true;
+   const title=String(entry.part.title||"").trim().toUpperCase();
+   const name=String(entry.name||"").trim().toUpperCase();
+   const id=String(entry.id||"").trim().toUpperCase();
+   const isC11=/^(?:(?:WORKOUT)\s*)?(?:C\s*)?11(?:\b|\s|$)/.test(title)||/^(?:(?:WORKOUT)\s*)?(?:C\s*)?11(?:\b|\s|$)/.test(name)||id==="STARTER-USER-C11";
+   return !isC11;
+  });
+  if(withoutC11.length!==beforeC11Removal){items.splice(0,items.length,...withoutC11);renumberedLibrary=true;}
   // Classifica automaticamente todos os blocos já salvos e os blocos padrão.
   let classifiedExistingBlocks=false;
   items.forEach(entry=>{
