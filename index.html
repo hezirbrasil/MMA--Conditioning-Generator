@@ -983,7 +983,7 @@ function manualLoadLibrary(){
    if(signature)presetCircuitSeen.add(signature);
    return true;
   });
-  if(cleanedItems.length!==beforePresetCleanup)items.splice(0,items.length,...cleanedItems);
+  if(cleanedItems.length!==beforePresetCleanup){items.splice(0,items.length,...cleanedItems);renumberedLibrary=true;}
   // Remove circuitos duplicados pela composição, independentemente da ordem ou do ID antigo.
   const seenAllCircuitSignatures=new Set();
   const beforeAllCircuitCleanup=items.length;
@@ -995,7 +995,7 @@ function manualLoadLibrary(){
    if(seenAllCircuitSignatures.has(signature)){renumberedLibrary=true;return false;}
    seenAllCircuitSignatures.add(signature);return true;
   });
-  if(uniqueCircuitItems.length!==beforeAllCircuitCleanup)items.splice(0,items.length,...uniqueCircuitItems);
+  if(uniqueCircuitItems.length!==beforeAllCircuitCleanup){items.splice(0,items.length,...uniqueCircuitItems);renumberedLibrary=true;}
   // Remove IDs predefinidos antigos que ultrapassam o catálogo ativo (por exemplo C19/C20).
   const beforeStaleCircuitCleanup=items.length;
   const activePresetCircuitCount=presetCircuitBlocks.length;
@@ -1008,7 +1008,7 @@ function manualLoadLibrary(){
    if(staleId||staleLabel){renumberedLibrary=true;return false;}
    return true;
   });
-  if(activeCircuitItems.length!==beforeStaleCircuitCleanup)items.splice(0,items.length,...activeCircuitItems);
+  if(activeCircuitItems.length!==beforeStaleCircuitCleanup){items.splice(0,items.length,...activeCircuitItems);renumberedLibrary=true;}
   const savedC17=items.find(entry=>entry?.id==="starter-preset-circuit-16");
   if(savedC17?.part?.type==="circuit"){
    savedC17.part.items=[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}];
@@ -2101,7 +2101,7 @@ let manualVisualLibraryKind="circuit";
 function manualVisualLibraryEntries(){
  const source=manualLoadLibrary().filter(entry=>entry&&entry.kind==="part"&&entry.part&&["circuit","individual"].includes(entry.part.type)&&entry.part.type===manualVisualLibraryKind);
  const signatures=new Set();
- const all=source.filter(entry=>{const signature=(entry.part.items||[]).map(item=>String(item.name||"").trim().toLocaleLowerCase("pt-BR")).join("|");if(!signature)return true;if(signatures.has(signature))return false;signatures.add(signature);return true;});
+ const all=source.filter(entry=>{const signature=(entry.part.items||[]).map(item=>String(item.name||"").trim().toLocaleLowerCase("pt-BR")).filter(Boolean).sort().join("|");if(!signature)return true;if(signatures.has(signature))return false;signatures.add(signature);return true;});
  const prefix=manualVisualLibraryKind==="circuit"?"C":"B";
  const getFixedNumber=entry=>{
   const id=String(entry.id||"");
