@@ -1015,7 +1015,7 @@ function manualLoadLibrary(){
   const activeCircuitItems=items.filter(entry=>{
    const idMatch=String(entry?.id||"").match(/^starter-preset-circuit-(\\d+)$/);
    const title=String(entry?.part?.title||entry?.name||"").trim().toUpperCase();
-   const labelMatch=title.match(/^(?:WORKOUT\\s*)?C(\\d+)\\b/);
+   const labelMatch=title.match(/^(?:WORKOUT\s*)?C(\\d+)\b/);
    const staleId=idMatch&&Number(idMatch[1])>activePresetCircuitCount;
    const staleLabel=labelMatch&&Number(labelMatch[1])>activePresetCircuitCount&&entry?.kind==="part"&&entry?.part?.type==="circuit";
    if(staleId||staleLabel){renumberedLibrary=true;return false;}
@@ -1118,7 +1118,7 @@ function manualLoadLibrary(){
    const title=String(entry.part.title||"").trim().toUpperCase();
    const name=String(entry.name||"").trim().toUpperCase();
    const id=String(entry.id||"").trim().toUpperCase();
-   const isC13=/^(?:WORKOUT\\s*)?C13(?:\\b|\\s|$)/.test(title)||/^(?:WORKOUT\\s*)?C13(?:\\b|\\s|$)/.test(name)||id==="STARTER-PRESET-CIRCUIT-13"||id==="STARTER-USER-C13";
+   const isC13=/^(?:WORKOUT\s*)?C13(?:\b|\s|$)/.test(title)||/^(?:WORKOUT\s*)?C13(?:\b|\s|$)/.test(name)||id==="STARTER-PRESET-CIRCUIT-13"||id==="STARTER-USER-C13";
    return !isC13;
   });
   if(withoutC13.length!==beforeC13Removal){items.splice(0,items.length,...withoutC13);renumberedLibrary=true;}
