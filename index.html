@@ -1118,7 +1118,7 @@ function manualLoadLibrary(){
    const title=String(entry.part.title||"").trim().toUpperCase();
    const name=String(entry.name||"").trim().toUpperCase();
    const id=String(entry.id||"").trim().toUpperCase();
-   const isC13=/^(?:WORKOUT\s*)?C13(?:\b|\s|$)/.test(title)||/^(?:WORKOUT\s*)?C13(?:\b|\s|$)/.test(name)||id==="STARTER-PRESET-CIRCUIT-13"||id==="STARTER-USER-C13";
+   const isC13=/^(?:(?:WORKOUT)\s*)?(?:C\s*)?13(?:\b|\s|$)/.test(title)||/^(?:(?:WORKOUT)\s*)?(?:C\s*)?13(?:\b|\s|$)/.test(name)||id==="STARTER-PRESET-CIRCUIT-13"||id==="STARTER-USER-C13";
    return !isC13;
   });
   if(withoutC13.length!==beforeC13Removal){items.splice(0,items.length,...withoutC13);renumberedLibrary=true;}
