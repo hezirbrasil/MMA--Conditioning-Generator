@@ -1011,7 +1011,6 @@ function manualLoadLibrary(){
   if(activeCircuitItems.length!==beforeStaleCircuitCleanup){items.splice(0,items.length,...activeCircuitItems);renumberedLibrary=true;}
   const savedC17=items.find(entry=>entry?.id==="starter-preset-circuit-16");
   if(savedC17?.part?.type==="circuit"){
-   savedC17.part.items=[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}];
    savedC17.part.title="WORKOUT 16";
    savedC17.name="WORKOUT 16 · Agachamento goblet + Crucifixo invertido";
    addedStarterCircuits=true;
