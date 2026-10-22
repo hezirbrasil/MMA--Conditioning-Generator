@@ -1715,7 +1715,7 @@ function manualRenderParts(){
    const swapCat=(p.swapCategories&&p.swapCategories[ii])||(currentOpt&&currentOpt.cat)||swapCats[0]||"";
    const swapOpts=allSwapOpts.filter(o=>o.cat===swapCat);
    const swapLabels=isFightSwap?fightCategoryLabels:bankCategoryLabels;
-   return '<div class="builder-item"><span><b>'+String(ii+1).padStart(2,"0")+'.</b> '+escHtml(it.name)+'</span><div class="builder-item-actions"><button type="button" class="secondary" data-manual-action="swap-item" data-p="'+pi+'" data-i="'+ii+'">↻ Trocar</button></div><div class="builder-swap-slot" hidden><div class="builder-field"><label>1. Escolha o grupamento muscular</label><select data-manual-replace-category data-p="'+pi+'" data-i="'+ii+'">'+swapCats.map(cat=>'<option value="'+escHtml(cat)+'"'+(cat===swapCat?' selected':'')+'>'+escHtml(swapLabels[cat]||cat)+'</option>').join("")+'</select></div><div class="builder-field"><label>2. Escolha o exercício</label><select data-manual-replace-select data-p="'+pi+'" data-i="'+ii+'"><option value="">Escolha o substituto…</option>'+swapOpts.map(o=>'<option value="'+escHtml(o.name)+'" '+(o.name===it.name?'selected':'')+' >'+escHtml(o.name)+'</option>').join("")+'</select></div></div></div>';
+   return '<div class="builder-item"><span><b>'+String(ii+1).padStart(2,"0")+'.</b> '+escHtml(it.name)+'</span><div class="builder-item-actions"><button type="button" class="secondary" data-manual-action="move-item-up" data-p="'+pi+'" data-i="'+ii+'" aria-label="Subir '+escHtml(it.name)+'" title="Subir exercício" '+(ii===0?'disabled':'')+'>↑</button><button type="button" class="secondary" data-manual-action="move-item-down" data-p="'+pi+'" data-i="'+ii+'" aria-label="Descer '+escHtml(it.name)+'" title="Descer exercício" '+(ii===p.items.length-1?'disabled':'')+'>↓</button><button type="button" class="secondary" data-manual-action="swap-item" data-p="'+pi+'" data-i="'+ii+'">↻ Trocar</button></div><div class="builder-swap-slot" hidden><div class="builder-field"><label>1. Escolha o grupamento muscular</label><select data-manual-replace-category data-p="'+pi+'" data-i="'+ii+'">'+swapCats.map(cat=>'<option value="'+escHtml(cat)+'"'+(cat===swapCat?' selected':'')+'>'+escHtml(swapLabels[cat]||cat)+'</option>').join("")+'</select></div><div class="builder-field"><label>2. Escolha o exercício</label><select data-manual-replace-select data-p="'+pi+'" data-i="'+ii+'"><option value="">Escolha o substituto…</option>'+swapOpts.map(o=>'<option value="'+escHtml(o.name)+'" '+(o.name===it.name?'selected':'')+' >'+escHtml(o.name)+'</option>').join("")+'</select></div></div></div>';
   }).join("");
   const isIndividual=p.type==="individual";
   const titleField=isIndividual?"":'<div class="builder-field"><label>Nome da parte</label><input data-manual-prop="title" data-p="'+pi+'" maxlength="80" value="'+escHtml(p.title||manualTypeLabel(p.type))+'"></div>';
@@ -1952,6 +1952,19 @@ document.getElementById("manualParts").addEventListener("click",e=>{
    document.getElementById("manualStatus").textContent="Bloco substituído por quatro exercícios individuais.";
   }
   replacement.id=current.id||manualId();replacement.collapsed=false;manualParts[pi]=replacement;manualRenderParts();return;
+ }
+ if(action==="move-item-up"||action==="move-item-down"){
+  const ii=Number(b.dataset.i);
+  const target=action==="move-item-up"?ii-1:ii+1;
+  if(!Number.isInteger(ii)||ii<0||ii>=p.items.length||target<0||target>=p.items.length)return;
+  const moved=p.items.splice(ii,1)[0];
+  p.items.splice(target,0,moved);
+  manualRenderParts();
+  const preview=document.getElementById("manualPreview");
+  if(preview&&!preview.hidden)manualRenderPreview();
+  const status=document.getElementById("manualStatus");
+  if(status)status.textContent="Ordem dos exercícios atualizada.";
+  return;
  }
  if(action==="swap-part"){
   const panel=b.closest(".builder-part")?.querySelector(".builder-part-swap");
