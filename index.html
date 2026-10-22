@@ -1122,18 +1122,15 @@ function manualLoadLibrary(){
    return !isC13;
   });
   if(withoutC13.length!==beforeC13Removal){items.splice(0,items.length,...withoutC13);renumberedLibrary=true;}
-  // Remove C12 personalizado pelo número ou pela composição exata, inclusive o circuito superior salvo.
-  const normalizeC12Text=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLocaleLowerCase("pt-BR").replace(/\s+/g," ");
-  const c12Signature=["Supino pegada fechada","Crucifixo","Tríceps Francês"].map(normalizeC12Text).sort().join("|");
+  // Remove somente o circuito identificado como C12; não remover outros blocos que compartilhem os exercícios.
   const beforeC12Removal=items.length;
   const withoutC12=items.filter(entry=>{
    if(entry?.kind!=="part"||!entry?.part||entry.part.type!=="circuit")return true;
    const title=String(entry.part.title||"").trim().toUpperCase();
    const name=String(entry.name||"").trim().toUpperCase();
    const id=String(entry.id||"").trim().toUpperCase();
-   const names=(entry.part.items||[]).map(item=>normalizeC12Text(item?.name)).sort().join("|");
    const isC12=/^(?:(?:WORKOUT)\s*)?(?:C\s*)?12(?:\b|\s|$)/.test(title)||/^(?:(?:WORKOUT)\s*)?(?:C\s*)?12(?:\b|\s|$)/.test(name)||id==="STARTER-USER-C12";
-   return !(isC12||names===c12Signature);
+   return !isC12;
   });
   if(withoutC12.length!==beforeC12Removal){items.splice(0,items.length,...withoutC12);renumberedLibrary=true;}
   // Classifica automaticamente todos os blocos já salvos e os blocos padrão.
