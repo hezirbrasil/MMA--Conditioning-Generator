@@ -485,7 +485,7 @@ document.getElementById("addExerciseForm").addEventListener("submit",addExercise
 const bankCategoryLabels={peito:"PEITO",costas:"COSTAS",ombros:"OMBROS",bíceps:"BÍCEPS",tríceps:"TRÍCEPS",pernas:"PERNAS",posterior:"POSTERIOR",composto:"COMPOSTOS",core:"CORE E ABDOMINAIS",cardio:"CARDIO E FUNCIONAL"};
 function renderExerciseBank(){
  const query=document.getElementById("bankSearch").value.trim().toLocaleLowerCase("pt-BR"),category=document.getElementById("bankCategoryFilter").value;
-  const all=getExerciseBankSeparateSides(),filtered=all.filter(x=>(category==="all"||x.cat===category)&&x.name.toLocaleLowerCase("pt-BR").includes(query));
+  const all=getExerciseBankSeparateSides();const selectedNames=new Set([...(manualParts||[]).flatMap(p=>(p.items||[]).map(x=>String(x.name||"").trim().toLocaleLowerCase("pt-BR"))),...(workoutGroups||[]).flatMap(g=>(g.items||[]).map(x=>String(x.name||"").trim().toLocaleLowerCase("pt-BR")))]);const filtered=all.filter(x=>!selectedNames.has(String(x.name||"").trim().toLocaleLowerCase("pt-BR"))&&(category==="all"||x.cat===category)&&x.name.toLocaleLowerCase("pt-BR").includes(query));
  document.getElementById("bankSummary").textContent=filtered.length+" de "+all.length+" exercícios exibidos.";
  const groups=Object.keys(bankCategoryLabels).map(cat=>({cat,label:bankCategoryLabels[cat],items:filtered.filter(x=>x.cat===cat)})).filter(g=>g.items.length);
  document.getElementById("bankList").innerHTML=groups.length?groups.map(g=>'<details class="bank-category" '+(query||category!=="all"?'open':'')+'><summary>'+escHtml(g.label)+'<span>'+g.items.length+' EXERCÍCIOS</span></summary><ul class="bank-list">'+g.items.map(x=>'<li><span class="bank-item-name">'+escHtml(x.name)+(x.custom?' <span style="color:#c5a4f5;font-size:10px">· ADICIONADO</span>':'')+'</span><span class="bank-item-actions"><button type="button" class="secondary" data-bank-manual-name="'+escHtml(x.name)+'" data-bank-manual-mode="individual">＋ Avulso</button><button type="button" class="secondary" data-bank-manual-name="'+escHtml(x.name)+'" data-bank-manual-mode="circuit">＋ WORKOUT</button><button type="button" class="secondary" data-bank-name="'+escHtml(x.name)+'" data-bank-target="0">＋ Bloco 1</button><button type="button" class="secondary" data-bank-name="'+escHtml(x.name)+'" data-bank-target="2">＋ Bloco 3</button></span></li>').join("")+'</ul></details>').join(""):'<div class="bank-empty">Nenhum exercício encontrado com esses filtros.</div>';
@@ -512,6 +512,7 @@ function addBankExerciseToManualBuilder(name,mode){
  }
  part.items.push({name:exercise.name,detail:exercise.detail||"WORKOUT"});
  manualRenderParts();
+ renderExerciseBank();
  const msg=mode==="circuit"?"Adicionado ao circuito: "+exercise.name+".":"Adicionado como exercício avulso: "+exercise.name+".";
  document.getElementById("manualStatus").textContent=msg;
  status.textContent=msg;
@@ -567,6 +568,7 @@ window.addBankExerciseToBlock=function(event,name,gi){
  const group=workoutGroups[gi];
  unit.forEach(x=>group.items.push({name:x.name,detail:"WORKOUT"}));
  renderWorkout();
+ renderExerciseBank();
  const msg=unit.length===2?"Par E/D adicionado ao BLOCO "+(gi+1)+", esquerdo seguido do direito.":"Exercício adicionado ao BLOCO "+(gi+1)+".";
  document.getElementById("status").textContent=msg;
  document.getElementById("bankSummary").textContent=msg;
@@ -605,7 +607,7 @@ window.addSpecificToBlock=function(event,gi){
   group.items.push({name,detail:"Sequência de golpes"});
   status.textContent="Sequência de FIGHT adicionada ao bloco.";
  }
- renderWorkout();saveWorkout();
+ renderWorkout();saveWorkout();renderExerciseBank();
  const updated=document.getElementById("blockAddStatus"+gi);
  if(updated)updated.textContent=functional?(select.value.includes("|||")?"Par E/D adicionado ao bloco, esquerdo seguido do direito.":"Exercício adicionado ao bloco."):"Sequência de FIGHT adicionada ao bloco.";
 };
