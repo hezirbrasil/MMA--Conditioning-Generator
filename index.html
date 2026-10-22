@@ -940,7 +940,6 @@ function manualLoadLibrary(){
   // WORKOUTs reutilizáveis padrão: aparecem na troca de bloco mesmo em um navegador novo.
   const starterCircuits=[
    {id:"starter-circuit-superior",name:"WORKOUT Superior",part:{type:"circuit",title:"WORKOUT Superior",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Supino pegada fechada",detail:"Peito e tríceps",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps Francês",detail:"Tríceps",cat:"tríceps"}]}},
-   {id:"starter-circuit-inferior-core",name:"WORKOUT Inferior + Core",part:{type:"circuit",title:"WORKOUT Inferior + Core",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"},{name:"Abdominal Oblíquo E",detail:"Core · esquerda",cat:"core"},{name:"Abdominal Oblíquo D",detail:"Core · direita",cat:"core"}]}},
   ];
   let addedStarterCircuits=false;
   starterCircuits.forEach(entry=>{if(!items.some(existing=>existing?.id===entry.id)){items.push({...entry,kind:"part",part:{...entry.part,id:"starter-part-"+entry.id.replace("starter-circuit-",""),items:entry.part.items.map(item=>({...item}))},savedAt:"2026-10-20T00:00:00.000Z"});addedStarterCircuits=true;}});
