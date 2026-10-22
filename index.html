@@ -1111,6 +1111,17 @@ function manualLoadLibrary(){
    const beforeDuplicateCRemoval=items.length;
    const withoutDuplicateC=items.filter(entry=>entry?.id!=="starter-user-C18" && !(entry?.kind==="part" && String(entry?.name||"").trim().toUpperCase()==="C16" && (entry?.part?.items||[]).map(item=>item.name).sort().join("|")==["Agachamento + Remada Alta","Avanço + Elevação Lateral","Terra + Desenvolvimento"].sort().join("|")));
    if(withoutDuplicateC.length!==beforeDuplicateCRemoval){items.splice(0,items.length,...withoutDuplicateC);renumberedLibrary=true;}
+  // Remove C13 da biblioteca após reconstruir os circuitos padrão, para não reaparecer no próximo carregamento.
+  const beforeC13Removal=items.length;
+  const withoutC13=items.filter(entry=>{
+   if(entry?.kind!=="part"||!entry?.part||entry.part.type!=="circuit")return true;
+   const title=String(entry.part.title||"").trim().toUpperCase();
+   const name=String(entry.name||"").trim().toUpperCase();
+   const id=String(entry.id||"").trim().toUpperCase();
+   const isC13=/^(?:WORKOUT\\s*)?C13(?:\\b|\\s|$)/.test(title)||/^(?:WORKOUT\\s*)?C13(?:\\b|\\s|$)/.test(name)||id==="STARTER-PRESET-CIRCUIT-13"||id==="STARTER-USER-C13";
+   return !isC13;
+  });
+  if(withoutC13.length!==beforeC13Removal){items.splice(0,items.length,...withoutC13);renumberedLibrary=true;}
   // Classifica automaticamente todos os blocos já salvos e os blocos padrão.
   let classifiedExistingBlocks=false;
   items.forEach(entry=>{
