@@ -952,9 +952,7 @@ function manualLoadLibrary(){
   });
   if(withoutC14.length!==beforeC14Removal){items.splice(0,items.length,...withoutC14);renumberedLibrary=true;}
   // WORKOUTs reutilizáveis padrão: aparecem na troca de bloco mesmo em um navegador novo.
-  const starterCircuits=[
-   {id:"starter-circuit-superior",name:"WORKOUT Superior",part:{type:"circuit",title:"WORKOUT Superior",durationMinutes:3,durationExtraSeconds:30,seconds:50,rest:10,rounds:1,items:[{name:"Supino pegada fechada",detail:"Peito e tríceps",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps Francês",detail:"Tríceps",cat:"tríceps"}]}},
-  ];
+  const starterCircuits=[]; // WORKOUT Superior removido a pedido do usuário (era exibido como C11).
   let addedStarterCircuits=false;
   starterCircuits.forEach(entry=>{if(!items.some(existing=>existing?.id===entry.id)){items.push({...entry,kind:"part",part:{...entry.part,id:"starter-part-"+entry.id.replace("starter-circuit-",""),items:entry.part.items.map(item=>({...item}))},savedAt:"2026-10-20T00:00:00.000Z"});addedStarterCircuits=true;}});
   // Recupera os circuitos ativos do banco de geração, em numeração sequencial.
@@ -1133,16 +1131,9 @@ function manualLoadLibrary(){
    return !isC12;
   });
   if(withoutC12.length!==beforeC12Removal){items.splice(0,items.length,...withoutC12);renumberedLibrary=true;}
-  // Remove somente o C11 identificado pelo número; não excluir outros circuitos com os mesmos exercícios.
+  // Remove o item C11 do catálogo visual: o número mostrado é sequencial e não corresponde ao ID interno.
   const beforeC11Removal=items.length;
-  const withoutC11=items.filter(entry=>{
-   if(entry?.kind!=="part"||!entry?.part||entry.part.type!=="circuit")return true;
-   const title=String(entry.part.title||"").trim().toUpperCase();
-   const name=String(entry.name||"").trim().toUpperCase();
-   const id=String(entry.id||"").trim().toUpperCase();
-   const isC11=/^(?:(?:WORKOUT)\s*)?(?:C\s*)?11(?:\b|\s|$)/.test(title)||/^(?:(?:WORKOUT)\s*)?(?:C\s*)?11(?:\b|\s|$)/.test(name)||id==="STARTER-USER-C11";
-   return !isC11;
-  });
+  const withoutC11=items.filter(entry=>entry?.id!=="starter-circuit-superior");
   if(withoutC11.length!==beforeC11Removal){items.splice(0,items.length,...withoutC11);renumberedLibrary=true;}
   // Classifica automaticamente todos os blocos já salvos e os blocos padrão.
   let classifiedExistingBlocks=false;
