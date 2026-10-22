@@ -1131,10 +1131,12 @@ function manualLoadLibrary(){
    return !isC12;
   });
   if(withoutC12.length!==beforeC12Removal){items.splice(0,items.length,...withoutC12);renumberedLibrary=true;}
-  // Remove o item C11 do catálogo visual: o número mostrado é sequencial e não corresponde ao ID interno.
-  const beforeC11Removal=items.length;
-  const withoutC11=items.filter(entry=>entry?.id!=="starter-circuit-superior");
-  if(withoutC11.length!==beforeC11Removal){items.splice(0,items.length,...withoutC11);renumberedLibrary=true;}
+  // Remove apenas uma ocorrência do circuito C11 indicado pelos três exercícios.
+  // A numeração visível é recalculada; por isso não usar apenas o ID interno.
+  const normalizeC11Exercise=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLocaleLowerCase("pt-BR").replace(/\s+/g," ");
+  const c11ExerciseSignature=["Supino pegada fechada","Crucifixo","Tríceps Francês"].map(normalizeC11Exercise).sort().join("|");
+  const c11MatchIndex=items.findIndex(entry=>entry?.kind==="part"&&entry?.part?.type==="circuit"&&(entry.part.items||[]).map(item=>normalizeC11Exercise(item?.name)).sort().join("|")===c11ExerciseSignature);
+  if(c11MatchIndex>=0){items.splice(c11MatchIndex,1);renumberedLibrary=true;}
   // Classifica automaticamente todos os blocos já salvos e os blocos padrão.
   let classifiedExistingBlocks=false;
   items.forEach(entry=>{
