@@ -937,16 +937,17 @@ function manualLoadLibrary(){
   const beforeB4Removal=items.length;
   const withoutB4=items.filter(entry=>!(entry?.kind==="part"&&(entry?.id==="starter-user-B4"||String(entry?.name||"").trim().toUpperCase()==="B4"||String(entry?.part?.title||"").trim().toUpperCase()==="B4")));
   if(withoutB4.length!==beforeB4Removal){items.splice(0,items.length,...withoutB4);renumberedLibrary=true;}
-  // Remove C14 da biblioteca local pelo número ou pela composição exata.
-  // Não exigir part.type === "circuit": versões antigas podem ter outro tipo/estrutura.
-  const c14Signature=["Agachamento Sumô","Abdominal Oblíquo E","Abdominal Oblíquo D"].sort().join("|");
+  // Remove C14 personalizado pelo número ou pela composição exata, inclusive dados antigos.
+  // Normaliza maiúsculas, espaços e acentos para não depender da grafia salva.
+  const normalizeC14Text=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLocaleLowerCase("pt-BR").replace(/\s+/g," ");
+  const c14Signature=["Agachamento Sumô","Abdominal Oblíquo E","Abdominal Oblíquo D"].map(normalizeC14Text).sort().join("|");
   const beforeC14Removal=items.length;
   const withoutC14=items.filter(entry=>{
    if(!entry||entry.kind!=="part"||!entry.part)return true;
-   const title=String(entry.part.title||entry.name||"").trim().toUpperCase();
+   const titles=[entry.part.title,entry.name].map(value=>String(value||"").trim().toUpperCase());
    const id=String(entry.id||"").trim().toUpperCase();
-   const names=(entry.part.items||[]).map(item=>String(item?.name||"").trim()).sort().join("|");
-   const isC14=/^(?:WORKOUT\\s*)?C14(?:\\b|\\s|$)/.test(title)||id==="STARTER-USER-C14";
+   const names=(entry.part.items||[]).map(item=>normalizeC14Text(item?.name)).sort().join("|");
+   const isC14=titles.some(title=>/^(?:WORKOUT\s*)?C14(?:\b|\s|$)/.test(title))||id==="STARTER-USER-C14";
    return !(isC14||names===c14Signature);
   });
   if(withoutC14.length!==beforeC14Removal){items.splice(0,items.length,...withoutC14);renumberedLibrary=true;}
