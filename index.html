@@ -1102,20 +1102,18 @@ function manualLoadLibrary(){
    {id:"starter-user-B18",name:"B18",items:[{name:"Sprawl",detail:"Condicionamento para luta",cat:"cardio"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"},{name:"Agachamento + Touch Down",detail:"Pernas e cardio",cat:"pernas"},{name:"Abdominal Supra + Rotação de Tronco",detail:"Core",cat:"core"}]}
   ];
   userFourExerciseBlocks.forEach(entry=>{
-   const existingIndex=items.findIndex(existing=>existing?.id===entry.id || (entry.id==="starter-user-B6" && existing?.kind==="part" && String(existing?.name||"").trim().toUpperCase()==="B6"));
    const normalizedItems=entry.items.map(item=>({...item}));
-   if(entry.id==="starter-user-B6" && existingIndex>=0){
-    const existingPart=items[existingIndex]?.part;
-    const existingExercises=Array.isArray(existingPart?.items)?existingPart.items:[];
-    const hasPolichinelo=existingExercises.some(item=>/polichinelo/i.test(String(item?.name||"")));
-    if(hasPolichinelo){
-     const updatedExercises=existingExercises.map(item=>/polichinelo/i.test(String(item?.name||""))?{...item,name:"Remada Alternada",detail:"Costas",cat:"costas"}:{...item});
-     items[existingIndex]={...items[existingIndex],id:entry.id,name:"B6",category:"Full Body",part:{...existingPart,id:"starter-part-"+entry.id,title:"B6",items:updatedExercises}};
-     addedStarterCircuits=true;
-     return;
-    }
-   }
    const updatedEntry={id:entry.id,kind:"part",name:entry.name,category:"Full Body",part:{id:"starter-part-"+entry.id,type:"individual",title:entry.name,rounds:1,seconds:50,durationMinutes:0,durationExtraSeconds:50,rest:10,restMinutes:0,restExtraSeconds:10,items:normalizedItems},savedAt:"2026-10-21T00:00:00.000Z"};
+   if(entry.id==="starter-user-B6"){
+    for(let i=items.length-1;i>=0;i--){
+     const existing=items[i];
+     if(existing?.id==="starter-user-B6"||(existing?.kind==="part"&&String(existing?.name||"").trim().toUpperCase()==="B6")||(existing?.kind==="part"&&String(existing?.part?.title||"").trim().toUpperCase()==="B6"))items.splice(i,1);
+    }
+    items.push(updatedEntry);
+    addedStarterCircuits=true;
+    return;
+   }
+   const existingIndex=items.findIndex(existing=>existing?.id===entry.id);
    if(existingIndex>=0){items[existingIndex]=updatedEntry;addedStarterCircuits=true;return;}
    items.push(updatedEntry);
    addedStarterCircuits=true;
