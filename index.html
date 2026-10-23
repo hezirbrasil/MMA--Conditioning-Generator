@@ -1179,7 +1179,7 @@ function manualLoadLibrary(){
    const name=String(entry.name||"").trim().toUpperCase();
    const id=String(entry.id||"").trim().toUpperCase();
    const isC13=/^(?:(?:WORKOUT)\s*)?(?:C\s*)?13(?:\b|\s|$)/.test(title)||/^(?:(?:WORKOUT)\s*)?(?:C\s*)?13(?:\b|\s|$)/.test(name)||id==="STARTER-PRESET-CIRCUIT-13"||id==="STARTER-USER-C13";
-   return !isC13;
+   return id==="STARTER-USER-C13-FULLBODY"||!isC13;
   });
   if(withoutC13.length!==beforeC13Removal){items.splice(0,items.length,...withoutC13);renumberedLibrary=true;}
   // C12 é um circuito ativo; preservar sua entrada na biblioteca.\n  // Remove apenas uma ocorrência do circuito C11 indicado pelos três exercícios.
