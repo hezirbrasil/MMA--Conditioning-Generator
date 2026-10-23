@@ -1951,6 +1951,19 @@ p.items=[chosen];
  if(meta&&p.type==="circuit")meta.textContent=manualTypeLabel(p.type)+" · "+p.items.length+" item(ns) · "+String(Math.max(0,Number(p.durationMinutes)||0)).padStart(2,"0")+":"+String(Math.max(0,Math.min(59,Number(p.durationExtraSeconds)||0))).padStart(2,"0");
 });
 document.getElementById("manualParts").addEventListener("change",e=>{
+ const fourSelect=e.target.closest("[data-manual-four-exercise]");
+ if(fourSelect){
+  const pi=Number(fourSelect.dataset.p),panel=fourSelect.closest("[data-manual-swap-individual-panel]");
+  if(!panel)return;
+  const selects=[...panel.querySelectorAll("[data-manual-four-exercise]")],baseOptions=manualOptions({type:"individual"});
+  selects.forEach(select=>{
+   const current=select.value,usedByOther=new Set(selects.filter(other=>other!==select&&other.value).map(other=>manualExerciseKey(other.value)));
+   const options=baseOptions.filter(o=>!manualExerciseUsed(o.name,pi)&&(!usedByOther.has(manualExerciseKey(o.name))||o.name===current));
+   select.innerHTML='<option value="">Escolha o exercício…</option>'+options.map(o=>'<option value="'+escHtml(o.name)+'">'+escHtml(o.name)+'</option>').join("");
+   if(current&&options.some(o=>o.name===current))select.value=current;
+  });
+  return;
+ }
  const categorySelect=e.target.closest("select[data-manual-circuit-category]");
  if(categorySelect){
   const panel=categorySelect.closest("[data-manual-swap-circuit-panel]");
