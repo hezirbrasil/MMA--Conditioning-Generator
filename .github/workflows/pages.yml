@@ -1,7 +1,9 @@
-name: Publish MMA Conditioning to GitHub Pages
+name: Test and publish MMA Conditioning
 
 on:
   push:
+    branches: ["main"]
+  pull_request:
     branches: ["main"]
   workflow_dispatch:
 
@@ -15,8 +17,37 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    name: Automated browser tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install test dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium webkit
+      - name: Run automated tests
+        run: npm test
+      - name: Upload test report when tests fail
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mma-conditioning-playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
   deploy:
     name: Publish GitHub Pages
+    needs: test
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
