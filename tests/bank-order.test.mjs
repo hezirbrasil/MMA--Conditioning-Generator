@@ -112,6 +112,10 @@ test("Os cartões mostram número e grupamento muscular juntos", () => {
   assert.equal(groups["starter-preset-circuit-5"], "Peitoral + Tríceps");
   assert.equal(groups["starter-preset-circuit-12"], "Costas + Bíceps");
   assert.equal(groups["starter-preset-circuit-7"], "Deltoide");
+  assert.equal(groups["starter-preset-circuit-4"], "Inferior", "Inferior Combinado deve ser unificado em Inferior");
+  assert.equal(groups["starter-bulgaro-joelhada-step"], "Inferior", "Inferior + Condicionamento deve ser unificado em Inferior");
+  assert.ok(!html.includes('"Inferior Combinado"'), "Não deve haver filtro separado de Inferior Combinado");
+  assert.ok(!html.includes('"Inferior + Condicionamento"'), "Não deve haver filtro separado de Inferior + Condicionamento");
   assert.equal(groups["starter-user-B25"], "Deltoide");
   assert.equal(groups["starter-user-B9"], "Full Body");
   assert.equal(groups["starter-user-B11"], "Costas + Bíceps");
