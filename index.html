@@ -483,7 +483,7 @@ const names=paired?[name+" E",name+" D"]:[name];
  renderExerciseBank();
 }
 document.getElementById("addExerciseForm").addEventListener("submit",addExerciseToBank);
-const bankCategoryLabels={peito:"PEITO + TRÍCEPS",costas:"COSTAS + BÍCEPS",ombros:"OMBROS",bíceps:"COSTAS + BÍCEPS",tríceps:"PEITO + TRÍCEPS",pernas:"PERNAS",composto:"COMPOSTOS",core:"CORE E ABDOMINAIS",cardio:"CARDIO E FUNCIONAL"};
+const bankCategoryLabels={peito:"PEITO",costas:"COSTAS",ombros:"OMBROS",bíceps:"BÍCEPS",tríceps:"TRÍCEPS",pernas:"PERNAS",composto:"COMPOSTOS",core:"CORE E ABDOMINAIS",cardio:"CARDIO E FUNCIONAL"};
 const bankDisplayGroups=[{key:"peito-triceps",label:"PEITO + TRÍCEPS",cats:["peito","tríceps"]},{key:"costas-biceps",label:"COSTAS + BÍCEPS",cats:["costas","bíceps"]},{key:"ombros",label:"OMBROS",cats:["ombros"]},{key:"pernas",label:"PERNAS",cats:["pernas"]},{key:"composto",label:"COMPOSTOS",cats:["composto"]},{key:"core",label:"CORE E ABDOMINAIS",cats:["core"]},{key:"cardio",label:"CARDIO E FUNCIONAL",cats:["cardio"]}];
 function renderExerciseBank(){
  const query=document.getElementById("bankSearch").value.trim().toLocaleLowerCase("pt-BR"),category=document.getElementById("bankCategoryFilter").value;
