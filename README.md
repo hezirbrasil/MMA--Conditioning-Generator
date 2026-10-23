@@ -133,3 +133,24 @@ O MMA Conditioning é uma ferramenta de apoio à preparação física. Antes de 
   <strong>MMA CONDITIONING</strong><br>
   <sub>Preparação física aplicada aos esportes de combate.</sub>
 </p>
+
+## 🧪 Testes automatizados
+
+O projeto usa Playwright para verificar o aplicativo real no navegador. Os testes cobrem a inicialização sem exceções JavaScript, os quatro modelos de aula em Full Body e Leg Blast, a quantidade e duração dos exercícios, as pausas e transições, a regeneração da aula, o Modo Play e o layout móvel.
+
+### Executar no computador
+
+É necessário ter Node.js 22 ou compatível instalado:
+
+```bash
+npm install
+npx playwright install chromium webkit
+npm test
+```
+
+O Playwright abre o aplicativo em Chromium e WebKit. Se um teste falhar, consulte a mensagem de falha e os arquivos de diagnóstico gerados em `test-results/`.
+
+### Execução no GitHub
+
+O GitHub Actions executa os testes quando há alterações na branch `main`, em pull requests para `main` e quando o fluxo é iniciado manualmente. A publicação no GitHub Pages só acontece após a etapa de testes passar. Em caso de falha, o relatório do Playwright é disponibilizado como artefato da execução.
+
