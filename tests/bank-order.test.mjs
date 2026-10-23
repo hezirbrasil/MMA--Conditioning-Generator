@@ -108,7 +108,8 @@ test("Os cartões mostram número e grupamento muscular juntos", () => {
   const groups = JSON.parse(html.slice(open, end));
   assert.equal(groups["starter-user-C12"], "Full Body");
   assert.equal(groups["starter-preset-circuit-3"], "Inferior");
-  assert.equal(groups["starter-preset-circuit-1"], "Posterior");
+  assert.equal(groups["starter-preset-circuit-4"], "Full Body", "C5 deve ser Full Body");
+  assert.equal(groups["starter-preset-circuit-1"], "Inferior", "C6 deve ser Inferior");
   assert.equal(groups["starter-preset-circuit-5"], "Peitoral + Tríceps");
   assert.equal(groups["starter-preset-circuit-12"], "Costas + Bíceps");
   assert.equal(groups["starter-preset-circuit-7"], "Deltoide");
@@ -117,8 +118,9 @@ test("Os cartões mostram número e grupamento muscular juntos", () => {
   assert.ok(!html.includes('"Inferior Combinado"'), "Não deve haver filtro separado de Inferior Combinado");
   assert.ok(!html.includes('"Inferior + Condicionamento"'), "Não deve haver filtro separado de Inferior + Condicionamento");
   assert.equal(groups["starter-user-B25"], "Deltoide");
+  assert.equal(groups["starter-user-B7"], "Inferior + Core", "B7 deve ser Inferior + Core");
   assert.equal(groups["starter-user-B9"], "Full Body");
-  assert.equal(groups["starter-user-B11"], "Costas + Bíceps");
+  assert.equal(groups["starter-user-B11"], "Core", "B10 deve ser apenas Core");
   assert.ok(html.includes('const title=entry.displayName+" — "+group;'));
 });
 
