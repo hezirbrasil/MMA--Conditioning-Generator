@@ -93,7 +93,7 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
  <h2 style="margin:8px 0 6px;font-size:21px">Escolha o modelo</h2>
  <p class="builder-intro">Primeiro escolha o tipo de treino e depois o modelo de aula. O gerador respeita as categorias do Fullbody ou do Leg Blast; você pode editar os exercícios antes de começar.</p><div class="builder-field" style="max-width:420px;margin:14px 0"><label for="presetWorkoutType">TIPO DE TREINO</label><select id="presetWorkoutType"><option value="fullbody">Fullbody — corpo todo</option><option value="legblast">Leg Blast — pernas e abdômen</option></select></div>
  <div class="builder-grid" hidden aria-hidden="true"><div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Nome do treino"></div><div class="builder-field"><label for="manualPartType">Parte</label><select id="manualPartType"><option value="circuit">WORKOUT</option></select></div></div>
- <div class="builder-toolbar manual-tabs" role="tablist" aria-label="Áreas do montador"><button type="button" class="secondary" id="manualBuilderTab" role="tab" aria-selected="true">✎ Montador</button><button type="button" class="secondary" id="manualPreviewButton">📜 Modo Script</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualOpenVisualLibrary">▦ Biblioteca</button><button type="button" class="primary" id="manualDownloadWorkout">⬇ Baixar treino</button></div>
+ <div class="builder-toolbar manual-tabs" role="tablist" aria-label="Áreas do montador"><button type="button" class="secondary" id="manualBuilderTab" role="tab" aria-selected="true">✎ Montador</button><button type="button" class="secondary" id="manualPreviewButton">📜 Modo Script</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualOpenVisualLibrary">▦ Biblioteca</button><button type="button" class="primary" id="manualDownloadWorkout">⬇ Baixar treino</button><button type="button" class="secondary" id="manualExportWorkoutJson">💾 Salvar aula no PC</button></div>
  <section id="manualVisualLibrary" class="manual-preview" hidden><div class="manual-preview-head"><div><div class="eyebrow purple">BIBLIOTECA</div><h3 style="margin:5px 0 0">B e C</h3><p class="builder-intro" style="margin:6px 0 0">Escolha uma categoria para visualizar os blocos e seus exercícios.</p></div><button type="button" class="primary" id="manualVisualLibraryBack">← Voltar ao montador</button></div><div class="swap-library-tabs" style="margin:14px 0"><button type="button" class="primary" data-visual-library-filter="circuit">C</button><button type="button" class="secondary" data-visual-library-filter="individual">B</button></div><div id="manualVisualLibraryGrid" class="swap-library-grid"></div><div id="manualVisualLibraryStatus" class="builder-status" aria-live="polite"></div></section><section id="manualPreview" class="manual-preview" hidden><div class="manual-preview-head"><div><div class="eyebrow purple">VISUALIZAÇÃO LIMPA</div><h3 style="margin:5px 0 0">Exercícios montados</h3><p class="builder-intro" style="margin:6px 0 0">Roteiro limpo e numerado para acompanhar os exercícios em outro cronômetro.</p></div><div class="builder-toolbar" style="margin:0;gap:8px"><button type="button" class="secondary" id="manualPreviewRegenerate" aria-label="Gerar outro treino" title="Gerar outro treino">↻</button><button type="button" class="primary" id="manualPreviewBack">← Voltar à edição</button></div></div><div id="manualPreviewContent"></div></section><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">1. TIPO DE TREINO  ·  2. MODELO DE AULA</strong><button type="button" class="primary" id="loadOption1" onclick="safeLoadWorkoutOption(1)"><svg class="model-option-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9v6M3.5 10v4M8.5 7v10M15.5 7v10M18 9v6M20.5 10v4M8.5 12h7"/></svg>3:30 · Físico primeiro</button><button type="button" class="primary" id="loadOption2" onclick="safeLoadWorkoutOption(2)"><svg class="model-option-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m14 10 7-7M14 3l7 7M4 20l7-7M3 14l7 7M5 5l14 14M19 5 5 19"/></svg>0:50 · Luta primeiro</button><button type="button" class="primary" id="loadOption3" onclick="safeLoadWorkoutOption(3)"><svg class="model-option-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m14 10 7-7M14 3l7 7M4 20l7-7M3 14l7 7M5 5l14 14M19 5 5 19"/></svg>3:30 · Luta primeiro</button><button type="button" class="primary" id="loadOption4" onclick="safeLoadWorkoutOption(4)"><svg class="model-option-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9v6M3.5 10v4M8.5 7v10M15.5 7v10M18 9v6M20.5 10v4M8.5 12h7"/></svg>0:50 · Físico primeiro</button><button type="button" class="secondary" id="regeneratePreset" onclick="regenerateWorkoutPreset()">↻ Regenerar aula</button></div>
  <div class="builder-play-note">Escolha entre as estruturas 3:30 (circuitos de 3 exercícios) e 0:50 (blocos de 4 exercícios), com início pela luta ou pelo físico. A inversão mantém os blocos, tempos, pausas e transições da estrutura escolhida.</div>
  <div id="manualParts" class="builder-parts"><div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div></div>
@@ -2553,6 +2553,44 @@ function manualDownloadWorkoutFile(){
 }
 const manualDownloadButton=document.getElementById("manualDownloadWorkout");
 if(manualDownloadButton)manualDownloadButton.addEventListener("click",manualDownloadWorkoutFile);
+
+// Exporta a aula completa em JSON para guardar no computador e manter todos os dados editáveis.
+function manualExportWorkoutJson(){
+ const status=document.getElementById("manualStatus");
+ if(!Array.isArray(manualParts)||manualParts.length===0){
+  if(status)status.textContent="Monte ou carregue uma aula antes de salvar no PC.";
+  return;
+ }
+ const typeSelect=document.getElementById("presetWorkoutType");
+ const typeValue=typeSelect?typeSelect.value:"";
+ const typeLabel=typeSelect&&typeSelect.selectedOptions&&typeSelect.selectedOptions[0]?typeSelect.selectedOptions[0].textContent.trim():"Treino";
+ const nameInput=document.getElementById("manualWorkoutName");
+ const workoutName=(nameInput&&nameInput.value.trim())||typeLabel;
+ const backup={
+  app:"MMA Conditioning",
+  formatVersion:1,
+  exportedAt:new Date().toISOString(),
+  workout:{
+   name:workoutName,
+   type:typeValue,
+   typeLabel,
+   parts:JSON.parse(JSON.stringify(manualParts))
+  }
+ };
+ const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json;charset=utf-8"});
+ const url=URL.createObjectURL(blob);
+ const link=document.createElement("a");
+ const safeName=workoutName.normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").replace(/[^a-zA-Z0-9_-]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"aula-mma-conditioning";
+ link.href=url;
+ link.download=safeName+"-"+new Date().toISOString().slice(0,10)+".json";
+ document.body.appendChild(link);
+ link.click();
+ link.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+ if(status)status.textContent="Aula salva como arquivo JSON. No PC, procure na pasta Downloads e guarde uma cópia.";
+}
+const manualExportJsonButton=document.getElementById("manualExportWorkoutJson");
+if(manualExportJsonButton)manualExportJsonButton.addEventListener("click",manualExportWorkoutJson);
 
 
 
