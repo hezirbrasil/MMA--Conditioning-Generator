@@ -44,7 +44,8 @@ const expectedC = [
   "starter-preset-circuit-12",
   "starter-preset-circuit-2",
   "starter-preset-circuit-7",
-  "starter-preset-circuit-9"
+  "starter-preset-circuit-9",
+  "starter-user-C13-fullbody"
 ];
 
 test("Banco B segue a ordem revisada, sem B8 antigo e sem lacunas", () => {
@@ -119,6 +120,7 @@ test("Os cartões mostram número e grupamento muscular juntos", () => {
   assert.ok(start >= 0 && open > 0 && end > open, "Mapa de grupamentos não encontrado");
   const groups = JSON.parse(html.slice(open, end));
   assert.equal(groups["starter-user-C12"], "Full Body");
+  assert.equal(groups["starter-user-C13-fullbody"], "Full Body", "C13 novo deve ser Full Body");
   assert.equal(groups["starter-preset-circuit-3"], "Inferior");
   assert.equal(groups["starter-preset-circuit-4"], "Full Body", "C5 deve ser Full Body");
   assert.equal(groups["starter-preset-circuit-1"], "Inferior", "C6 deve ser Inferior");
@@ -150,4 +152,16 @@ test("O C12 Full Body mantém seus três exercícios definidos", () => {
   assert.ok(block.includes('name:"Agachamento Sumô"'));
   assert.ok(block.includes('name:"Supino com Halteres"'));
   assert.ok(block.includes('name:"Remada Aberta"'));
+});
+
+test("O C13 Full Body é mantido e contém os três exercícios solicitados", () => {
+  const start = html.indexOf("const c13Entry={");
+  const end = html.indexOf("const c13Index=", start);
+  const block = html.slice(start, end);
+  assert.ok(start >= 0 && end > start, "Definição do C13 não encontrada");
+  assert.ok(block.includes('name:"Terra + Desenvolvimento"'));
+  assert.ok(block.includes('name:"Agachamento + Remada Alta"'));
+  assert.ok(block.includes('name:"Abdominal Bicicleta"'));
+  assert.ok(html.includes('return id==="STARTER-USER-C13-FULLBODY"||!isC13;'),
+    "A limpeza automática não deve excluir o C13 personalizado");
 });
