@@ -82,7 +82,7 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
 </style>
 </head>
 <body>
-<header class="top"><div class="brand"><span class="mark"><img src="./icon.svg?v=octagon2" alt="MMA Conditioning — octógono roxo e preto"></span><span>MMA <em>CONDITIONING</em><small>MODELOS DE AULA • TREINO</small></span></div><span class="tag">2 MODELOS DE AULA</span></header>
+<header class="top"><div class="brand"><span class="mark"><img src="./icon.svg?v=octagon2" alt="MMA Conditioning — octógono roxo e preto"></span><span>MMA <em>CONDITIONING</em><small>MODELOS DE AULA • TREINO</small></span></div><span class="tag">4 MODELOS DE AULA</span></header>
 <main class="wrap">
 <section class="hero"><div class="eyebrow">● MMA CONDITIONING</div><h1>Monte seu<br><span>treino.</span></h1><p>Escolha Fullbody ou Leg Blast e combine com um dos dois modelos de aula para montar a sequência completa e iniciar no Modo Play.</p></section>
 <section class="panel" id="savedShortcutPanel" style="padding:16px;margin-top:14px"><div class="eyebrow purple">SUA BIBLIOTECA</div><h2 style="margin:7px 0;font-size:17px">Salve seus treinos e sequências</h2><p class="tip" style="margin:0 0 12px">Escolha um objetivo, troque os exercícios que quiser e salve o treino personalizado para usar novamente quando quiser.</p><div class="buttons"><button type="button" class="primary" id="saveWorkoutTop">★ Salvar treino</button><button type="button" class="secondary" id="openSavedLibraryTop">♥ Ver treinos salvos</button></div></section>
@@ -94,8 +94,8 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
  <p class="builder-intro">Primeiro escolha o tipo de treino e depois o modelo de aula. O gerador respeita as categorias do Fullbody ou do Leg Blast; você pode editar os exercícios antes de começar.</p><div class="builder-field" style="max-width:420px;margin:14px 0"><label for="presetWorkoutType">TIPO DE TREINO</label><select id="presetWorkoutType"><option value="fullbody">Fullbody — corpo todo</option><option value="legblast">Leg Blast — pernas e abdômen</option></select></div>
  <div class="builder-grid" hidden aria-hidden="true"><div class="builder-field"><label for="manualWorkoutName">Nome do treino</label><input id="manualWorkoutName" maxlength="80" type="text" placeholder="Nome do treino"></div><div class="builder-field"><label for="manualPartType">Parte</label><select id="manualPartType"><option value="circuit">WORKOUT</option></select></div></div>
  <div class="builder-toolbar manual-tabs" role="tablist" aria-label="Áreas do montador"><button type="button" class="secondary" id="manualBuilderTab" role="tab" aria-selected="true">✎ Montador</button><button type="button" class="secondary" id="manualPreviewButton">📜 Modo Script</button><button type="button" class="secondary" id="manualPlay">▶ Modo Play</button><button type="button" class="secondary" id="manualOpenVisualLibrary">▦ Biblioteca</button></div>
- <section id="manualVisualLibrary" class="manual-preview" hidden><div class="manual-preview-head"><div><div class="eyebrow purple">BIBLIOTECA</div><h3 style="margin:5px 0 0">B e C</h3><p class="builder-intro" style="margin:6px 0 0">Escolha uma categoria para visualizar os blocos e seus exercícios.</p></div><button type="button" class="primary" id="manualVisualLibraryBack">← Voltar ao montador</button></div><div class="swap-library-tabs" style="margin:14px 0"><button type="button" class="primary" data-visual-library-filter="circuit">C</button><button type="button" class="secondary" data-visual-library-filter="individual">B</button></div><div id="manualVisualLibraryGrid" class="swap-library-grid"></div><div id="manualVisualLibraryStatus" class="builder-status" aria-live="polite"></div></section><section id="manualPreview" class="manual-preview" hidden><div class="manual-preview-head"><div><div class="eyebrow purple">VISUALIZAÇÃO LIMPA</div><h3 style="margin:5px 0 0">Exercícios montados</h3><p class="builder-intro" style="margin:6px 0 0">Roteiro limpo e numerado para acompanhar os exercícios em outro cronômetro.</p></div><div class="builder-toolbar" style="margin:0;gap:8px"><button type="button" class="secondary" id="manualPreviewRegenerate" aria-label="Gerar outro treino" title="Gerar outro treino">↻</button><button type="button" class="primary" id="manualPreviewBack">← Voltar à edição</button></div></div><div id="manualPreviewContent"></div></section><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">1. TIPO DE TREINO  ·  2. MODELO DE AULA</strong><button type="button" class="primary" id="loadOption1" onclick="safeLoadWorkoutOption(1)">Aplicar Opção 1 · Starts with WORKOUT</button><button type="button" class="primary" id="loadOption2" onclick="safeLoadWorkoutOption(2)">Aplicar Opção 2 · Starts with FIGHT</button><button type="button" class="secondary" id="regeneratePreset" onclick="regenerateWorkoutPreset()">↻ Regenerate workout</button></div>
- <div class="builder-play-note">Option 1 starts with WORKOUT and includes circuits. Option 2 starts with FIGHT and uses individual WORKOUT exercises. As trocas duram 1min30s.</div>
+ <section id="manualVisualLibrary" class="manual-preview" hidden><div class="manual-preview-head"><div><div class="eyebrow purple">BIBLIOTECA</div><h3 style="margin:5px 0 0">B e C</h3><p class="builder-intro" style="margin:6px 0 0">Escolha uma categoria para visualizar os blocos e seus exercícios.</p></div><button type="button" class="primary" id="manualVisualLibraryBack">← Voltar ao montador</button></div><div class="swap-library-tabs" style="margin:14px 0"><button type="button" class="primary" data-visual-library-filter="circuit">C</button><button type="button" class="secondary" data-visual-library-filter="individual">B</button></div><div id="manualVisualLibraryGrid" class="swap-library-grid"></div><div id="manualVisualLibraryStatus" class="builder-status" aria-live="polite"></div></section><section id="manualPreview" class="manual-preview" hidden><div class="manual-preview-head"><div><div class="eyebrow purple">VISUALIZAÇÃO LIMPA</div><h3 style="margin:5px 0 0">Exercícios montados</h3><p class="builder-intro" style="margin:6px 0 0">Roteiro limpo e numerado para acompanhar os exercícios em outro cronômetro.</p></div><div class="builder-toolbar" style="margin:0;gap:8px"><button type="button" class="secondary" id="manualPreviewRegenerate" aria-label="Gerar outro treino" title="Gerar outro treino">↻</button><button type="button" class="primary" id="manualPreviewBack">← Voltar à edição</button></div></div><div id="manualPreviewContent"></div></section><div class="builder-toolbar" style="padding:12px;border:1px solid #51356d;border-radius:10px;background:#100d15"><strong style="font-size:12px;width:100%;color:#d8c0ff">1. TIPO DE TREINO  ·  2. MODELO DE AULA</strong><button type="button" class="primary" id="loadOption1" onclick="safeLoadWorkoutOption(1)">3:30 · Luta primeiro</button><button type="button" class="primary" id="loadOption2" onclick="safeLoadWorkoutOption(2)">0:50 · Luta primeiro</button><button type="button" class="primary" id="loadOption3" onclick="safeLoadWorkoutOption(3)">3:30 · Físico primeiro</button><button type="button" class="primary" id="loadOption4" onclick="safeLoadWorkoutOption(4)">0:50 · Físico primeiro</button><button type="button" class="secondary" id="regeneratePreset" onclick="regenerateWorkoutPreset()">↻ Regenerar aula</button></div>
+ <div class="builder-play-note">Escolha entre as estruturas 3:30 (circuitos de 3 exercícios) e 0:50 (blocos de 4 exercícios), com início pela luta ou pelo físico. A inversão mantém os blocos, tempos, pausas e transições da estrutura escolhida.</div>
  <div id="manualParts" class="builder-parts"><div class="builder-empty">Seu treino está vazio.<br>Adicione a primeira parte para começar a montar manualmente.</div></div>
  <div id="manualStatus" class="builder-status" aria-live="polite"></div>
  <div id="manualLibrary" class="builder-library" hidden><h3>Biblioteca</h3><p class="builder-intro">Comece escolhendo o tipo de bloco. Depois filtre por grupo muscular. Os treinos completos ficam disponíveis na opção “Todos os tipos”.</p><details class="library-save-tools" open><summary>Salvar treino completo</summary><div class="builder-grid"><div class="builder-field"><label for="manualLibraryName">Nome do treino</label><input id="manualLibraryName" maxlength="80" type="text" placeholder="Ex.: Fullbody favorito"></div></div><div class="builder-toolbar"><button type="button" class="primary" id="manualConfirmSave">Salvar treino completo</button><button type="button" class="secondary" id="manualCloseLibrary">Fechar</button></div><div id="manualLibraryList" style="margin-top:14px"></div></div></details></div>
@@ -1474,14 +1474,47 @@ function presetFightBlock(label,addPauseAfter=false){
  manualParts.push(presetPart("fight",label,{seconds:240,durationMinutes:4,durationExtraSeconds:0,rest:0,items}));
  if(addPauseAfter){manualParts.push(presetPause("ACTIVE REST",30,"activePause"));}
 }
+function presetReverseStart(reverseStart){
+ if(!reverseStart||!manualParts.length)return;
+ const warmupIndex=manualParts.findIndex(part=>part&&/AQUECIMENTO/i.test(String(part.title||"")));
+ const warmup=warmupIndex>=0?manualParts[warmupIndex]:null;
+ const source=manualParts.filter((part,index)=>index!==warmupIndex&&part&&part.type!=="transition"&&!/^(?:FIM|FINALIZAÇÃO)$/i.test(String(part.title||"")));
+ const segments=[];
+ let current=[];
+ manualParts.forEach((part,index)=>{
+  if(index===warmupIndex)return;
+  if(!part)return;
+  if(part.type==="transition"){
+   if(current.length){segments.push(current);current=[];}
+   return;
+  }
+  if(/^(?:FIM|FINALIZAÇÃO)$/i.test(String(part.title||"")))return;
+  current.push(part);
+ });
+ if(current.length)segments.push(current);
+ if(segments.length<2)return;
+ const key=segment=>segment.some(part=>["fight","fightCircuit"].includes(part.type))?"fight":"workout";
+ const desired="workout";
+ const startIndex=segments.findIndex(segment=>key(segment)===desired);
+ if(startIndex<=0)return;
+ const ordered=segments.slice(startIndex).concat(segments.slice(0,startIndex));
+ manualParts=[];
+ if(warmup)manualParts.push(warmup);
+ ordered.forEach((segment,index)=>{
+  if(index>0)manualParts.push(presetPause(key(segment)==="fight"?"SWITCH TO FIGHT":"SWITCH TO WORKOUT",90,"transition"));
+  manualParts.push(...segment);
+ });
+}
 function loadWorkoutOption(option,forceRegenerate=false){
   lastPresetOption=option;
+ const baseOption=(option===1||option===3)?1:2;
+ const reverseStart=option===3||option===4;
 
  const previousWorkoutBlocks=forceRegenerate?manualParts.filter(p=>p&&["circuit","individual"].includes(p.type)).map(p=>({type:p.type,items:(p.items||[]).map(x=>({...x}))})):[];
  manualParts=[];presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetResetCircuitOrder();presetResetBlock050Order();presetOption=option;presetResetFunctionalPhase(0);
  const addSwitch=title=>{if(manualParts.length&&manualParts[manualParts.length-1]?.type==="rest")manualParts.pop();manualParts.push(presetPause(title.includes("LUTA")?"SWITCH TO FIGHT":"SWITCH TO WORKOUT",90,"transition"));};
  manualParts.push(presetPause("AQUECIMENTO",180));
- if(option===1){
+ if(baseOption===1){
   presetCircuit("WORKOUT · WORKOUT 1",true);
   presetCircuit("WORKOUT · WORKOUT 2",true);
   presetExerciseBlock("WORKOUT · Exercícios individuais",false);
@@ -1513,7 +1546,7 @@ function loadWorkoutOption(option,forceRegenerate=false){
   presetExerciseBlock("WORKOUT · Bloco 1",true);
   presetExerciseBlock("WORKOUT · Bloco 2",false);
  }
- if(option===1){
+ if(baseOption===1){
   const circuitParts=manualParts.filter(p=>p.type==="circuit");
   const circuitTitles=circuitParts.map(p=>p.title||"");
   const structureValid=circuitTitles.length===3&&circuitTitles[0].includes("WORKOUT 1")&&circuitTitles[1].includes("WORKOUT 2")&&circuitTitles[2].includes("WORKOUT final");
@@ -1524,6 +1557,7 @@ function loadWorkoutOption(option,forceRegenerate=false){
    return;
   }
  }
+ presetReverseStart(reverseStart);
  // Ao regenerar, troca cada bloco/circuito WORKOUT por outro conjunto completo equivalente.
  // Mantém a quantidade de exercícios e a configuração temporal de cada parte.
  if(forceRegenerate){
@@ -1618,14 +1652,14 @@ const targetSeconds=3000;
  const remainingSeconds=Math.max(0,targetSeconds-estimatedSeconds);
  const roundedRemainingSeconds=Math.ceil(remainingSeconds/5)*5;
  manualParts.push(presetPause("FIM",roundedRemainingSeconds));
- document.getElementById("manualWorkoutName").value=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" — "+(option===1?"Opção 1 (WORKOUT primeiro)":"Opção 2 (FIGHT primeiro)");
+ document.getElementById("manualWorkoutName").value=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" — "+(option===1?"3:30 — Luta primeiro":option===2?"0:50 — Luta primeiro":option===3?"3:30 — Físico primeiro":"0:50 — Físico primeiro");
  manualRenderParts();
  document.getElementById("manualStatus").textContent=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" aplicado com "+(option===1?"Opção 1":"Opção 2")+". Você pode trocar qualquer exercício e salvar o treino completo.";
  document.getElementById("manualBuilder").scrollIntoView({behavior:"smooth",block:"start"});
 }
 let lastPresetOption=1;
 function regenerateWorkoutPreset(){
- const option=Number(lastPresetOption)===2?2:1;
+ const option=[1,2,3,4].includes(Number(lastPresetOption))?Number(lastPresetOption):1;
  // Sempre sorteia novamente a aula atual, usando o tipo selecionado e preservando a opção de estrutura.
  safeLoadWorkoutOption(option,true);
 }
@@ -1659,14 +1693,16 @@ function safeLoadWorkoutOption(option,forceRegenerate=false){
 }
 document.getElementById("loadOption1").onclick=function(){safeLoadWorkoutOption(1)};
 document.getElementById("loadOption2").onclick=function(){safeLoadWorkoutOption(2)};
+document.getElementById("loadOption3").onclick=function(){safeLoadWorkoutOption(3)};
+document.getElementById("loadOption4").onclick=function(){safeLoadWorkoutOption(4)};
 document.addEventListener("click",function(event){
- const button=event.target.closest("#loadOption1, #loadOption2");
+ const button=event.target.closest("#loadOption1, #loadOption2, #loadOption3, #loadOption4");
  if(!button)return;
  event.preventDefault();
  const status=document.getElementById("manualStatus");
  if(status)status.textContent="Gerando treino...";
  try{
-  safeLoadWorkoutOption(button.id==="loadOption1"?1:2);
+  safeLoadWorkoutOption(Number(button.id.replace("loadOption","")));
   if(status&&manualParts.length)status.textContent="Treino gerado com "+manualParts.filter(p=>["circuit","individual","fight","fightCircuit"].includes(p.type)).length+" blocos.";
  }catch(error){
   if(status)status.textContent="Falha ao gerar: "+String(error&&error.message||error);
