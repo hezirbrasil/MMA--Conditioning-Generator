@@ -101,10 +101,11 @@ test("B13 coloca Joelhada Alternada antes da Prancha T, que fecha o bloco", () =
 });
 
 test("Os cartões mostram número e grupamento muscular juntos", () => {
-  const groups = readJsonConstant(
-    /const BANK_GROUP_LABELS = Object\\.freeze\\((\\{[\\s\\S]*?\\})\\);/,
-    "BANK_GROUP_LABELS"
-  );
+  const start = html.indexOf("const BANK_GROUP_LABELS = Object.freeze(");
+  const open = html.indexOf("(", start) + 1;
+  const end = html.indexOf(");", open);
+  assert.ok(start >= 0 && open > 0 && end > open, "Mapa de grupamentos não encontrado");
+  const groups = JSON.parse(html.slice(open, end));
   assert.equal(groups["starter-user-C12"], "Full Body");
   assert.equal(groups["starter-preset-circuit-3"], "Inferior");
   assert.equal(groups["starter-preset-circuit-1"], "Posterior");
@@ -114,14 +115,14 @@ test("Os cartões mostram número e grupamento muscular juntos", () => {
   assert.equal(groups["starter-user-B25"], "Deltoide");
   assert.equal(groups["starter-user-B9"], "Full Body");
   assert.equal(groups["starter-user-B11"], "Costas + Bíceps");
-  assert.match(html, /const title=entry\\.displayName\\+" — "\\+group/);
+  assert.ok(html.includes('const title=entry.displayName+" — "+group;'));
 });
 
 test("A biblioteca tem filtro por grupamento e reage à mudança de seleção", () => {
-  assert.match(html, /id="manualVisualLibraryGroupFilter"/);
-  assert.match(html, /Filtrar por grupamento muscular/);
-  assert.match(html, /const visibleEntries=selectedGroup\\?entries\\.filter\\(entry=>manualBankGroup\\(entry\\)===selectedGroup\\):entries/);
-  assert.match(html, /id==="manualVisualLibraryGroupFilter"\\)manualRenderVisualLibrary\\(\\)/);
+  assert.ok(html.includes('id="manualVisualLibraryGroupFilter"'));
+  assert.ok(html.includes("Filtrar por grupamento muscular"));
+  assert.ok(html.includes('const visibleEntries=selectedGroup?entries.filter(entry=>manualBankGroup(entry)===selectedGroup):entries;'));
+  assert.ok(html.includes('if(event.target&&event.target.id==="manualVisualLibraryGroupFilter")manualRenderVisualLibrary();'));
 });
 
 test("O C12 Full Body mantém seus três exercícios definidos", () => {
