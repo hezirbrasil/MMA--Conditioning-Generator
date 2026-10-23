@@ -1182,6 +1182,30 @@ function manualLoadLibrary(){
    return id==="STARTER-USER-C13-FULLBODY"||!isC13;
   });
   if(withoutC13.length!==beforeC13Removal){items.splice(0,items.length,...withoutC13);renumberedLibrary=true;}
+  // Novo C13 Full Body: circuito de três exercícios.
+  const c13Entry={
+   id:"starter-user-C13-fullbody",kind:"part",name:"C13",category:"Full Body",
+   part:{id:"starter-part-C13-fullbody",type:"circuit",title:"C13",rounds:1,seconds:50,durationMinutes:3,durationExtraSeconds:30,rest:10,restMinutes:0,restExtraSeconds:10,
+    items:[
+     {name:"Terra + Desenvolvimento",detail:"Full Body · cadeia posterior e ombros",cat:"composto"},
+     {name:"Agachamento + Remada Alta",detail:"Full Body · pernas e ombros",cat:"composto"},
+     {name:"Abdominal Bicicleta",detail:"Core",cat:"core"}
+    ]},
+   savedAt:new Date().toISOString()
+  };
+  const c13Index=items.findIndex(entry=>entry?.id===c13Entry.id);
+  if(c13Index>=0){
+   const current=items[c13Index];
+   const currentNames=(current.part?.items||[]).map(item=>String(item.name||""));
+   const newNames=c13Entry.part.items.map(item=>item.name);
+   if(current.name!==c13Entry.name||current.part?.title!==c13Entry.part.title||JSON.stringify(currentNames)!==JSON.stringify(newNames)||current.category!==c13Entry.category){
+    items[c13Index]={...current,...c13Entry,part:{...current.part,...c13Entry.part,items:c13Entry.part.items.map(item=>({...item}))}};
+    addedStarterCircuits=true;
+   }
+  }else{
+   items.push(c13Entry);
+   addedStarterCircuits=true;
+  }
   // C12 é um circuito ativo; preservar sua entrada na biblioteca.\n  // Remove apenas uma ocorrência do circuito C11 indicado pelos três exercícios.
   // A numeração visível é recalculada; por isso não usar apenas o ID interno.
   const normalizeC11Exercise=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLocaleLowerCase("pt-BR").replace(/\s+/g," ");
