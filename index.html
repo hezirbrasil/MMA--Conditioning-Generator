@@ -1134,10 +1134,10 @@ function manualLoadLibrary(){
    items.push(updatedEntry);
    addedStarterCircuits=true;
   });
-   // Circuito personalizado C19 solicitado pelo usuário; sincroniza também a biblioteca já salva.
-  const c19Entry={
-   id:"starter-user-C19",kind:"part",name:"C19",category:"Full Body",
-   part:{id:"starter-part-C19",type:"circuit",title:"C19",rounds:1,seconds:50,durationMinutes:3,durationExtraSeconds:30,rest:10,restMinutes:0,restExtraSeconds:10,
+   // Circuito personalizado C12 solicitado pelo usuário; sincroniza também a biblioteca já salva.
+  const c12Entry={
+   id:"starter-user-C12",kind:"part",name:"C12",category:"Full Body",
+   part:{id:"starter-part-C12",type:"circuit",title:"C12",rounds:1,seconds:50,durationMinutes:3,durationExtraSeconds:30,rest:10,restMinutes:0,restExtraSeconds:10,
     items:[
      {name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"},
      {name:"Supino com Halteres",detail:"Peito",cat:"peito"},
@@ -1145,12 +1145,12 @@ function manualLoadLibrary(){
     ]},
    savedAt:"2026-10-23T00:00:00.000Z"
   };
-  const c19Index=items.findIndex(entry=>entry?.id==="starter-user-C19"||(entry?.kind==="part"&&String(entry?.name||"").trim().toUpperCase()==="C19"));
-  if(c19Index>=0){
-   items[c19Index]={...items[c19Index],...c19Entry,part:{...items[c19Index]?.part,...c19Entry.part,items:c19Entry.part.items.map(item=>({...item}))}};
+  const c12Index=items.findIndex(entry=>entry?.id==="starter-user-C12"||(entry?.kind==="part"&&String(entry?.name||"").trim().toUpperCase()==="C12"));
+  if(c12Index>=0){
+   items[c12Index]={...items[c12Index],...c12Entry,part:{...items[c12Index]?.part,...c12Entry.part,items:c12Entry.part.items.map(item=>({...item}))}};
    addedStarterCircuits=true;
   }else{
-   items.push(c19Entry);
+   items.push(c12Entry);
    addedStarterCircuits=true;
   }
   // Remove a cópia antiga de C16: duplicava o circuito predefinido C14.
@@ -1168,18 +1168,7 @@ function manualLoadLibrary(){
    return !isC13;
   });
   if(withoutC13.length!==beforeC13Removal){items.splice(0,items.length,...withoutC13);renumberedLibrary=true;}
-  // Remove somente o circuito identificado como C12; não remover outros blocos que compartilhem os exercícios.
-  const beforeC12Removal=items.length;
-  const withoutC12=items.filter(entry=>{
-   if(entry?.kind!=="part"||!entry?.part||entry.part.type!=="circuit")return true;
-   const title=String(entry.part.title||"").trim().toUpperCase();
-   const name=String(entry.name||"").trim().toUpperCase();
-   const id=String(entry.id||"").trim().toUpperCase();
-   const isC12=/^(?:(?:WORKOUT)\s*)?(?:C\s*)?12(?:\b|\s|$)/.test(title)||/^(?:(?:WORKOUT)\s*)?(?:C\s*)?12(?:\b|\s|$)/.test(name)||id==="STARTER-USER-C12";
-   return !isC12;
-  });
-  if(withoutC12.length!==beforeC12Removal){items.splice(0,items.length,...withoutC12);renumberedLibrary=true;}
-  // Remove apenas uma ocorrência do circuito C11 indicado pelos três exercícios.
+  // C12 é um circuito ativo; preservar sua entrada na biblioteca.\n  // Remove apenas uma ocorrência do circuito C11 indicado pelos três exercícios.
   // A numeração visível é recalculada; por isso não usar apenas o ID interno.
   const normalizeC11Exercise=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLocaleLowerCase("pt-BR").replace(/\s+/g," ");
   const c11ExerciseSignature=["Supino pegada fechada","Crucifixo","Tríceps Francês"].map(normalizeC11Exercise).sort().join("|");
