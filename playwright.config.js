@@ -21,8 +21,8 @@ module.exports = defineConfig({
       use: { ...devices["Desktop Chrome"] }
     },
     {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"], viewport: { width: 390, height: 844 } }
+      name: "chromium-mobile",
+      use: { ...devices["Pixel 7"], browserName: "chromium" }
     }
   ],
   webServer: {
