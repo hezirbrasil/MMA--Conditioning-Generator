@@ -1680,7 +1680,7 @@ function safeLoadWorkoutOption(option,forceRegenerate=false){
    const addFight=(name)=>{const names=getFightBank();const items=Array.from({length:4},(_,i)=>({name:names.length?names[(manualParts.length*4+i)%names.length]:"Jab + Direto",detail:"Sequência de FIGHT"}));manualParts.push(presetPart("fight",name,{seconds:240,rest:0,items}));};
    const pause=(name,seconds,type="rest")=>manualParts.push(presetPause(name,seconds,type));
    pause("AQUECIMENTO",180);
-   if(option===1){addCircuit("WORKOUT · WORKOUT 1");pause("REST",40);addCircuit("WORKOUT · WORKOUT 2");addIndividual("WORKOUT · Exercícios individuais");pause("SWITCH TO FIGHT",90,"transition");addFight("FIGHT · Bloco 1");addFight("FIGHT · Bloco 2");pause("SWITCH TO WORKOUT",90,"transition");presetResetFunctionalPhase(1);addIndividual("WORKOUT · Exercícios individuais");addCircuit("WORKOUT · WORKOUT final");pause("FIM",300);}
+   if(option===1||option===3){addCircuit("WORKOUT · WORKOUT 1");pause("REST",40);addCircuit("WORKOUT · WORKOUT 2");addIndividual("WORKOUT · Exercícios individuais");pause("SWITCH TO FIGHT",90,"transition");addFight("FIGHT · Bloco 1");addFight("FIGHT · Bloco 2");pause("SWITCH TO WORKOUT",90,"transition");presetResetFunctionalPhase(1);addIndividual("WORKOUT · Exercícios individuais");addCircuit("WORKOUT · WORKOUT final");pause("FIM",300);}
    else{addFight("FIGHT · Bloco 1");addFight("FIGHT · Bloco 2");pause("SWITCH TO WORKOUT",90,"transition");addIndividual("WORKOUT · Bloco 1");addIndividual("WORKOUT · Bloco 2");pause("SWITCH TO FIGHT",90,"transition");addFight("FIGHT · Bloco 3");pause("FIM",300);}
    document.getElementById("manualWorkoutName").value=(presetSelectedType==="fullbody"?"Fullbody":"Leg Blast")+" — Opção "+option;
    manualRenderParts();
