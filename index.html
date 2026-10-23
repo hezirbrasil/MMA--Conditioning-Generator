@@ -2337,13 +2337,13 @@ const BANK_GROUP_LABELS = Object.freeze({
  "starter-user-B18":"Condicionamento + Core",
  "starter-user-B19":"Core + Condicionamento",
  "starter-user-B23":"Inferior + Core",
- "starter-bulgaro-joelhada-step":"Inferior + Condicionamento",
+ "starter-bulgaro-joelhada-step":"Inferior",
  "starter-workout-bloco-1-four":"Core + Condicionamento",
  "starter-user-C12":"Full Body",
  "starter-preset-circuit-3":"Inferior",
  "starter-preset-circuit-8":"Inferior",
  "starter-preset-circuit-10":"Inferior",
- "starter-preset-circuit-4":"Inferior Combinado",
+ "starter-preset-circuit-4":"Inferior",
  "starter-preset-circuit-1":"Posterior",
  "starter-preset-circuit-11":"Posterior",
  "starter-preset-circuit-5":"Peitoral + Tríceps",
@@ -2353,9 +2353,9 @@ const BANK_GROUP_LABELS = Object.freeze({
  "starter-preset-circuit-9":"Deltoide"
 });
 const BANK_GROUP_ORDER = [
- "Full Body","Inferior","Inferior + Core","Inferior Combinado","Posterior",
+ "Full Body","Inferior","Inferior + Core","Posterior",
  "Peitoral + Tríceps","Costas + Bíceps","Superior","Deltoide",
- "Inferior + Condicionamento","Core + Condicionamento","Condicionamento + Core"
+ "Core + Condicionamento","Condicionamento + Core"
 ];
 function manualBankGroup(entry){
  return BANK_GROUP_LABELS[String(entry?.id||"")]||entry?.category||"Outros";
