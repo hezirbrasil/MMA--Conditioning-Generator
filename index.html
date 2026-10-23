@@ -1092,17 +1092,10 @@ function manualLoadLibrary(){
   }
   // Blocos personalizados adicionados pelo usuário: B5 a B8.
   const userFourExerciseBlocks=[
-   {id:"starter-user-B5",name:"B5",items:[{name:"Prancha + Feet Touch",detail:"Core",cat:"core"},{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Polichinelo",detail:"Cardio",cat:"cardio"}]},
-   {id:"starter-user-B6",name:"B6",items:[{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Prancha Baixa + Prancha Alta",detail:"Core e estabilidade",cat:"core"},{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"},{name:"Remada Alternada",detail:"Costas",cat:"costas"}]},
    {id:"starter-user-B7",name:"B7",items:[{name:"Búlgaro E",detail:"Pernas · esquerda",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas · direita",cat:"pernas"},{name:"Stiff com Halteres",detail:"Posterior",cat:"posterior"},{name:"Sprint",detail:"Cardio e velocidade",cat:"cardio"}]},
-   {id:"starter-user-B8",name:"B8",items:[{name:"Polichinelo + Desenvolvimento",detail:"Cardio e ombros",cat:"composto"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"},{name:"Supino com Halter",detail:"Peito",cat:"peito"}]},
    {id:"starter-user-B9",name:"B9",items:[{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"}]},
-   {id:"starter-user-B10",name:"B10",items:[{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Tríceps Francês com Halter",detail:"Tríceps",cat:"tríceps"},{name:"Flexão + Feet Touch",detail:"Peito e core",cat:"peito"},{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"}]},
    {id:"starter-user-B11",name:"B11",items:[{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Bíceps com Halter",detail:"Bíceps",cat:"bíceps"},{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"}]},
-   {id:"starter-user-B12",name:"B12",items:[{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"},{name:"Polichinelo",detail:"Cardio",cat:"cardio"}]},
    {id:"starter-user-B13",name:"B13",items:[{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"},{name:"Stiff com Halteres",detail:"Posterior",cat:"posterior"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"},{name:"Afundo + Salto",detail:"Pernas e potência",cat:"pernas"}]},
-   {id:"starter-user-B14",name:"B14",items:[{name:"Desenvolvimento com Halter",detail:"Ombros",cat:"ombros"},{name:"Bíceps com Halter",detail:"Bíceps",cat:"bíceps"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"}]},
-   {id:"starter-user-B15",name:"B15",items:[{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"},{name:"Remada Fechada",detail:"Costas",cat:"costas"}]},
    {id:"starter-user-B16",name:"B16",items:[{name:"Agachamento + Desenvolvimento",detail:"Pernas e ombros",cat:"composto"},{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Abdominal Bicicleta",detail:"Core",cat:"core"},{name:"Sprint",detail:"Cardio e velocidade",cat:"cardio"}]},
    {id:"starter-user-B17",name:"B17",items:[{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"},{name:"Búlgaro E",detail:"Pernas · esquerda",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas · direita",cat:"pernas"},{name:"Prancha + Feet Touch",detail:"Core",cat:"core"}]},
    {id:"starter-user-B18",name:"B18",items:[{name:"Sprawl",detail:"Condicionamento para luta",cat:"cardio"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"},{name:"Agachamento + Touch Down",detail:"Pernas e cardio",cat:"pernas"},{name:"Abdominal Supra + Rotação de Tronco",detail:"Core",cat:"core"}]},
@@ -1110,7 +1103,6 @@ function manualLoadLibrary(){
     {id:"starter-user-B19",name:"B19",items:[{name:"Abdominal Bicicleta",detail:"Core",cat:"core"},{name:"Prancha + Feet Touch",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Escalador",detail:"Core e condicionamento",cat:"cardio"}]},
     {id:"starter-user-B20",name:"B20",items:[{name:"Agachamento Sumô",detail:"Inferiores",cat:"pernas"},{name:"Stiff com Halteres",detail:"Posterior de coxa",cat:"posterior"},{name:"Avanço Alternado",detail:"Pernas e glúteos",cat:"pernas"},{name:"Panturrilha",detail:"Panturrilhas",cat:"pernas"}]},
     {id:"starter-user-B21",name:"B21",items:[{name:"Sprint",detail:"Velocidade e condicionamento",cat:"cardio"},{name:"Polichinelo",detail:"Cardio",cat:"cardio"},{name:"Sprawl",detail:"Condicionamento para luta",cat:"cardio"},{name:"Hop Out Step",detail:"Agilidade e cardio",cat:"cardio"}]},
-    {id:"starter-user-B22",name:"B22",items:[{name:"Agachamento Lateral",detail:"Inferiores",cat:"pernas"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"},{name:"Joelhada no Step Alternada",detail:"Condicionamento e combate",cat:"cardio"},{name:"Stiff com Halteres",detail:"Posterior de coxa",cat:"posterior"}]},
     {id:"starter-user-B23",name:"B23",items:[{name:"Búlgaro E",detail:"Pernas · esquerda",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas · direita",cat:"pernas"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"},{name:"Joelhada no Step Alternada",detail:"Condicionamento e combate",cat:"cardio"}]},
     {id:"starter-user-B24",name:"B24",items:[{name:"Agachamento + Salto",detail:"Pernas e potência",cat:"pernas"},{name:"Abdominal Supra + Rotação de Tronco",detail:"Core",cat:"core"},{name:"Corrida Lateral + Touch Down",detail:"Agilidade e condicionamento",cat:"cardio"},{name:"Afundo + Salto",detail:"Pernas e potência",cat:"pernas"}]},
     {id:"starter-user-B25",name:"B25",items:[{name:"Crucifixo com Halter",detail:"Peitoral",cat:"peito"},{name:"Crucifixo invertido",detail:"Deltoide posterior e costas",cat:"costas"},{name:"Elevação lateral",detail:"Ombros · deltoide lateral",cat:"ombros"},{name:"Elevação frontal",detail:"Ombros · deltoide anterior",cat:"ombros"}]},
@@ -1134,6 +1126,18 @@ function manualLoadLibrary(){
    items.push(updatedEntry);
    addedStarterCircuits=true;
   });
+  // Remove definitivamente os blocos B solicitados, inclusive cópias antigas salvas no navegador.
+  const removedUserBlockIds=new Set(["starter-user-B22","starter-user-B15","starter-user-B14","starter-user-B12","starter-user-B10","starter-user-B8","starter-user-B5","starter-user-B6"]);
+  const removedUserBlockNames=new Set(["B22","B15","B14","B12","B10","B8","B5","B6"]);
+  const beforeRemovedUserBlocks=items.length;
+  items.splice(0,items.length,...items.filter(entry=>{
+   if(entry?.kind!=="part")return true;
+   const id=String(entry?.id||"").trim().toUpperCase();
+   const name=String(entry?.name||"").trim().toUpperCase();
+   const title=String(entry?.part?.title||"").trim().toUpperCase();
+   return !removedUserBlockIds.has(String(entry?.id||""))&&!removedUserBlockNames.has(name)&&!removedUserBlockNames.has(title)&&!removedUserBlockIds.has(id.toLowerCase());
+  }));
+  if(items.length!==beforeRemovedUserBlocks)renumberedLibrary=true;
    // Circuito personalizado C12 solicitado pelo usuário; sincroniza também a biblioteca já salva.
   const c12Entry={
    id:"starter-user-C12",kind:"part",name:"C12",category:"Full Body",
