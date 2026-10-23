@@ -21,86 +21,73 @@ O **MMA Conditioning** é uma ferramenta para montar e organizar aulas de condic
 - **Visualização e cronômetro:** acompanhe a estrutura da aula com uma interface pensada para uso durante o treino.
 - **Design responsivo:** use no celular ou no computador.
 
-## 🥊 Descrição dos quatro modelos de aula — Round 1 ao 10
+## 🥊 O que fazer em cada round — os quatro modelos
 
-As quatro opções têm **10 rounds principais**. O aquecimento e as trocas de modalidade são etapas à parte e não entram nessa contagem.
+A descrição abaixo está escrita para ser fácil de consultar e explicar aos alunos. **Cada round é uma etapa da aula**, e não necessariamente um minuto de luta: a duração depende do modelo.
 
-**Regras de tempo**
-- **Aquecimento:** 3 minutos antes do Round 1.
-- **Round de circuito:** 3:30, com 3 exercícios; quando indicado, descanso de 40 s ao final.
-- **Round físico individual:** 4 exercícios, 50 s por exercício e 10 s entre exercícios; quando indicado, descanso de 40 s ao final.
-- **Round de FIGHT:** 4 minutos, com 4 exercícios/sequências. As pausas ativas de 30 s ocorrem após os rounds indicados.
-- **Troca entre WORKOUT e FIGHT:** 1:30. As trocas acontecem entre os grupos, fora da contagem dos 10 rounds.
+Antes do Round 1, faça o aquecimento de 3 minutos. As trocas entre Funcional e Luta duram 1 minuto e 30 segundos e acontecem entre as etapas descritas.
 
 ### 1. 3:30 · Físico primeiro
 
-| Round | Descrição |
+| Round | O que explicar para a turma |
 |---|---|
-| 1 | WORKOUT — circuito 1, 3 exercícios, 3:30; descanso de 40 s. |
-| 2 | WORKOUT — circuito 2, 3 exercícios, 3:30; descanso de 40 s. |
-| 3 | WORKOUT — bloco individual, 4 exercícios de 50 s, com 10 s entre exercícios. |
-| 4 | FIGHT — bloco 1, 4 minutos; pausa ativa de 30 s. |
-| 5 | FIGHT — bloco 2, 4 minutos; pausa ativa de 30 s. |
-| 6 | FIGHT — bloco 3, 4 minutos. |
-| 7 | WORKOUT — bloco individual, 4 exercícios de 50 s, com 10 s entre exercícios e descanso final de 40 s. |
-| 8 | WORKOUT — circuito final, 3 exercícios, 3:30. |
-| 9 | FIGHT — bloco 1 da etapa final, 4 minutos; pausa ativa de 30 s. |
-| 10 | FIGHT — bloco 2 da etapa final, 4 minutos. |
-
-**Perfil:** começa com condicionamento físico, passa por três blocos de luta e termina alternando físico e luta.
+| **Round 1 — Funcional** | Faça os 3 exercícios do circuito durante 3 minutos e 30 segundos. Ao terminar, descanse 40 segundos. |
+| **Round 2 — Funcional** | Faça os 3 exercícios do próximo circuito durante 3 minutos e 30 segundos. Ao terminar, descanse 40 segundos. |
+| **Round 3 — Funcional** | Faça os 4 exercícios individuais: 50 segundos em cada exercício, com 10 segundos para trocar entre eles. |
+| **Round 4 — Luta** | Execute as combinações de luta indicadas durante 4 minutos. Depois, faça 30 segundos de pausa ativa. |
+| **Round 5 — Luta** | Continue com as combinações do próximo bloco durante 4 minutos. Depois, faça 30 segundos de pausa ativa. |
+| **Round 6 — Luta** | Execute o terceiro bloco de combinações durante 4 minutos. |
+| **Round 7 — Funcional** | Faça os 4 exercícios individuais, 50 segundos cada e 10 segundos para trocar. Ao final, descanse 40 segundos. |
+| **Round 8 — Funcional** | Faça os 3 exercícios do circuito final durante 3 minutos e 30 segundos. |
+| **Round 9 — Luta** | Retome as combinações de luta durante 4 minutos. Depois, faça 30 segundos de pausa ativa. |
+| **Round 10 — Luta** | Termine com o último bloco de combinações durante 4 minutos. |
 
 ### 2. 0:50 · Luta primeiro
 
-| Round | Descrição |
+| Round | O que explicar para a turma |
 |---|---|
-| 1 | FIGHT — bloco 1, 4 minutos; pausa ativa de 30 s. |
-| 2 | FIGHT — bloco 2, 4 minutos; pausa ativa de 30 s. |
-| 3 | FIGHT — bloco 3, 4 minutos. |
-| 4 | WORKOUT — bloco individual 1, 4 exercícios de 50 s, com 10 s entre exercícios e descanso final de 40 s. |
-| 5 | WORKOUT — bloco individual 2, 4 exercícios de 50 s, com 10 s entre exercícios e descanso final de 40 s. |
-| 6 | WORKOUT — bloco individual 3, 4 exercícios de 50 s, com 10 s entre exercícios. |
-| 7 | FIGHT — bloco 1 da segunda etapa, 4 minutos; pausa ativa de 30 s. |
-| 8 | FIGHT — bloco 2 da segunda etapa, 4 minutos. |
-| 9 | WORKOUT — bloco individual 1 da etapa final, 4 exercícios de 50 s, com 10 s entre exercícios e descanso final de 40 s. |
-| 10 | WORKOUT — bloco individual 2 da etapa final, 4 exercícios de 50 s, com 10 s entre exercícios. |
-
-**Perfil:** começa pela luta e utiliza exclusivamente blocos físicos individuais de 0:50, sem circuitos de 3:30.
+| **Round 1 — Luta** | Execute as combinações indicadas durante 4 minutos. Depois, faça 30 segundos de pausa ativa. |
+| **Round 2 — Luta** | Continue com o próximo bloco de combinações durante 4 minutos. Depois, faça 30 segundos de pausa ativa. |
+| **Round 3 — Luta** | Execute o terceiro bloco de combinações durante 4 minutos. |
+| **Round 4 — Funcional** | Faça os 4 exercícios do bloco: 50 segundos por exercício e 10 segundos para trocar. Ao terminar, descanse 40 segundos. |
+| **Round 5 — Funcional** | Faça mais 4 exercícios, 50 segundos cada e 10 segundos para trocar. Ao terminar, descanse 40 segundos. |
+| **Round 6 — Funcional** | Faça os 4 exercícios do próximo bloco, 50 segundos cada e 10 segundos para trocar. |
+| **Round 7 — Luta** | Volte às combinações de luta durante 4 minutos. Depois, faça 30 segundos de pausa ativa. |
+| **Round 8 — Luta** | Execute o próximo bloco de combinações durante 4 minutos. |
+| **Round 9 — Funcional** | Faça os 4 exercícios do bloco final, 50 segundos cada e 10 segundos para trocar. Ao terminar, descanse 40 segundos. |
+| **Round 10 — Funcional** | Termine com mais 4 exercícios, 50 segundos cada e 10 segundos para trocar. |
 
 ### 3. 3:30 · Luta primeiro
 
-| Round | Descrição |
+| Round | O que explicar para a turma |
 |---|---|
-| 1 | FIGHT — bloco 1, 4 minutos; pausa ativa de 30 s. |
-| 2 | FIGHT — bloco 2, 4 minutos; pausa ativa de 30 s. |
-| 3 | FIGHT — bloco 3, 4 minutos. |
-| 4 | WORKOUT — circuito 1, 3 exercícios, 3:30; descanso de 40 s. |
-| 5 | WORKOUT — circuito 2, 3 exercícios, 3:30; descanso de 40 s. |
-| 6 | WORKOUT — bloco individual, 4 exercícios de 50 s, com 10 s entre exercícios. |
-| 7 | FIGHT — bloco 1 da segunda etapa, 4 minutos; pausa ativa de 30 s. |
-| 8 | FIGHT — bloco 2 da segunda etapa, 4 minutos. |
-| 9 | WORKOUT — bloco individual da etapa final, 4 exercícios de 50 s, com 10 s entre exercícios e descanso final de 40 s. |
-| 10 | WORKOUT — circuito final, 3 exercícios, 3:30. |
-
-**Perfil:** começa pela luta, mantém os dois circuitos de 3:30 no começo da parte física e reserva um circuito separado para o final.
+| **Round 1 — Luta** | Execute as combinações indicadas durante 4 minutos. Depois, faça 30 segundos de pausa ativa. |
+| **Round 2 — Luta** | Continue com o próximo bloco de combinações durante 4 minutos. Depois, faça 30 segundos de pausa ativa. |
+| **Round 3 — Luta** | Execute o terceiro bloco de combinações durante 4 minutos. |
+| **Round 4 — Funcional** | Faça os 3 exercícios do circuito durante 3 minutos e 30 segundos. Ao terminar, descanse 40 segundos. |
+| **Round 5 — Funcional** | Faça os 3 exercícios do próximo circuito durante 3 minutos e 30 segundos. Ao terminar, descanse 40 segundos. |
+| **Round 6 — Funcional** | Faça os 4 exercícios individuais: 50 segundos em cada exercício, com 10 segundos para trocar entre eles. |
+| **Round 7 — Luta** | Retome as combinações de luta durante 4 minutos. Depois, faça 30 segundos de pausa ativa. |
+| **Round 8 — Luta** | Execute o próximo bloco de combinações durante 4 minutos. |
+| **Round 9 — Funcional** | Faça os 4 exercícios individuais, 50 segundos cada e 10 segundos para trocar. Ao final, descanse 40 segundos. |
+| **Round 10 — Funcional** | Termine o trabalho físico com os 3 exercícios do circuito final durante 3 minutos e 30 segundos. |
 
 ### 4. 0:50 · Físico primeiro
 
-| Round | Descrição |
+| Round | O que explicar para a turma |
 |---|---|
-| 1 | WORKOUT — bloco individual 1, 4 exercícios de 50 s, com 10 s entre exercícios e descanso final de 40 s. |
-| 2 | WORKOUT — bloco individual 2, 4 exercícios de 50 s, com 10 s entre exercícios e descanso final de 40 s. |
-| 3 | WORKOUT — bloco individual 3, 4 exercícios de 50 s, com 10 s entre exercícios. |
-| 4 | FIGHT — bloco 1, 4 minutos; pausa ativa de 30 s. |
-| 5 | FIGHT — bloco 2, 4 minutos. |
-| 6 | WORKOUT — bloco individual 1 da segunda etapa, 4 exercícios de 50 s, com 10 s entre exercícios e descanso final de 40 s. |
-| 7 | WORKOUT — bloco individual 2 da segunda etapa, 4 exercícios de 50 s, com 10 s entre exercícios. |
-| 8 | FIGHT — bloco 1 da etapa final, 4 minutos; pausa ativa de 30 s. |
-| 9 | FIGHT — bloco 2 da etapa final, 4 minutos; pausa ativa de 30 s. |
-| 10 | FIGHT — bloco 3 da etapa final, 4 minutos. |
+| **Round 1 — Funcional** | Faça os 4 exercícios do bloco: 50 segundos por exercício e 10 segundos para trocar. Ao terminar, descanse 40 segundos. |
+| **Round 2 — Funcional** | Faça mais 4 exercícios, 50 segundos cada e 10 segundos para trocar. Ao terminar, descanse 40 segundos. |
+| **Round 3 — Funcional** | Faça os 4 exercícios do próximo bloco, 50 segundos cada e 10 segundos para trocar. |
+| **Round 4 — Luta** | Execute as combinações indicadas durante 4 minutos. Depois, faça 30 segundos de pausa ativa. |
+| **Round 5 — Luta** | Termine essa etapa de luta com o próximo bloco de combinações durante 4 minutos. |
+| **Round 6 — Funcional** | Faça os 4 exercícios do bloco, 50 segundos cada e 10 segundos para trocar. Ao terminar, descanse 40 segundos. |
+| **Round 7 — Funcional** | Faça os 4 exercícios do próximo bloco, 50 segundos cada e 10 segundos para trocar. |
+| **Round 8 — Luta** | Retome as combinações durante 4 minutos. Depois, faça 30 segundos de pausa ativa. |
+| **Round 9 — Luta** | Execute o próximo bloco de combinações durante 4 minutos. Depois, faça 30 segundos de pausa ativa. |
+| **Round 10 — Luta** | Termine a aula com o último bloco de combinações durante 4 minutos. |
 
-**Perfil:** começa com blocos físicos individuais, passa por dois blocos de luta, retorna ao físico e encerra com três blocos de FIGHT.
-
-> Os exercícios específicos são sorteados conforme o tipo de treino escolhido (Full Body ou Leg Blast). A descrição acima documenta a estrutura dos modelos; não significa que todos os rounds tenham a mesma duração.
+**Como ler:** “Funcional” significa seguir os exercícios que aparecem no bloco do treino; “Luta” significa executar as combinações exibidas no bloco FIGHT. Os exercícios específicos variam conforme a aula Full Body ou Leg Blast e a geração do treino. Os intervalos e as trocas entre modalidades continuam sendo controlados pelo cronômetro.
 
 ## 🧠 Feito para a rotina do treinador
 
