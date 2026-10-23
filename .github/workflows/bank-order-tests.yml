@@ -1,0 +1,26 @@
+name: Bank order tests
+
+on:
+  push:
+    paths:
+      - "index.html"
+      - "tests/bank-order.test.mjs"
+      - ".github/workflows/bank-order-tests.yml"
+  pull_request:
+    paths:
+      - "index.html"
+      - "tests/bank-order.test.mjs"
+      - ".github/workflows/bank-order-tests.yml"
+
+jobs:
+  bank-order:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run bank ordering tests
+        run: node --test tests/bank-order.test.mjs
