@@ -17,17 +17,17 @@ const bankOrder = readJsonConstant(
 
 const expectedB = [
   "starter-user-B16",
-  "starter-user-B20",
-  "starter-user-B26",
   "starter-user-B13",
+  "starter-user-B20",
+  "starter-user-B24",
+  "starter-user-B26",
   "starter-user-B17",
   "starter-user-B7",
-  "starter-user-B18",
   "starter-user-B25",
   "starter-user-B9",
   "starter-user-B11",
+  "starter-user-B18",
   "starter-user-B19",
-  "starter-user-B24",
   "starter-user-B23",
   "starter-bulgaro-joelhada-step",
   "starter-workout-bloco-1-four"
@@ -82,8 +82,8 @@ test("B8 é Deltoide, B9 é Full Body, B10 é Costas + Bíceps e B4/B7 mantêm a
   assert.equal(labels["starter-user-B25"], "B8");
   assert.equal(labels["starter-user-B9"], "B9");
   assert.equal(labels["starter-user-B11"], "B10");
-  assert.equal(labels["starter-user-B13"], "B4");
-  assert.equal(labels["starter-user-B18"], "B7");
+  assert.equal(labels["starter-user-B24"], "B4");
+  assert.equal(labels["starter-user-B7"], "B7");
 });
 
 test("B13 coloca Joelhada Alternada antes da Prancha T, que fecha o bloco", () => {
