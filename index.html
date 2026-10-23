@@ -112,21 +112,21 @@ input[type="text"]{width:100%;background:#0d0a12;border:1px solid #3a2c49;border
 <script>
 window.addEventListener("error",function(event){const status=document.getElementById("manualStatus");if(status)status.textContent="Erro interno do aplicativo: "+(event.message||"falha no JavaScript")+" (linha "+(event.lineno||"?")+"). Envie esta mensagem para corrigirmos.";});
 const bank = [
-{name:"Supino",cat:"peito",types:["fullbody"]},
+{name:"Supino com Halter",cat:"peito",types:["fullbody"]},
 {name:"Supino pegada fechada",cat:"peito",types:["fullbody"]},
-{name:"Crucifixo",cat:"peito",types:["fullbody"]},
+{name:"Crucifixo com Halter",cat:"peito",types:["fullbody"]},
 {name:"Flexão + Feet Touch",cat:"cardio",types:["fullbody","legblast"]},
 {name:"Pulldown",cat:"costas",types:["fullbody"]},
 {name:"Remada Aberta",cat:"costas",types:["fullbody"]},
 {name:"Remada Fechada",cat:"costas",types:["fullbody"]},
 {name:"Remada Alta",cat:"costas",types:["fullbody"]},
-{name:"Remada unilateral E",cat:"costas",types:["fullbody"]},
-{name:"Remada unilateral D",cat:"costas",types:["fullbody"]},
-{name:"Desenvolvimento",cat:"ombros",types:["fullbody"]},
-{name:"Desenvolvimento Arnold",cat:"ombros",types:["fullbody"]},
-{name:"Elevação Lateral",cat:"ombros",types:["fullbody"]},
-{name:"Elevação Lateral + Elevação Frontal",cat:"ombros",types:["fullbody"]},
-{name:"Crucifixo Invertido",cat:"ombros",types:["fullbody"]},
+{name:"Remada Unilateral com Halter E",cat:"costas",types:["fullbody"]},
+{name:"Remada Unilateral com Halter D",cat:"costas",types:["fullbody"]},
+{name:"Desenvolvimento com Halter",cat:"ombros",types:["fullbody"]},
+{name:"Desenvolvimento Arnold com Halter",cat:"ombros",types:["fullbody"]},
+{name:"Elevação Lateral com Halter",cat:"ombros",types:["fullbody"]},
+{name:"Elevação Lateral + Elevação Frontal com Halteres",cat:"ombros",types:["fullbody"]},
+{name:"Crucifixo Invertido com Halter",cat:"ombros",types:["fullbody"]},
 {name:"Bíceps com Halter",cat:"bíceps",types:["fullbody"]},
 {name:"Recuo + Bíceps",cat:"composto",types:["fullbody","legblast"]},
 {name:"Tríceps Francês com Halter",cat:"tríceps",types:["fullbody"]},
@@ -152,9 +152,9 @@ const bank = [
 {name:"Avanço + Elevação Lateral",cat:"composto",types:["fullbody","legblast"]},
 {name:"Afundo + Troca de Base",cat:"pernas",types:["fullbody","legblast"]},
 {name:"Terra",cat:"posterior",types:["fullbody","legblast"]},
-{name:"Stiff",cat:"posterior",types:["fullbody","legblast"]},
-{name:"Stiff unilateral E",cat:"posterior",types:["fullbody","legblast"]},
-{name:"Stiff unilateral D",cat:"posterior",types:["fullbody","legblast"]},
+{name:"Stiff com Halteres",cat:"posterior",types:["fullbody","legblast"]},
+{name:"Stiff Unilateral com Halter E",cat:"posterior",types:["fullbody","legblast"]},
+{name:"Stiff Unilateral com Halter D",cat:"posterior",types:["fullbody","legblast"]},
 {name:"Panturrilha",cat:"pernas",types:["fullbody","legblast"]},
 {name:"Terra + Desenvolvimento",cat:"composto",types:["fullbody","legblast"]},
 {name:"Agachamento + Desenvolvimento",cat:"composto",types:["fullbody","legblast"]},
@@ -1024,7 +1024,7 @@ function manualLoadLibrary(){
   if(activeCircuitItems.length!==beforeStaleCircuitCleanup){items.splice(0,items.length,...activeCircuitItems);renumberedLibrary=true;}
   const savedC17=items.find(entry=>entry?.id==="starter-preset-circuit-16");
   if(savedC17?.part?.type==="circuit"){
-    savedC17.part.items=[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}];
+    savedC17.part.items=[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Crucifixo Invertido com Halter",detail:"Ombros e costas",cat:"ombros"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"}];
    savedC17.part.title="WORKOUT 16";
    savedC17.name="WORKOUT 16 · Agachamento goblet + Crucifixo invertido";
    addedStarterCircuits=true;
@@ -1090,26 +1090,26 @@ function manualLoadLibrary(){
   const userFourExerciseBlocks=[
    {id:"starter-user-B5",name:"B5",items:[{name:"Agachamento + Abre e Fecha Tocando o Solo",detail:"Pernas e cardio",cat:"cardio"},{name:"Prancha + Feet Touch",detail:"Core",cat:"core"},{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Polichinelo",detail:"Cardio",cat:"cardio"}]},
    {id:"starter-user-B6",name:"B6",items:[{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Prancha Baixa + Prancha Alta",detail:"Core e estabilidade",cat:"core"},{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"},{name:"Remada Alternada",detail:"Costas",cat:"costas"}]},
-   {id:"starter-user-B7",name:"B7",items:[{name:"Búlgaro E",detail:"Pernas · esquerda",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas · direita",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Sprint",detail:"Cardio e velocidade",cat:"cardio"}]},
-   {id:"starter-user-B8",name:"B8",items:[{name:"Polichinelo + Desenvolvimento",detail:"Cardio e ombros",cat:"composto"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"},{name:"Supino",detail:"Peito",cat:"peito"}]},
-   {id:"starter-user-B9",name:"B9",items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"}]},
-   {id:"starter-user-B10",name:"B10",items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Tríceps Francês com Halter",detail:"Tríceps",cat:"tríceps"},{name:"Flexão + Feet Touch",detail:"Peito e core",cat:"peito"},{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"}]},
+   {id:"starter-user-B7",name:"B7",items:[{name:"Búlgaro E",detail:"Pernas · esquerda",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas · direita",cat:"pernas"},{name:"Stiff com Halteres",detail:"Posterior",cat:"posterior"},{name:"Sprint",detail:"Cardio e velocidade",cat:"cardio"}]},
+   {id:"starter-user-B8",name:"B8",items:[{name:"Polichinelo + Desenvolvimento",detail:"Cardio e ombros",cat:"composto"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"},{name:"Agachamento + Remada Alta",detail:"Pernas e costas",cat:"composto"},{name:"Supino com Halter",detail:"Peito",cat:"peito"}]},
+   {id:"starter-user-B9",name:"B9",items:[{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"}]},
+   {id:"starter-user-B10",name:"B10",items:[{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Tríceps Francês com Halter",detail:"Tríceps",cat:"tríceps"},{name:"Flexão + Feet Touch",detail:"Peito e core",cat:"peito"},{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"}]},
    {id:"starter-user-B11",name:"B11",items:[{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Bíceps com Halter",detail:"Bíceps",cat:"bíceps"},{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"}]},
-   {id:"starter-user-B12",name:"B12",items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"},{name:"Polichinelo",detail:"Cardio",cat:"cardio"}]},
-   {id:"starter-user-B13",name:"B13",items:[{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"},{name:"Afundo + Salto",detail:"Pernas e potência",cat:"pernas"}]},
-   {id:"starter-user-B14",name:"B14",items:[{name:"Desenvolvimento",detail:"Ombros",cat:"ombros"},{name:"Bíceps com Halter",detail:"Bíceps",cat:"bíceps"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"}]},
+   {id:"starter-user-B12",name:"B12",items:[{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"},{name:"Polichinelo",detail:"Cardio",cat:"cardio"}]},
+   {id:"starter-user-B13",name:"B13",items:[{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"},{name:"Stiff com Halteres",detail:"Posterior",cat:"posterior"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"},{name:"Afundo + Salto",detail:"Pernas e potência",cat:"pernas"}]},
+   {id:"starter-user-B14",name:"B14",items:[{name:"Desenvolvimento com Halter",detail:"Ombros",cat:"ombros"},{name:"Bíceps com Halter",detail:"Bíceps",cat:"bíceps"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"}]},
    {id:"starter-user-B15",name:"B15",items:[{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"},{name:"Remada Fechada",detail:"Costas",cat:"costas"}]},
-   {id:"starter-user-B16",name:"B16",items:[{name:"Agachamento + Desenvolvimento",detail:"Pernas e ombros",cat:"composto"},{name:"Supino",detail:"Peito",cat:"peito"},{name:"Abdominal Bicicleta",detail:"Core",cat:"core"},{name:"Sprint",detail:"Cardio e velocidade",cat:"cardio"}]},
+   {id:"starter-user-B16",name:"B16",items:[{name:"Agachamento + Desenvolvimento",detail:"Pernas e ombros",cat:"composto"},{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Abdominal Bicicleta",detail:"Core",cat:"core"},{name:"Sprint",detail:"Cardio e velocidade",cat:"cardio"}]},
    {id:"starter-user-B17",name:"B17",items:[{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"},{name:"Búlgaro E",detail:"Pernas · esquerda",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas · direita",cat:"pernas"},{name:"Prancha + Feet Touch",detail:"Core",cat:"core"}]},
    {id:"starter-user-B18",name:"B18",items:[{name:"Sprawl",detail:"Condicionamento para luta",cat:"cardio"},{name:"Joelhada no Step Alternada",detail:"Cardio e combate",cat:"cardio"},{name:"Agachamento + Touch Down",detail:"Pernas e cardio",cat:"pernas"},{name:"Abdominal Supra + Rotação de Tronco",detail:"Core",cat:"core"}]},
 
     {id:"starter-user-B19",name:"B19",items:[{name:"Abdominal Bicicleta",detail:"Core",cat:"core"},{name:"Prancha + Feet Touch",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Escalador",detail:"Core e condicionamento",cat:"cardio"}]},
-    {id:"starter-user-B20",name:"B20",items:[{name:"Agachamento Sumô",detail:"Inferiores",cat:"pernas"},{name:"Stiff",detail:"Posterior de coxa",cat:"posterior"},{name:"Avanço Alternado",detail:"Pernas e glúteos",cat:"pernas"},{name:"Panturrilha",detail:"Panturrilhas",cat:"pernas"}]},
+    {id:"starter-user-B20",name:"B20",items:[{name:"Agachamento Sumô",detail:"Inferiores",cat:"pernas"},{name:"Stiff com Halteres",detail:"Posterior de coxa",cat:"posterior"},{name:"Avanço Alternado",detail:"Pernas e glúteos",cat:"pernas"},{name:"Panturrilha",detail:"Panturrilhas",cat:"pernas"}]},
     {id:"starter-user-B21",name:"B21",items:[{name:"Sprint",detail:"Velocidade e condicionamento",cat:"cardio"},{name:"Polichinelo",detail:"Cardio",cat:"cardio"},{name:"Sprawl",detail:"Condicionamento para luta",cat:"cardio"},{name:"Hop Out Step",detail:"Agilidade e cardio",cat:"cardio"}]},
-    {id:"starter-user-B22",name:"B22",items:[{name:"Agachamento Lateral",detail:"Inferiores",cat:"pernas"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"},{name:"Joelhada no Step Alternada",detail:"Condicionamento e combate",cat:"cardio"},{name:"Stiff",detail:"Posterior de coxa",cat:"posterior"}]},
+    {id:"starter-user-B22",name:"B22",items:[{name:"Agachamento Lateral",detail:"Inferiores",cat:"pernas"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"},{name:"Joelhada no Step Alternada",detail:"Condicionamento e combate",cat:"cardio"},{name:"Stiff com Halteres",detail:"Posterior de coxa",cat:"posterior"}]},
     {id:"starter-user-B23",name:"B23",items:[{name:"Búlgaro E",detail:"Pernas · esquerda",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas · direita",cat:"pernas"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"},{name:"Joelhada no Step Alternada",detail:"Condicionamento e combate",cat:"cardio"}]},
     {id:"starter-user-B24",name:"B24",items:[{name:"Agachamento + Salto",detail:"Pernas e potência",cat:"pernas"},{name:"Abdominal Supra + Rotação de Tronco",detail:"Core",cat:"core"},{name:"Corrida Lateral + Touch Down",detail:"Agilidade e condicionamento",cat:"cardio"},{name:"Afundo + Salto",detail:"Pernas e potência",cat:"pernas"}]},
-    {id:"starter-user-B25",name:"B25",items:[{name:"Crucifixo",detail:"Peitoral",cat:"peito"},{name:"Crucifixo invertido",detail:"Deltoide posterior e costas",cat:"costas"},{name:"Elevação lateral",detail:"Ombros · deltoide lateral",cat:"ombros"},{name:"Elevação frontal",detail:"Ombros · deltoide anterior",cat:"ombros"}]},
+    {id:"starter-user-B25",name:"B25",items:[{name:"Crucifixo com Halter",detail:"Peitoral",cat:"peito"},{name:"Crucifixo invertido",detail:"Deltoide posterior e costas",cat:"costas"},{name:"Elevação lateral",detail:"Ombros · deltoide lateral",cat:"ombros"},{name:"Elevação frontal",detail:"Ombros · deltoide anterior",cat:"ombros"}]},
     {id:"starter-user-B26",name:"B26",items:[{name:"Agachamento Sumô",detail:"Pernas · quadríceps e glúteos",cat:"pernas"},{name:"Agachamento Goblet",detail:"Pernas · quadríceps e glúteos",cat:"pernas"},{name:"Afundo Alternado",detail:"Pernas · unilateral",cat:"pernas"},{name:"Agachamento Lateral",detail:"Pernas · adutores e glúteos",cat:"pernas"}]}
   ];
   userFourExerciseBlocks.forEach(entry=>{
@@ -1323,24 +1323,24 @@ function presetPickExercise(){
 }
 const presetBlock050Blocks=[
  {types:["fullbody","legblast"],items:[{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"},{name:"Abdominal Bicicleta",detail:"Core",cat:"core"},{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Abdominal Supra + Rotação de Tronco",detail:"Core",cat:"core"}]},
- {types:["fullbody","legblast"],items:[{name:"Stiff unilateral E",detail:"Posterior",cat:"posterior"},{name:"Stiff unilateral D",detail:"Posterior",cat:"posterior"},{name:"Afundo E",detail:"Pernas",cat:"pernas"},{name:"Afundo D",detail:"Pernas",cat:"pernas"}]},
+ {types:["fullbody","legblast"],items:[{name:"Stiff Unilateral com Halter E",detail:"Posterior",cat:"posterior"},{name:"Stiff Unilateral com Halter D",detail:"Posterior",cat:"posterior"},{name:"Afundo E",detail:"Pernas",cat:"pernas"},{name:"Afundo D",detail:"Pernas",cat:"pernas"}]},
  {types:["fullbody","legblast"],items:[{name:"Prancha Baixa + Prancha Alta",detail:"Core e estabilidade",cat:"core"},{name:"Prancha + Feet Touch",detail:"Core",cat:"core"},{name:"Abdominal + Jab + Direto",detail:"Core e FIGHT",cat:"core"},{name:"Escalador",detail:"Core e cardio",cat:"cardio"}]},
  {types:["fullbody","legblast"],items:[{name:"Búlgaro E",detail:"Pernas",cat:"pernas"},{name:"Búlgaro D",detail:"Pernas",cat:"pernas"},{name:"Joelhada no Step E",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Joelhada no Step D",detail:"Cardio e WORKOUT",cat:"cardio"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento + Touch Down",detail:"Pernas e cardio",cat:"pernas"},{name:"Hop Out Step",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Corrida Lateral + Touch Down",detail:"Cardio e agilidade",cat:"cardio"},{name:"Sprawl",detail:"Cardio e corpo inteiro",cat:"cardio"}]},
  {types:["fullbody","legblast"],items:[{name:"Abdominal Supra + Rotação de Tronco",detail:"Core",cat:"core"},{name:"Abdominal Infra",detail:"Core",cat:"core"},{name:"Prancha",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal Remador",detail:"Core",cat:"core"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento + Troca de Base",detail:"Pernas e cardio",cat:"pernas"},{name:"Prancha + Feet Touch",detail:"Core",cat:"core"},{name:"Avanço",detail:"Pernas",cat:"pernas"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"}]},
- {types:["fullbody"],items:[{name:"Agachamento + Salto",detail:"Pernas e potência",cat:"pernas"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"}]},
- {types:["fullbody","legblast"],items:[{name:"Afundo + Salto",detail:"Pernas e potência",cat:"pernas"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"},{name:"Agachamento + Remada Alta",detail:"Pernas e ombros",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"}]},
+ {types:["fullbody"],items:[{name:"Agachamento + Salto",detail:"Pernas e potência",cat:"pernas"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"}]},
+ {types:["fullbody","legblast"],items:[{name:"Afundo + Salto",detail:"Pernas e potência",cat:"pernas"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"},{name:"Agachamento + Remada Alta",detail:"Pernas e ombros",cat:"pernas"},{name:"Stiff com Halteres",detail:"Posterior",cat:"posterior"}]},
  {types:["fullbody","legblast"],items:[{name:"Abdominal + Jab + Direto",detail:"Core e FIGHT",cat:"core"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"},{name:"Abdominal + Passar as Pernas por Cima",detail:"Core",cat:"core"},{name:"Escalador",detail:"Core e cardio",cat:"cardio"}]},
  {types:["fullbody","legblast"],items:[{name:"Sprint",detail:"Cardio e potência",cat:"cardio"},{name:"Corrida Lateral + Touch Down",detail:"Cardio e agilidade",cat:"cardio"},{name:"Joelhada no Step Alternada",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Sprawl",detail:"Cardio e corpo inteiro",cat:"cardio"}]},
- {types:["fullbody"],items:[{name:"Elevação Lateral + Elevação Frontal",detail:"Ombros",cat:"ombros"},{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"}]},
+ {types:["fullbody"],items:[{name:"Elevação Lateral + Elevação Frontal com Halteres",detail:"Ombros",cat:"ombros"},{name:"Abdominal Remador",detail:"Core",cat:"core"},{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento + Desenvolvimento",detail:"Pernas e ombros",cat:"pernas"},{name:"Avanço + Elevação Lateral",detail:"Pernas e ombros",cat:"pernas"},{name:"Abdominal Bicicleta",detail:"Core",cat:"core"},{name:"Terra",detail:"Posterior",cat:"posterior"}]},
- {types:["legblast"],items:[{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Avanço",detail:"Pernas",cat:"pernas"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}]},
- {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Pulldown",detail:"Costas",cat:"costas"}]},
+ {types:["legblast"],items:[{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"},{name:"Stiff com Halteres",detail:"Posterior",cat:"posterior"},{name:"Avanço",detail:"Pernas",cat:"pernas"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}]},
+ {types:["fullbody"],items:[{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Crucifixo com Halter",detail:"Peito",cat:"peito"},{name:"Pulldown",detail:"Costas",cat:"costas"}]},
  {types:["legblast"],items:[{name:"Agachamento + Salto",detail:"Pernas e potência",cat:"pernas"},{name:"Afundo + Troca de Base",detail:"Pernas e cardio",cat:"pernas"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"},{name:"Hop Out Step",detail:"Cardio e WORKOUT",cat:"cardio"}]},
- {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Remada Fechada",detail:"Costas",cat:"costas"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"}]},
+ {types:["fullbody"],items:[{name:"Desenvolvimento Arnold com Halter",detail:"Ombros",cat:"ombros"},{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Remada Fechada",detail:"Costas",cat:"costas"},{name:"Crucifixo Invertido com Halter",detail:"Ombros e costas",cat:"ombros"}]},
  {types:["fullbody","legblast"],items:[{name:"Polichinelo + Desenvolvimento",detail:"Cardio e ombros",cat:"composto"},{name:"Corrida Lateral + Touch Down",detail:"Cardio e agilidade",cat:"cardio"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Senta, Levanta e Pula",detail:"Cardio e potência",cat:"cardio"}]},
- {types:["legblast"],items:[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Stiff unilateral E",detail:"Posterior",cat:"posterior"},{name:"Stiff unilateral D",detail:"Posterior",cat:"posterior"},{name:"Prancha + Feet Touch",detail:"Core",cat:"core"}]}
+ {types:["legblast"],items:[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Stiff Unilateral com Halter E",detail:"Posterior",cat:"posterior"},{name:"Stiff Unilateral com Halter D",detail:"Posterior",cat:"posterior"},{name:"Prancha + Feet Touch",detail:"Core",cat:"core"}]}
 ];
 let presetBlock050Order=[];
 let presetBlock050Cursor=0;
@@ -1430,20 +1430,20 @@ function presetExerciseBlock(label,addFinalRest=false){
  if(addFinalRest){manualParts.push(presetPause("REST",40));}
 }
 const presetCircuitBlocks=[
- {types:["fullbody"],items:[{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"}]},
- {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Desenvolvimento",detail:"Ombros",cat:"ombros"}]},
- {types:["fullbody","legblast"],items:[{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}]},
+ {types:["fullbody"],items:[{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Stiff com Halteres",detail:"Posterior",cat:"posterior"},{name:"Abdominal Infra Alternado",detail:"Core",cat:"core"}]},
+ {types:["fullbody"],items:[{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Desenvolvimento com Halter",detail:"Ombros",cat:"ombros"}]},
+ {types:["fullbody","legblast"],items:[{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"},{name:"Stiff com Halteres",detail:"Posterior",cat:"posterior"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}]},
  {types:["fullbody","legblast"],items:[{name:"Terra + Desenvolvimento",detail:"WORKOUT",cat:"composto"},{name:"Agachamento + Panturrilha",detail:"Pernas",cat:"pernas"},{name:"Joelhada no Step Alternada",detail:"Cardio e WORKOUT",cat:"cardio"}]},
- {types:["fullbody"],items:[{name:"Supino",detail:"Peito",cat:"peito"},{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Tríceps Francês com Halter",detail:"Tríceps",cat:"tríceps"}]},
+ {types:["fullbody"],items:[{name:"Supino com Halter",detail:"Peito",cat:"peito"},{name:"Crucifixo com Halter",detail:"Peito",cat:"peito"},{name:"Tríceps Francês com Halter",detail:"Tríceps",cat:"tríceps"}]},
  {types:["fullbody","legblast"],items:[{name:"Hop Out Step",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Sprawl + Salto",detail:"Cardio e WORKOUT",cat:"cardio"}]},
- {types:["fullbody"],items:[{name:"Crucifixo",detail:"Peito",cat:"peito"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Elevação Lateral + Elevação Frontal",detail:"Ombros",cat:"ombros"}]},
+ {types:["fullbody"],items:[{name:"Crucifixo com Halter",detail:"Peito",cat:"peito"},{name:"Crucifixo Invertido com Halter",detail:"Ombros e costas",cat:"ombros"},{name:"Elevação Lateral + Elevação Frontal com Halteres",detail:"Ombros",cat:"ombros"}]},
  {types:["fullbody","legblast"],items:[{name:"Terra",detail:"Posterior",cat:"posterior"},{name:"Afundo + Troca de Base",detail:"Pernas",cat:"pernas"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"}]},
- {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Elevação Lateral + Elevação Frontal",detail:"Ombros",cat:"ombros"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"}]},
+ {types:["fullbody"],items:[{name:"Desenvolvimento Arnold com Halter",detail:"Ombros",cat:"ombros"},{name:"Elevação Lateral + Elevação Frontal com Halteres",detail:"Ombros",cat:"ombros"},{name:"Prancha T",detail:"Core e estabilidade",cat:"core"}]},
  {types:["fullbody","legblast"],items:[{name:"Agachamento Sumô",detail:"Pernas",cat:"pernas"},{name:"Agachamento Neutro",detail:"Pernas",cat:"pernas"},{name:"Agachamento Livre",detail:"Pernas",cat:"pernas"}]},
- {types:["fullbody","legblast"],items:[{name:"Terra",detail:"Posterior",cat:"posterior"},{name:"Stiff",detail:"Posterior",cat:"posterior"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}]},
- {types:["fullbody"],items:[{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Crucifixo Invertido",detail:"Ombros e costas",cat:"ombros"},{name:"Pulldown",detail:"Costas",cat:"costas"}]},
- {types:["fullbody"],items:[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"},{name:"Stiff",detail:"Posterior",cat:"posterior"}]},
- {types:["fullbody"],items:[{name:"Desenvolvimento Arnold",detail:"Ombros",cat:"ombros"},{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Remada Fechada",detail:"Costas",cat:"costas"}]},
+ {types:["fullbody","legblast"],items:[{name:"Terra",detail:"Posterior",cat:"posterior"},{name:"Stiff com Halteres",detail:"Posterior",cat:"posterior"},{name:"Panturrilha",detail:"Pernas",cat:"pernas"}]},
+ {types:["fullbody"],items:[{name:"Remada Aberta",detail:"Costas",cat:"costas"},{name:"Crucifixo Invertido com Halter",detail:"Ombros e costas",cat:"ombros"},{name:"Pulldown",detail:"Costas",cat:"costas"}]},
+ {types:["fullbody"],items:[{name:"Agachamento Goblet",detail:"Pernas",cat:"pernas"},{name:"Agachamento Lateral",detail:"Pernas",cat:"pernas"},{name:"Stiff com Halteres",detail:"Posterior",cat:"posterior"}]},
+ {types:["fullbody"],items:[{name:"Desenvolvimento Arnold com Halter",detail:"Ombros",cat:"ombros"},{name:"Pulldown",detail:"Costas",cat:"costas"},{name:"Remada Fechada",detail:"Costas",cat:"costas"}]},
  {types:["fullbody","legblast"],items:[{name:"Hop Out Step",detail:"Cardio e WORKOUT",cat:"cardio"},{name:"Escalador",detail:"Cardio e core",cat:"cardio"},{name:"Sprawl + Salto",detail:"Cardio e WORKOUT",cat:"cardio"}]}
 ];;
 let presetCircuitOrder=[];
