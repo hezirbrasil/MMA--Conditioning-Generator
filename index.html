@@ -1508,13 +1508,14 @@ function loadWorkoutOption(option,forceRegenerate=false){
   lastPresetOption=option;
  const baseOption=(option===1||option===3)?1:2;
  // Os modelos 3:30 preservam os dois circuitos iniciais de 3 exercícios. Não rotacionar segmentos inteiros, pois isso desloca os circuitos para depois.
- const reverseStart=option===3?"fight":option===4?"workout":null;
+ // A opção 3 tem sequência própria para começar na luta e manter os dois circuitos no início da parte física.
+ const reverseStart=option===4?"workout":null;
 
  const previousWorkoutBlocks=forceRegenerate?manualParts.filter(p=>p&&["circuit","individual"].includes(p.type)).map(p=>({type:p.type,items:(p.items||[]).map(x=>({...x}))})):[];
  manualParts=[];presetExerciseCursor=0;presetFightCursor=0;presetUsedFightNames=new Set();presetSelectedType=document.getElementById("presetWorkoutType").value||"fullbody";presetResetCircuitOrder();presetResetBlock050Order();presetOption=option;presetResetFunctionalPhase(0);
  const addSwitch=title=>{if(manualParts.length&&manualParts[manualParts.length-1]?.type==="rest")manualParts.pop();manualParts.push(presetPause(title.includes("LUTA")?"SWITCH TO FIGHT":"SWITCH TO WORKOUT",90,"transition"));};
  manualParts.push(presetPause("AQUECIMENTO",180));
- if(baseOption===1){
+ if(baseOption===1 && option!==3){
   presetCircuit("WORKOUT · WORKOUT 1",true);
   presetCircuit("WORKOUT · WORKOUT 2",true);
   presetExerciseBlock("WORKOUT · Exercícios individuais",false);
@@ -1530,6 +1531,22 @@ function loadWorkoutOption(option,forceRegenerate=false){
   addSwitch("TROCA PARA A LUTA");
   presetFightBlock("FIGHT · Bloco 1",true);
   presetFightBlock("FIGHT · Bloco 2",false);
+ }else if(option===3){
+  // Começa com FIGHT, depois entram os dois circuitos de 3:30 antes dos blocos individuais.
+  presetFightBlock("FIGHT · Bloco 1",true);
+  presetFightBlock("FIGHT · Bloco 2",true);
+  presetFightBlock("FIGHT · Bloco 3",false);
+  addSwitch("TROCA PARA O FUNCIONAL");
+  presetCircuit("WORKOUT · WORKOUT 1",true);
+  presetCircuit("WORKOUT · WORKOUT 2",true);
+  presetExerciseBlock("WORKOUT · Exercícios individuais",false);
+  addSwitch("TROCA PARA A LUTA");
+  presetFightBlock("FIGHT · Bloco 1",true);
+  presetFightBlock("FIGHT · Bloco 2",false);
+  addSwitch("TROCA PARA O FUNCIONAL");
+  presetResetFunctionalPhase(1);
+  presetExerciseBlock("WORKOUT · Exercícios individuais",true);
+  presetCircuit("WORKOUT · WORKOUT final (único circuito final)",false);
  }else{
   presetFightBlock("FIGHT · Bloco 1",true);
   presetFightBlock("FIGHT · Bloco 2",true);
