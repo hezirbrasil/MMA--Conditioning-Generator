@@ -23,7 +23,6 @@ const expectedB = [
   "starter-user-B26",
   "starter-user-B17",
   "starter-user-B7",
-  "starter-user-B25",
   "starter-user-B9",
   "starter-user-B11",
   "starter-user-B18",
@@ -48,10 +47,23 @@ const expectedC = [
   "starter-preset-circuit-9"
 ];
 
-test("Banco B segue a ordem aprovada e tem IDs únicos", () => {
+test("Banco B segue a ordem revisada, sem B8 antigo e sem lacunas", () => {
   assert.deepEqual(bankOrder.B, expectedB);
   assert.equal(new Set(bankOrder.B).size, bankOrder.B.length, "Banco B não pode duplicar IDs");
-  assert.ok(!bankOrder.B.includes("starter-user-B21"), "O bloco B11 antigo deve estar fora da ordem");
+  assert.ok(!bankOrder.B.includes("starter-user-B21"), "O bloco de condicionamento antigo deve estar fora da ordem");
+  assert.ok(!bankOrder.B.includes("starter-user-B25"), "B8 Deltoide deve estar removido");
+  const removedIds = readJsonConstant(/const removedUserBlockIds=new Set\((\[[^\n]*\])\);/, "removedUserBlockIds");
+  assert.ok(removedIds.includes("starter-user-B25"), "A exclusão de B8 deve persistir após recarregar");
+  const labels = readJsonConstant(/const renumberedBLabels=(\{[^\n]*\});/, "renumberedBLabels");
+  assert.deepEqual(Object.values(labels), Array.from({length:12}, (_,i) => "B" + (i+1)));
+  assert.equal(labels["starter-user-B9"], "B8");
+  assert.equal(labels["starter-user-B11"], "B9");
+  assert.equal(labels["starter-user-B18"], "B10");
+  assert.equal(labels["starter-user-B19"], "B11");
+  assert.equal(labels["starter-user-B23"], "B12");
+  const start = html.indexOf("const userFourExerciseBlocks=[");
+  const end = html.indexOf("userFourExerciseBlocks.forEach", start);
+  assert.ok(!html.slice(start, end).includes('id:"starter-user-B25"'), "Bloco B8 não deve ser recriado");
 });
 
 test("Banco C segue a sequência agrupada e tem IDs únicos", () => {
@@ -77,11 +89,11 @@ test("O antigo bloco de condicionamento B11 é removido da biblioteca e das defi
   assert.ok(!definitions.includes('id:"starter-user-B21"'), "B11 antigo não deve ser recriado");
 });
 
-test("B8 é Deltoide, B9 é Full Body, B10 é Costas + Bíceps e B4/B7 mantêm as posições", () => {
+test("A renumeração após excluir B8 mantém os grupos existentes ligados aos blocos corretos", () => {
   const labels = readJsonConstant(/const renumberedBLabels=(\{[^\n]*\});/, "renumberedBLabels");
-  assert.equal(labels["starter-user-B25"], "B8");
-  assert.equal(labels["starter-user-B9"], "B9");
-  assert.equal(labels["starter-user-B11"], "B10");
+  assert.equal(labels["starter-user-B9"], "B8");
+  assert.equal(labels["starter-user-B11"], "B9");
+  assert.equal(labels["starter-user-B18"], "B10");
   assert.equal(labels["starter-user-B24"], "B4");
   assert.equal(labels["starter-user-B7"], "B7");
 });
@@ -116,10 +128,11 @@ test("Os cartões mostram número e grupamento muscular juntos", () => {
   assert.equal(groups["starter-bulgaro-joelhada-step"], "Inferior", "Inferior + Condicionamento deve ser unificado em Inferior");
   assert.ok(!html.includes('"Inferior Combinado"'), "Não deve haver filtro separado de Inferior Combinado");
   assert.ok(!html.includes('"Inferior + Condicionamento"'), "Não deve haver filtro separado de Inferior + Condicionamento");
-  assert.equal(groups["starter-user-B25"], "Deltoide");
   assert.equal(groups["starter-user-B7"], "Inferior + Core", "B7 deve ser Inferior + Core");
-  assert.equal(groups["starter-user-B9"], "Full Body");
-  assert.equal(groups["starter-user-B11"], "Core", "B10 deve ser apenas Core");
+  assert.equal(groups["starter-user-B9"], "Full Body", "Este bloco passa a ser B8 após excluir o antigo B8");
+  assert.equal(groups["starter-user-B11"], "Core", "Este bloco passa a ser B9 após excluir o antigo B8");
+  assert.equal(groups["starter-user-B18"], "Condicionamento + Core", "Este bloco passa a ser B10 após excluir o antigo B8");
+  assert.ok(!Object.hasOwn(groups, "starter-user-B25"), "O mapa não deve reter a classificação do B8 excluído");
   assert.ok(html.includes('const title=entry.displayName+" — "+group;'));
 });
 
