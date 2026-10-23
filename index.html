@@ -1712,7 +1712,7 @@ function manualRenderParts(){
   const visibleOpts=(p.type==="fight"||p.type==="fightCircuit")?opts.filter(o=>o.cat===selectedFightCat):(p.type==="circuit"?opts.filter(o=>o.cat===selectedExerciseCat):opts);
   const availableOpts=visibleOpts.filter(o=>!p.items.some(it=>it.name===o.name));
   const itemRows=p.items.map((it,ii)=>{
-   const allSwapOpts=manualOptions(p).filter(o=>!(/ [ED]$/.test(o.name))||o.name===it.name);
+   const allSwapOpts=opts.filter(o=>!(/ [ED]$/.test(o.name))||o.name===it.name);
    const isFightSwap=p.type==="fight"||p.type==="fightCircuit";
    const swapCats=isFightSwap?[...new Set(allSwapOpts.map(o=>o.cat))]:Object.keys(bankCategoryLabels).filter(cat=>allSwapOpts.some(o=>o.cat===cat));
    const currentOpt=allSwapOpts.find(o=>o.name===it.name);
