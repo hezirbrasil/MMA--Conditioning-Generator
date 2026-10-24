@@ -1124,9 +1124,9 @@ function manualLoadLibrary(){
    addedStarterCircuits=true;
   });
   // Remove definitivamente os blocos B solicitados, inclusive cópias antigas salvas no navegador.
-  const removedUserBlockIds=new Set(["starter-user-B22","starter-user-B15","starter-user-B14","starter-user-B12","starter-user-B10","starter-user-B8","starter-user-B5","starter-user-B6","starter-user-B21","starter-user-B25"]);
+  const removedUserBlockIds=new Set(["starter-user-B22","starter-user-B15","starter-user-B14","starter-user-B12","starter-user-B10","starter-user-B8","starter-user-B5","starter-user-B6","starter-user-B21","starter-user-B25","starter-user-B23"]);
   const removedUserBlockNames=new Set(["B22","B15","B14","B12","B10","B8","B5","B6"]);
-  const retainedRenumberedBIds=new Set(["starter-user-B16","starter-user-B13","starter-user-B20","starter-user-B24","starter-user-B26","starter-user-B17","starter-user-B7","starter-user-B9","starter-user-B11","starter-user-B18","starter-user-B19","starter-user-B23"]);
+  const retainedRenumberedBIds=new Set(["starter-user-B16","starter-user-B13","starter-user-B20","starter-user-B24","starter-user-B26","starter-user-B17","starter-user-B7","starter-user-B9","starter-user-B11","starter-user-B18","starter-user-B19"]);
   const beforeRemovedUserBlocks=items.length;
   items.splice(0,items.length,...items.filter(entry=>{
    if(entry?.kind!=="part")return true;
@@ -1141,7 +1141,7 @@ function manualLoadLibrary(){
   }));
   if(items.length!==beforeRemovedUserBlocks)renumberedLibrary=true;
    // Renumera os blocos B restantes em sequência, mantendo IDs internos estáveis.
-  const renumberedBLabels={"starter-user-B16":"B1","starter-user-B13":"B2","starter-user-B20":"B3","starter-user-B24":"B4","starter-user-B26":"B5","starter-user-B17":"B6","starter-user-B7":"B7","starter-user-B9":"B8","starter-user-B11":"B9","starter-user-B18":"B10","starter-user-B19":"B11","starter-user-B23":"B12"};
+  const renumberedBLabels={"starter-user-B16":"B1","starter-user-B13":"B2","starter-user-B20":"B3","starter-user-B24":"B4","starter-user-B26":"B5","starter-user-B17":"B6","starter-user-B7":"B7","starter-user-B9":"B8","starter-user-B11":"B9","starter-user-B18":"B10","starter-user-B19":"B11"};
   items.forEach(entry=>{
    const label=renumberedBLabels[entry?.id];
    if(!label||entry?.kind!=="part"||!entry?.part)return;
@@ -2330,7 +2330,6 @@ const BANK_DISPLAY_ORDER = Object.freeze({
   "starter-user-B11",
   "starter-user-B18",
   "starter-user-B19",
-  "starter-user-B23",
   "starter-bulgaro-joelhada-step",
   "starter-workout-bloco-1-four"
  ],
@@ -2362,7 +2361,6 @@ const BANK_GROUP_LABELS = Object.freeze({
  "starter-user-B11":"Core",
  "starter-user-B18":"Inferior + Core",
  "starter-user-B19":"Core",
- "starter-user-B23":"Inferior + Core",
  "starter-bulgaro-joelhada-step":"Inferior",
  "starter-workout-bloco-1-four":"Core",
  "starter-user-C12":"Full Body",
