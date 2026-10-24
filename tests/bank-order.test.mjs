@@ -148,7 +148,7 @@ test("Os cartões mostram número e grupamento muscular juntos", () => {
   assert.ok(!html.includes('"Inferior + Condicionamento"'), "Não deve haver filtro separado de Inferior + Condicionamento");
   assert.equal(groups["starter-user-B7"], "Inferior + Core", "B7 deve ser Inferior + Core");
   assert.equal(groups["starter-user-B9"], "Full Body", "Este bloco passa a ser B8 após excluir o antigo B8");
-  assert.equal(groups["starter-user-B11"], "Core", "Este bloco passa a ser B9 após excluir o antigo B8");
+  assert.equal(groups["starter-user-B11"], "Full Body", "B9 visível (Remada Aberta, Pulldown, Bíceps com Halter e Agachamento Sumô) deve ser Full Body");
   assert.equal(groups["starter-user-B18"], "Inferior + Core", "Condicionamento + Core deve ser classificado como Inferior + Core");
   assert.equal(groups["starter-user-B19"], "Core", "Core + Condicionamento deve ser classificado apenas como Core");
   assert.ok(!html.includes('"Condicionamento + Core"'), "Não deve haver filtro separado de Condicionamento + Core");
