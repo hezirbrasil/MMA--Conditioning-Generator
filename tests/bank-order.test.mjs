@@ -71,6 +71,19 @@ test("Banco B segue a ordem revisada, sem B8 antigo e sem lacunas", () => {
   assert.ok(b7 && b7.includes('name:"Joelhada no Step Alternada"') && !b7.includes('name:"Sprint"'), "B7 deve terminar com Joelhada no Step Alternada");
 });
 
+test("B9 visível corresponde exatamente aos quatro exercícios confirmados pelo usuário", () => {
+  const visibleB9Id = bankOrder.B[8];
+  assert.equal(visibleB9Id, "starter-user-B11", "B9 visível deve apontar para o bloco estável correto");
+  const start = html.indexOf("const userFourExerciseBlocks=[");
+  const end = html.indexOf("userFourExerciseBlocks.forEach", start);
+  const definitions = html.slice(start, end);
+  const b9 = definitions.split(String.fromCharCode(10)).find(line => line.includes('id:"starter-user-B11"'));
+  assert.ok(b9, "Definição do B9 visível não encontrada");
+  for (const exercise of ["Remada Aberta", "Pulldown", "Bíceps com Halter", "Agachamento Sumô"]) {
+    assert.ok(b9.includes('name:"' + exercise + '"'), "B9 deve conter: " + exercise);
+  }
+});
+
 test("Banco C segue a sequência agrupada e tem IDs únicos", () => {
   assert.deepEqual(bankOrder.C, expectedC);
   assert.equal(new Set(bankOrder.C).size, bankOrder.C.length, "Banco C não pode duplicar IDs");
