@@ -126,7 +126,7 @@ test("Os cartões mostram número e grupamento muscular juntos", () => {
   assert.equal(groups["starter-user-C13-fullbody"], "Full Body", "C13 novo deve ser Full Body");
   assert.equal(groups["starter-preset-circuit-3"], "Inferior");
   assert.equal(groups["starter-preset-circuit-4"], "Full Body", "C5 deve ser Full Body");
-  assert.equal(groups["starter-preset-circuit-1"], "Inferior", "C6 deve ser Inferior");
+  assert.equal(groups["starter-preset-circuit-1"], "Full Body", "Circuito Remada Aberta + Stiff + Abdominal Infra deve ser Full Body");
   assert.equal(groups["starter-preset-circuit-5"], "Peitoral + Tríceps");
   assert.equal(groups["starter-preset-circuit-12"], "Costas + Bíceps");
   assert.equal(groups["starter-preset-circuit-7"], "Deltoide");
