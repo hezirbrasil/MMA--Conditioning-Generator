@@ -133,7 +133,10 @@ test("Os cartões mostram número e grupamento muscular juntos", () => {
   assert.equal(groups["starter-user-B7"], "Inferior + Core", "B7 deve ser Inferior + Core");
   assert.equal(groups["starter-user-B9"], "Full Body", "Este bloco passa a ser B8 após excluir o antigo B8");
   assert.equal(groups["starter-user-B11"], "Core", "Este bloco passa a ser B9 após excluir o antigo B8");
-  assert.equal(groups["starter-user-B18"], "Condicionamento + Core", "Este bloco passa a ser B10 após excluir o antigo B8");
+  assert.equal(groups["starter-user-B18"], "Inferior + Core", "Condicionamento + Core deve ser classificado como Inferior + Core");
+  assert.equal(groups["starter-user-B19"], "Core", "Core + Condicionamento deve ser classificado apenas como Core");
+  assert.ok(!html.includes('"Condicionamento + Core"'), "Não deve haver filtro separado de Condicionamento + Core");
+  assert.ok(!html.includes('"Core + Condicionamento"'), "Não deve haver filtro separado de Core + Condicionamento");
   assert.ok(!Object.hasOwn(groups, "starter-user-B25"), "O mapa não deve reter a classificação do B8 excluído");
   assert.ok(html.includes('const title=entry.displayName+" — "+group;'));
 });
