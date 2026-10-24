@@ -27,7 +27,6 @@ const expectedB = [
   "starter-user-B11",
   "starter-user-B18",
   "starter-user-B19",
-  "starter-user-B23",
   "starter-bulgaro-joelhada-step",
   "starter-workout-bloco-1-four"
 ];
@@ -53,18 +52,23 @@ test("Banco B segue a ordem revisada, sem B8 antigo e sem lacunas", () => {
   assert.equal(new Set(bankOrder.B).size, bankOrder.B.length, "Banco B não pode duplicar IDs");
   assert.ok(!bankOrder.B.includes("starter-user-B21"), "O bloco de condicionamento antigo deve estar fora da ordem");
   assert.ok(!bankOrder.B.includes("starter-user-B25"), "B8 Deltoide deve estar removido");
+  assert.ok(!bankOrder.B.includes("starter-user-B23"), "B12 deve estar removido");
   const removedIds = readJsonConstant(/const removedUserBlockIds=new Set\((\[[^\n]*\])\);/, "removedUserBlockIds");
   assert.ok(removedIds.includes("starter-user-B25"), "A exclusão de B8 deve persistir após recarregar");
+  assert.ok(removedIds.includes("starter-user-B23"), "A exclusão de B12 deve persistir após recarregar");
   const labels = readJsonConstant(/const renumberedBLabels=(\{[^\n]*\});/, "renumberedBLabels");
-  assert.deepEqual(Object.values(labels), Array.from({length:12}, (_,i) => "B" + (i+1)));
+  assert.deepEqual(Object.values(labels), Array.from({length:11}, (_,i) => "B" + (i+1)));
   assert.equal(labels["starter-user-B9"], "B8");
   assert.equal(labels["starter-user-B11"], "B9");
   assert.equal(labels["starter-user-B18"], "B10");
   assert.equal(labels["starter-user-B19"], "B11");
-  assert.equal(labels["starter-user-B23"], "B12");
+  assert.ok(!Object.hasOwn(labels, "starter-user-B23"), "O B12 excluído não deve receber rótulo");
   const start = html.indexOf("const userFourExerciseBlocks=[");
   const end = html.indexOf("userFourExerciseBlocks.forEach", start);
   assert.ok(!html.slice(start, end).includes('id:"starter-user-B25"'), "Bloco B8 não deve ser recriado");
+  assert.ok(!html.slice(start, end).includes('id:"starter-user-B23"'), "B12 não deve ser recriado");
+  const b7 = html.slice(start, end).split(String.fromCharCode(10)).find(line => line.includes('id:"starter-user-B7"'));
+  assert.ok(b7 && b7.includes('name:"Joelhada no Step Alternada"') && !b7.includes('name:"Sprint"'), "B7 deve terminar com Joelhada no Step Alternada");
 });
 
 test("Banco C segue a sequência agrupada e tem IDs únicos", () => {
@@ -97,20 +101,19 @@ test("A renumeração após excluir B8 mantém os grupos existentes ligados aos 
   assert.equal(labels["starter-user-B18"], "B10");
   assert.equal(labels["starter-user-B24"], "B4");
   assert.equal(labels["starter-user-B7"], "B7");
+  assert.equal(labels["starter-user-B19"], "B11");
+  assert.ok(!Object.hasOwn(labels, "starter-user-B23"));
 });
 
-test("B13 coloca Joelhada Alternada antes da Prancha T, que fecha o bloco", () => {
+test("B12 é removido e o quarto exercício do B7 é atualizado", () => {
   const start = html.indexOf("const userFourExerciseBlocks=[");
   const end = html.indexOf("userFourExerciseBlocks.forEach", start);
-  const line = html.slice(start, end).split("\n").find(value => value.includes('id:"starter-user-B23"'));
-  assert.ok(line, "Bloco B13 não encontrado");
-  const bulgaroE = line.indexOf('name:"Búlgaro E"');
-  const bulgaroD = line.indexOf('name:"Búlgaro D"');
-  const knee = line.indexOf('name:"Joelhada no Step Alternada"');
-  const plank = line.indexOf('name:"Prancha T"');
-  assert.ok(bulgaroE >= 0 && bulgaroD > bulgaroE && knee > bulgaroD && plank > knee,
-    "Sequência esperada: Búlgaro E, Búlgaro D, Joelhada Alternada, Prancha T");
-  assert.ok(line.indexOf('name:"Prancha T"', plank + 1) < 0, "Prancha T deve aparecer uma vez");
+  const definitions = html.slice(start, end);
+  const b7 = definitions.split(String.fromCharCode(10)).find(line => line.includes('id:"starter-user-B7"'));
+  assert.ok(b7 && b7.includes('name:"Joelhada no Step Alternada"') && !b7.includes('name:"Sprint"'));
+  assert.ok(!definitions.includes('id:"starter-user-B23"'));
+  const removedIds = readJsonConstant(/const removedUserBlockIds=new Set\((\[[^\n]*\])\);/, "removedUserBlockIds");
+  assert.ok(removedIds.includes("starter-user-B23"));
 });
 
 test("Os cartões mostram número e grupamento muscular juntos", () => {
